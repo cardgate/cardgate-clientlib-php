@@ -4,6 +4,7 @@
 
 [![Total Downloads](https://img.shields.io/packagist/dt/cardgate/cardgate-clientlib-php.svg)](https://packagist.org/packages/cardgate/cardgate-clientlib-php)
 [![Latest Version](https://img.shields.io/packagist/v/cardgate/cardgate-clientlib-php.svg)](https://github.com/cardgate/cardgate-clientlib-php/releases)
+[![Build Status](https://travis-ci.org/cardgate/cardgate-clientlib-php.svg?branch=master)](https://travis-ci.org/cardgate/cardgate-clientlib-php)
 
 ## Installation ##
 
