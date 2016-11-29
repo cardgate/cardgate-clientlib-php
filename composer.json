@@ -18,7 +18,7 @@
 		"afterpay", "bitcoin", "directdebit"
 	],
 	"require" : {
-		"php": ">=5.3"
+		"php": ">=5.4"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "^3.7 || ^4.8 || ^5.4",
