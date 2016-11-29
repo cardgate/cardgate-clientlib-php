@@ -1,0 +1,6 @@
+.DS_Store
+/vendor
+/composer.lock
+/doc
+/doc.generate.sh
+INTERNAL
