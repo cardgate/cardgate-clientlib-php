@@ -97,6 +97,13 @@ namespace cardgate\api {
 		private $_oTransactions = NULL;
 
 		/**
+		 * The subscriptions resource.
+		 * @var resource\Subscriptions
+		 * @access private
+		 */
+		private $_oSubscriptions = NULL;
+
+		/**
 		 * The customers resource.
 		 * @var resource\Customers
 		 * @access private
@@ -298,6 +305,19 @@ namespace cardgate\api {
 				$this->_oTransactions = new resource\Transactions( $this );
 			}
 			return $this->_oTransactions;
+		}
+
+		/**
+		 * Accessor for the subscriptions resource.
+		 * @return resource\Subscriptions
+		 * @access public
+		 * @api
+		 */
+		public function subscriptions() {
+			if ( NULL == $this->_oSubscriptions ) {
+				$this->_oSubscriptions = new resource\Subscriptions( $this );
+			}
+			return $this->_oSubscriptions;
 		}
 
 		/**

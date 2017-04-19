@@ -1,7 +1,9 @@
 <?php
 try {
 
-	include 'init.php';
+	if ( FALSE == @include 'init.php' ) {
+		die( 'init.php missing - copy or rename the init.example.php to init.php and configure it with your account details' );
+	}
 
 	$aMethods = $oCardGate->methods()->all( $iSiteId );
 
