@@ -275,6 +275,27 @@ namespace cardgate\api {
 		}
 
 		/**
+		 * Pull the config from the API using a token provided by the site setup button in the backoffice.
+		 * @return Array Returns an array with settings.
+		 * @access public
+		 * @api
+		 */
+		public function pullConfig( $sToken_ ) {
+			if ( ! is_string( $sToken_ ) ) {
+				throw new Exception( 'Client.Token.Invalid', 'invalid token for settings pull: ' . $sToken_ );
+			}
+
+			$sResource = "pullconfig/{$sToken_}/";
+			$aResult = $this->doRequest( $sResource, [], 'POST' );
+
+			if ( empty( $aResult['content'] ) ) {
+				throw new Exception( 'Client.Settings.Invalid', 'invalid settings returned' );
+			}
+
+			return $aResult['content'];
+		}
+
+		/**
 		 * Accessor for the versioning resource.
 		 * @return resource\Version
 		 * @access public
