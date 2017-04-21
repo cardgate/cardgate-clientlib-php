@@ -1,17 +1,29 @@
 <?php
 class apiUnitTest extends PHPUnit_Framework_TestCase {
 
+	private $_oClient;
+
 	protected function setUp() {
+		$this->_oClient = new cardgate\api\Client( 1, 'fake_key', TRUE );
 		parent::setUp();
 	}
 
+	protected function tearDown() {
+		$this->_oClient = NULL;
+		parent::tearDown();
+	}
+
 	public function testCreateClientInstance() {
-		$oCardGate = new cardgate\api\Client( 1, 'fake_key', TRUE );
-		$oCardGate->setLanguage( 'nl' );
-		$oCardGate->version()->setPlatformName( 'PHP' );
-		$oCardGate->version()->setPlatformVersion( phpversion() );
-		$oCardGate->version()->setPluginName( 'Test Implementation' );
-		$oCardGate->version()->setPluginVersion( '0.0.1' );
+		$this->_oClient->setLanguage( 'nl' );
+		$this->assertEquals( 'nl', $this->_oClient->getLanguage(), 'language not set' );
+		$this->_oClient->version()->setPlatformName( 'PHP' );
+		$this->assertEquals( 'PHP', $this->_oClient->version()->getPlatformName(), 'platform name not set' );
+		$this->_oClient->version()->setPlatformVersion( phpversion() );
+		$this->assertEquals( phpversion(), $this->_oClient->version()->getPlatformVersion(), 'platform version not set' );
+		$this->_oClient->version()->setPluginName( 'Test Implementation' );
+		$this->assertEquals( 'Test Implementation', $this->_oClient->version()->getPluginName(), 'plugin name not set' );
+		$this->_oClient->version()->setPluginVersion( '0.0.1' );
+		$this->assertEquals( '0.0.1', $this->_oClient->version()->getPluginVersion(), 'plugin version not set' );
 	}
 
 }
