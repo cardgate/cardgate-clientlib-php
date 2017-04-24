@@ -287,19 +287,46 @@ namespace cardgate\api {
 		 * @access public
 		 * @api
 		 */
-		public function pullConfig( $sToken_ ) {
+		static public function pullConfig( $sToken_, $bTestmode_ = FALSE ) {
 			if ( ! is_string( $sToken_ ) ) {
 				throw new Exception( 'Client.Token.Invalid', 'invalid token for settings pull: ' . $sToken_ );
 			}
 
 			$sResource = "pullconfig/{$sToken_}/";
-			$aResult = $this->doRequest( $sResource, [], 'POST' );
+			$sUrl = ( $bTestmode_ ? self::URL_STAGING : self::URL_PRODUCTION ) . $sResource;
 
-			if ( empty( $aResult['content'] ) ) {
-				throw new Exception( 'Client.Settings.Invalid', 'invalid settings returned' );
+			$rCh = curl_init();
+			curl_setopt( $rCh, CURLOPT_URL, $sUrl );
+			curl_setopt( $rCh, CURLOPT_RETURNTRANSFER, 1 );
+			curl_setopt( $rCh, CURLOPT_TIMEOUT, 60 );
+			curl_setopt( $rCh, CURLOPT_HEADER, FALSE );
+			curl_setopt( $rCh, CURLOPT_HTTPHEADER, [
+				'Content-Type: application/json',
+				'Accept: application/json'
+			] );
+			if ( $bTestmode_ ) {
+				curl_setopt( $rCh, CURLOPT_SSL_VERIFYPEER, FALSE );
+				curl_setopt( $rCh, CURLOPT_SSL_VERIFYHOST, 0 );
+			} else {
+				curl_setopt( $rCh, CURLOPT_SSL_VERIFYPEER, TRUE ); // verify SSL peer
+				curl_setopt( $rCh, CURLOPT_SSL_VERIFYHOST, 2 ); // check for valid common name and verify host
 			}
 
-			return $aResult['content'];
+			if ( FALSE == ( $sResults = curl_exec( $rCh ) ) ) {
+				$sError = curl_error( $rCh );
+				curl_close( $rCh );
+				throw new Exception( 'Client.Request.Curl.Error', $sError );
+			} else {
+				curl_close( $rCh );
+			}
+			if ( NULL === ( $aResults = json_decode( $sResults, TRUE ) ) ) {
+				throw new Exception( 'Client.Request.JSON.Invalid', 'remote gave invalid JSON: ' . $sResults );
+			}
+			if ( isset( $aResults['error'] ) ) {
+				throw new Exception( 'Client.Request.Remote.' . $aResults['error']['code'], $aResults['error']['message'] );
+			}
+
+			return $aResults;
 		}
 
 		/**
