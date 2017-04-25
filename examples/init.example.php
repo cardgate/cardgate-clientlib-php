@@ -3,7 +3,7 @@ require_once dirname( __FILE__ ) . '/../src/Autoloader.php';
 
 cardgate\api\Autoloader::register();
 
-$oCardGate = new cardgate\api\Client( 1, '<merchant key>', TRUE );
+$oCardGate = new cardgate\api\Client( 1, '<api key>', TRUE );
 $oCardGate->setIp( $_SERVER['REMOTE_ADDR'] );
 $oCardGate->setLanguage( 'nl' );
 $oCardGate->version()->setPlatformName( 'PHP' );
