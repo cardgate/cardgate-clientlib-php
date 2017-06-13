@@ -29,27 +29,8 @@ namespace cardgate\api {
 
 	/**
 	 * Customer instance.
-	 *
-	 * @method Customer setEmail( string $sEmail_ )
-	 * @method string getEmail()
-	 * @method boolean hasEmail()
-	 * @method Customer unsetEmail()
-	 *
-	 * @method Customer setPhone( string $sPhone_ )
-	 * @method string getPhone()
-	 * @method boolean hasPhone()
-	 * @method Customer unsetPhone()
 	 */
-	final class Customer extends Entity {
-
-		/**
-		 * @ignore
-		 * @internal The methods these fields expose are configured in the class phpdoc.
-		 */
-		static $_aFields = [
-			'Email'			=> 'email',
-			'Phone'			=> 'phone'
-		];
+	final class Customer {
 
 		/**
 		 * The bill-to address.

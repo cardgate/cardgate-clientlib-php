@@ -30,14 +30,14 @@ namespace cardgate\api {
 	/**
 	 * Transaction instance.
 	 */
-	final class Transaction {
+	class Transaction {
 
 		/**
 		 * The client associated with this transaction.
 		 * @var Client
 		 * @access private
 		 */
-		private $_oClient;
+		protected $_oClient;
 
 		/**
 		 * The transaction id.
@@ -47,107 +47,99 @@ namespace cardgate\api {
 		private $_sId;
 
 		/**
-		 * The transaction site id.
-		 * @var Integer
-		 * @access private
-		 */
-		private $_iSiteId;
-
-		/**
 		 * The transaction amount in cents.
 		 * @var Integer
 		 * @access private
 		 */
-		private $_iAmount;
+		protected $_iAmount;
 
 		/**
 		 * The transaction currency (ISO 4217).
 		 * @var String
 		 * @access private
 		 */
-		private $_sCurrency;
+		protected $_sCurrency;
 
 		/**
 		 * The description for the transaction.
 		 * @var String
 		 * @access private
 		 */
-		private $_sDescription;
+		protected $_sDescription;
 
 		/**
 		 * A reference for the transaction.
 		 * @var String
 		 * @access private
 		 */
-		private $_sReference;
+		protected $_sReference;
 
 		/**
 		 * The payment method for the transaction.
 		 * @var Method
 		 * @access private
 		 */
-		private $_oPaymentMethod = NULL;
+		protected $_oPaymentMethod = NULL;
 
 		/**
 		 * The payment method issuer for the transaction.
 		 * @var String
 		 * @access private
 		 */
-		private $_sIssuer = NULL;
+		protected $_sIssuer = NULL;
 
 		/**
 		 * The customer for the transaction.
 		 * @var Customer
 		 * @access private
 		 */
-		private $_oCustomer = NULL;
+		protected $_oCustomer = NULL;
 
 		/**
 		 * The cart for the transaction.
 		 * @var Cart
 		 * @access private
 		 */
-		private $_oCart = NULL;
+		protected $_oCart = NULL;
 
 		/**
 		 * The URL to send payment callback updates to.
 		 * @var String
 		 * @access private
 		 */
-		private $_sCallbackUrl = NULL;
+		protected $_sCallbackUrl = NULL;
 
 		/**
 		 * The URL to redirect to on success.
 		 * @var String
 		 * @access private
 		 */
-		private $_sSuccessUrl = NULL;
+		protected $_sSuccessUrl = NULL;
 
 		/**
 		 * The URL to redirect to on failre.
 		 * @var String
 		 * @access private
 		 */
-		private $_sFailureUrl = NULL;
+		protected $_sFailureUrl = NULL;
 
 		/**
 		 * The URL to redirect to on pending.
 		 * @var String
 		 * @access private
 		 */
-		private $_sPendingUrl = NULL;
+		protected $_sPendingUrl = NULL;
 
 		/**
 		 * The URL to redirect to after initial transaction register.
 		 * @var String
 		 * @access private
 		 */
-		private $_sActionUrl = NULL;
+		protected $_sActionUrl = NULL;
 
 		/**
 		 * The constructor.
 		 * @param Client $oClient_ The client associated with this transaction.
-		 * @param Integer $iSiteId_ Site id to create transaction for.
 		 * @param Integer $iAmount_ The amount of the transaction in cents.
 		 * @param String $sCurrency_ Currency (ISO 4217)
 		 * @return Transaction
@@ -155,9 +147,9 @@ namespace cardgate\api {
 		 * @access public
 		 * @api
 		 */
-		function __construct( Client $oClient_, $iSiteId_, $iAmount_, $sCurrency_ = 'EUR' ) {
+		function __construct( Client $oClient_, $iAmount_, $sCurrency_ = 'EUR' ) {
 			$this->_oClient = $oClient_;
-			$this->setSiteId( $iSiteId_ )->setAmount( $iAmount_ )->setCurrency( $sCurrency_ );
+			$this->setAmount( $iAmount_ )->setCurrency( $sCurrency_ );
 		}
 
 		/**
@@ -190,32 +182,6 @@ namespace cardgate\api {
 				throw new Exception( 'Transaction.Not.Initialized', 'invalid transaction state' );
 			}
 			return $this->_sId;
-		}
-
-		/**
-		 * Configure the transaction object with a site id.
-		 * @param Integer $iSiteId_ Site id to set.
-		 * @return Transaction
-		 * @throws Exception
-		 * @access public
-		 * @api
-		 */
-		public function setSiteId( $iSiteId_ ) {
-			if ( ! is_integer( $iSiteId_ ) ) {
-				throw new Exception( 'Transaction.SiteId.Invalid', 'invalid site: ' . $iSiteId_ );
-			}
-			$this->_iSiteId = $iSiteId_;
-			return $this;
-		}
-
-		/**
-		 * Get the site id associated with this transaction.
-		 * @return Integer The site id associated with this transaction.
-		 * @access public
-		 * @api
-		 */
-		public function getSiteId() {
-			return $this->_iSiteId;
 		}
 
 		/**
@@ -569,7 +535,6 @@ namespace cardgate\api {
 		 */
 		public function register() {
 			$aData = [
-				'site'			=> $this->_iSiteId,
 				'amount'		=> $this->_iAmount,
 				'currency_id'	=> $this->_sCurrency,
 				'url_callback'	=> $this->_sCallbackUrl,
@@ -580,10 +545,12 @@ namespace cardgate\api {
 				'reference'		=> $this->_sReference
 			];
 			if ( ! is_null( $this->_oCustomer ) ) {
-				$aData['email'] = $this->_oCustomer->getEmail();
-				$aData['phone'] = $this->_oCustomer->getPhone();
-				$aData = array_merge( $aData, $this->_oCustomer->address()->getData() );
-				$aData = array_merge( $aData, $this->_oCustomer->shippingAddress()->getData( 'shipto_' ) );
+				$aData['consumer'] = array_merge( 
+					$this->_oCustomer->address()->getData() 
+					, $this->_oCustomer->shippingAddress()->getData( 'shipto_' ) 
+				);
+
+				$aData['country_id'] = $this->_oCustomer->address()->getCountry();
 			}
 			if ( ! is_null( $this->_oCart ) ) {
 				$aData['cartitems'] = $this->_oCart->getData();
@@ -654,7 +621,6 @@ namespace cardgate\api {
 			}
 
 			$aData = [
-				'site'			=> $this->_iSiteId,
 				'amount'		=> is_null( $iAmount_ ) ? $this->_iAmount : $iAmount_,
 				'currency_id'	=> $this->_sCurrency
 			];

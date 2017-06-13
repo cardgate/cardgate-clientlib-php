@@ -5,7 +5,7 @@ try {
 		die( 'init.php missing - copy or rename the init.example.php to init.php and configure it with your account details' );
 	}
 
-	$oTransaction = $oCardGate->transactions()->create( $iSiteId, 660596, 'EUR' );
+	$oTransaction = $oCardGate->transactions()->create( 660596, 'EUR' );
 
 	// Configure payment option.
 	if ( ! empty( $_POST['option'] ) ) {
@@ -26,6 +26,7 @@ try {
 
 	// Configure customer.
 	$oCustomer = $oTransaction->getCustomer();
+	
 	$oCustomer->address()->setFirstName( 'John' );
 	$oCustomer->address()->setInitials( 'J.A.N.' );
 	$oCustomer->address()->setLastName( 'Doe' );
@@ -33,6 +34,9 @@ try {
 	$oCustomer->address()->setZipCode( '34342' );
 	$oCustomer->address()->setCity( 'Minneapolis' );
 	$oCustomer->address()->setCountry( 'US' );
+	$oCustomer->address()->setEmail( 'john@doe.com' );
+	$oCustomer->address()->setPhone( '0123456789' );
+
 	$oCustomer->shippingAddress()->setFirstName( 'Judy' );
 	$oCustomer->shippingAddress()->setInitials( 'J.' );
 	$oCustomer->shippingAddress()->setLastName( 'Doe' );

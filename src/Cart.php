@@ -60,8 +60,6 @@ namespace cardgate\api {
 		function getAll() {
 		}
 
-
-
 		function getData() {
 			$aData = [];
 			foreach( $this->_aItems as $oItem ) {
