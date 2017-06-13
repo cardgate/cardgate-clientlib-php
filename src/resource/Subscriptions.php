@@ -60,6 +60,7 @@ namespace cardgate\api\resource {
 
 			$oSubscription = new \cardgate\api\Subscription( 
 				$this->_oClient
+				, (int) $aResult['subscription']['site_id']
 				, (int) $aResult['subscription']['period']
 				, $aResult['subscription']['period_type']
 				, (int) $aResult['subscription']['period_price'] 
@@ -76,6 +77,7 @@ namespace cardgate\api\resource {
 
 		/**
 		 * This method can be used to create a new subscription.
+		 * @param Integer $iSiteId_ Site id to create the subscription for.
 		 * @param Integer $iPeriod_ The period length of the subscription.
 		 * @param String $sPeriodType_ The period type of the subscription (e.g. day, week, month, year).
 		 * @param Integer $iPeriodAmount_ The period amount of the subscription in cents.
@@ -85,8 +87,8 @@ namespace cardgate\api\resource {
 		 * @access public
 		 * @api
 		 */
-		public function create( $iPeriod_, $sPeriodType_, $iPeriodAmount_, $sCurrency_ = 'EUR' ) {
-			return new \cardgate\api\Subscription( $this->_oClient, $iPeriod_, $sPeriodType_, $iPeriodAmount_, $sCurrency_ );
+		public function create( $iSiteId_, $iPeriod_, $sPeriodType_, $iPeriodAmount_, $sCurrency_ = 'EUR' ) {
+			return new \cardgate\api\Subscription( $this->_oClient, $iSiteId_, $iPeriod_, $sPeriodType_, $iPeriodAmount_, $sCurrency_ );
 		}
 
 	}

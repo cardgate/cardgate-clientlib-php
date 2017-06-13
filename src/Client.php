@@ -69,20 +69,6 @@ namespace cardgate\api {
 		private $_sKey;
 
 		/**
-		 * The site id to use for payments.
-		 * @var Integer
-		 * @access private
-		 */
-		private $_iSiteId;
-
-		/**
-		 * The site key to use for payments.
-		 * @var String
-		 * @access private
-		 */
-		private $_sSiteKey;
-
-		/**
 		 * The consumer IP address associated with the client.
 		 * @var String
 		 * @access private
@@ -205,32 +191,6 @@ namespace cardgate\api {
 		}
 
 		/**
-		 * Configure the client object with a site id.
-		 * @param String $iSiteId_ Site id to set.
-		 * @return Client
-		 * @throws Exception
-		 * @access public
-		 * @api
-		 */
-		public function setSiteId( $iSiteId_ ) {
-			if ( ! is_integer( $iSiteId_ ) ) {
-				throw new Exception( 'Client.SiteId.Invalid', 'invalid site: ' . $iSiteId_ );
-			}
-			$this->_iSiteId = $iSiteId_;
-			return $this;
-		}
-
-		/**
-		 * Get the site id associated with this client.
-		 * @return String The merchant API key.
-		 * @access public
-		 * @api
-		 */
-		public function getSiteId() {
-			return $this->_iSiteId;
-		}
-
-		/**
 		 * Set the Merchant API key to authenticate the transaction request with.
 		 * @param String $sKey_ The merchant API key to set.
 		 * @return Client
@@ -254,32 +214,6 @@ namespace cardgate\api {
 		 */
 		public function getKey() {
 			return $this->_sKey;
-		}
-
-		/**
-		 * Set the Site key to authenticate the hash in the request.
-		 * @param String $sSiteKey_ The site key to set.
-		 * @return Client
-		 * @throws Exception
-		 * @access public
-		 * @api
-		 */
-		public function setSiteKey( $sSiteKey_ ) {
-			if ( ! is_string( $sSiteKey_ ) ) {
-				throw new Exception( 'Client.SiteKey.Invalid', 'invalid site key: ' . $sSiteKey_ );
-			}
-			$this->_sSiteKey = $sSiteKey_;
-			return $this;
-		}
-
-		/**
-		 * Get the Merchant API key to authenticate the transaction request with.
-		 * @return String The merchant API key.
-		 * @access public
-		 * @api
-		 */
-		public function getSiteKey() {
-			return $this->_sSiteKey;
 		}
 
 		/**
@@ -489,7 +423,6 @@ namespace cardgate\api {
 
 			$sUrl = $this->getUrl() . $sResource_;
 			if ( is_array( $aData_ ) ) {
-				$aData_['site_id'] = $this->getSiteId();
 				$aData_['ip'] = $this->getIp();
 				$aData_['language_id'] = $this->getLanguage();
 				if ( 'GET' == $sHttpMethod_ ) {
@@ -497,7 +430,7 @@ namespace cardgate\api {
 					$sUrl .= $sDelim . http_build_query( $aData_ );
 				}
 			} elseif ( is_null( $aData_ ) ) {
-				$aData_ = [ 'ip' => $this->getIp(), 'language_id' => $this->getLanguage(), 'site_id' => $this->getSiteId() ];
+				$aData_ = [ 'ip' => $this->getIp(), 'language_id' => $this->getLanguage() ];
 			} else {
 				throw new Exception( 'Client.Data.Invalid', 'invalid data: ' . $aData_ );
 			}

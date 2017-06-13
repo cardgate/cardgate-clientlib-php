@@ -11,7 +11,7 @@ try {
 		&& isset( $_POST['period_type'] )
 	) {
 
-		$oSubscription = $oCardGate->subscriptions()->create( (int) $_POST['period'], $_POST['period_type'], (int) $_POST['period_amount'], 'EUR' );
+		$oSubscription = $oCardGate->subscriptions()->create( $iSiteId, (int) $_POST['period'], $_POST['period_type'], (int) $_POST['period_amount'], 'EUR' );
 		$oSubscription->setPaymentMethod( cardgate\api\Method::BANKTRANSFER );
 
 		// Configure customer.

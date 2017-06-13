@@ -58,7 +58,8 @@ namespace cardgate\api\resource {
 				$aDetails_ = array_merge( $aDetails_, $aResult['transaction'] );
 			}
 
-			$oTransaction = new \cardgate\api\Transaction( $this->_oClient, (int)$aResult['transaction']['amount'], $aResult['transaction']['currency_id'] );
+			$oTransaction = new \cardgate\api\Transaction( $this->_oClient, (int)$aResult['transaction']['site_id'], (int)$aResult['transaction']['amount'], $aResult['transaction']['currency_id'] );
+			
 			$oTransaction
 				->setId( $aResult['transaction']['id'] )
 				->setDescription( $aResult['transaction']['description'] )
@@ -73,6 +74,7 @@ namespace cardgate\api\resource {
 
 		/**
 		 * This method can be used to create a new transaction.
+		 * @param Integer $iSiteId_ Site id to create transaction for.
 		 * @param Integer $iAmount_ The amount of the transaction in cents.
 		 * @param String $sCurrency_ Currency (ISO 4217)
 		 * @return \cardgate\api\Transaction
@@ -80,8 +82,8 @@ namespace cardgate\api\resource {
 		 * @access public
 		 * @api
 		 */
-		public function create( $iAmount_, $sCurrency_ = 'EUR' ) {
-			return new \cardgate\api\Transaction( $this->_oClient, $iAmount_, $sCurrency_ );
+		public function create( $iSiteId_, $iAmount_, $sCurrency_ = 'EUR' ) {
+			return new \cardgate\api\Transaction( $this->_oClient, $iSiteId_, $iAmount_, $sCurrency_ );
 		}
 
 		/**

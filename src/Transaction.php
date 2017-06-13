@@ -35,7 +35,7 @@ namespace cardgate\api {
 		/**
 		 * The client associated with this transaction.
 		 * @var Client
-		 * @access private
+		 * @access protected
 		 */
 		protected $_oClient;
 
@@ -47,99 +47,114 @@ namespace cardgate\api {
 		private $_sId;
 
 		/**
+		 * The site id to use for payments.
+		 * @var Integer
+		 * @access protected
+		 */
+		protected $_iSiteId;
+
+		/**
+		 * The site key to use for payments.
+		 * @var String
+		 * @access protected
+		 */
+		protected $_sSiteKey;
+
+		/**
 		 * The transaction amount in cents.
 		 * @var Integer
-		 * @access private
+		 * @access protected
 		 */
 		protected $_iAmount;
 
 		/**
 		 * The transaction currency (ISO 4217).
 		 * @var String
-		 * @access private
+		 * @access protected
 		 */
 		protected $_sCurrency;
 
 		/**
 		 * The description for the transaction.
 		 * @var String
-		 * @access private
+		 * @access protected
 		 */
 		protected $_sDescription;
 
 		/**
 		 * A reference for the transaction.
 		 * @var String
-		 * @access private
+		 * @access protected
 		 */
 		protected $_sReference;
 
 		/**
 		 * The payment method for the transaction.
 		 * @var Method
-		 * @access private
+		 * @access protected
 		 */
 		protected $_oPaymentMethod = NULL;
 
 		/**
 		 * The payment method issuer for the transaction.
 		 * @var String
-		 * @access private
+		 * @access protected
 		 */
 		protected $_sIssuer = NULL;
 
 		/**
 		 * The customer for the transaction.
 		 * @var Customer
-		 * @access private
+		 * @access protected
 		 */
 		protected $_oCustomer = NULL;
 
 		/**
 		 * The cart for the transaction.
 		 * @var Cart
-		 * @access private
+		 * @access protected
 		 */
 		protected $_oCart = NULL;
 
 		/**
 		 * The URL to send payment callback updates to.
 		 * @var String
-		 * @access private
+		 * @access protected
 		 */
 		protected $_sCallbackUrl = NULL;
 
 		/**
 		 * The URL to redirect to on success.
 		 * @var String
-		 * @access private
+		 * @access protected
 		 */
 		protected $_sSuccessUrl = NULL;
 
 		/**
 		 * The URL to redirect to on failre.
 		 * @var String
-		 * @access private
+		 * @access protected
 		 */
 		protected $_sFailureUrl = NULL;
 
 		/**
 		 * The URL to redirect to on pending.
 		 * @var String
-		 * @access private
+		 * @access protected
 		 */
 		protected $_sPendingUrl = NULL;
 
 		/**
 		 * The URL to redirect to after initial transaction register.
 		 * @var String
-		 * @access private
+		 * @access protected
 		 */
 		protected $_sActionUrl = NULL;
 
 		/**
 		 * The constructor.
 		 * @param Client $oClient_ The client associated with this transaction.
+		 * @param Integer $iSiteId_ Site id to create transaction for.
 		 * @param Integer $iAmount_ The amount of the transaction in cents.
 		 * @param String $sCurrency_ Currency (ISO 4217)
 		 * @return Transaction
@@ -147,9 +162,9 @@ namespace cardgate\api {
 		 * @access public
 		 * @api
 		 */
-		function __construct( Client $oClient_, $iAmount_, $sCurrency_ = 'EUR' ) {
+		function __construct( Client $oClient_, $iSiteId_, $iAmount_, $sCurrency_ = 'EUR' ) {
 			$this->_oClient = $oClient_;
-			$this->setAmount( $iAmount_ )->setCurrency( $sCurrency_ );
+			$this->setSiteId( $iSiteId_ )->setAmount( $iAmount_ )->setCurrency( $sCurrency_ );
 		}
 
 		/**
@@ -182,6 +197,58 @@ namespace cardgate\api {
 				throw new Exception( 'Transaction.Not.Initialized', 'invalid transaction state' );
 			}
 			return $this->_sId;
+		}
+
+		/**
+		 * Configure the client object with a site id.
+		 * @param String $iSiteId_ Site id to set.
+		 * @return Client
+		 * @throws Exception
+		 * @access public
+		 * @api
+		 */
+		public function setSiteId( $iSiteId_ ) {
+			if ( ! is_integer( $iSiteId_ ) ) {
+				throw new Exception( 'Client.SiteId.Invalid', 'invalid site: ' . $iSiteId_ );
+			}
+			$this->_iSiteId = $iSiteId_;
+			return $this;
+		}
+
+		/**
+		 * Get the site id associated with this client.
+		 * @return String The merchant API key.
+		 * @access public
+		 * @api
+		 */
+		public function getSiteId() {
+			return $this->_iSiteId;
+		}
+
+		/**
+		 * Set the Site key to authenticate the hash in the request.
+		 * @param String $sSiteKey_ The site key to set.
+		 * @return Client
+		 * @throws Exception
+		 * @access public
+		 * @api
+		 */
+		public function setSiteKey( $sSiteKey_ ) {
+			if ( ! is_string( $sSiteKey_ ) ) {
+				throw new Exception( 'Client.SiteKey.Invalid', 'invalid site key: ' . $sSiteKey_ );
+			}
+			$this->_sSiteKey = $sSiteKey_;
+			return $this;
+		}
+
+		/**
+		 * Get the Merchant API key to authenticate the transaction request with.
+		 * @return String The merchant API key.
+		 * @access public
+		 * @api
+		 */
+		public function getSiteKey() {
+			return $this->_sSiteKey;
 		}
 
 		/**
@@ -535,6 +602,7 @@ namespace cardgate\api {
 		 */
 		public function register() {
 			$aData = [
+				'site_id' 		=> $this->_iSiteId,
 				'amount'		=> $this->_iAmount,
 				'currency_id'	=> $this->_sCurrency,
 				'url_callback'	=> $this->_sCallbackUrl,

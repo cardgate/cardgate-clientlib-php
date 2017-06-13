@@ -107,6 +107,7 @@ namespace cardgate\api {
 		/**
 		 * The constructor.
 		 * @param Client $oClient_ The client associated with this subscription.
+		 * @param Integer $iSiteId_ Site id to create the subscription for.
 		 * @param Integer $iPeriod_ The period length of the subscription.
 		 * @param String $sPeriodType_ The period type of the subscription (e.g. day, week, month, year).
 		 * @param Integer $iPeriodAmount_ The period amount of the subscription in cents.
@@ -116,9 +117,9 @@ namespace cardgate\api {
 		 * @access public
 		 * @api
 		 */
-		function __construct( Client $oClient_, $iPeriod_, $sPeriodType_, $iPeriodAmount_, $sCurrency_ = 'EUR' ) {
+		function __construct( Client $oClient_, $iSiteId_, $iPeriod_, $sPeriodType_, $iPeriodAmount_, $sCurrency_ = 'EUR' ) {
 			$this->_oClient = $oClient_;
-			$this->setPeriod( $iPeriod_ )->setPeriodType( $sPeriodType_ )->setPeriodPrice( $iPeriodAmount_ )->setCurrency( $sCurrency_ );
+			$this->setSiteId( $iSiteId_ )->setPeriod( $iPeriod_ )->setPeriodType( $sPeriodType_ )->setPeriodPrice( $iPeriodAmount_ )->setCurrency( $sCurrency_ );
 		}
 
 		/**
@@ -404,6 +405,7 @@ namespace cardgate\api {
 		 */
 		public function register() {
 			$aData = [
+				'site_id' 				=> $this->_iSiteId,
 				'currency_id'			=> $this->_sCurrency,
 				'url_callback'			=> $this->_sCallbackUrl,
 				'url_success'			=> $this->_sSuccessUrl,

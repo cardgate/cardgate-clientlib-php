@@ -10,12 +10,11 @@ try {
 	) {
 
 		$oSubscription = $oCardGate->subscriptions()->get( $_POST['subscription_id'] );
-		if (TRUE == $oSubscription->changeStatus( $_POST['action'] ) ) {
+		if ( TRUE == $oSubscription->changeStatus( $_POST['action'] ) ) {
 			echo "<h3>succes</h3>";
 		} else {
 			echo "<h3>failed</h3>";
 		}
-		//result = true or false
 
 	} else {
 
