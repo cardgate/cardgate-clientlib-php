@@ -103,6 +103,11 @@ namespace cardgate\api {
 		const SOFORTBANKING = 'sofortbanking';
 
 		/**
+         * Paysafecard
+         */
+		const PAYSAFECARD = 'paysafecard';
+
+		/**
 		 * The client associated with this payment method.
 		 * @var Client
 		 * @access private
