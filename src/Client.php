@@ -96,6 +96,13 @@ namespace cardgate\api {
 		 */
 		private $_oTransactions = NULL;
 
+        /**
+         * The recurring resource.
+         * @var resource\Recurring
+         * @access private
+         */
+        private $_oRecurring = NULL;
+
 		/**
 		 * The subscriptions resource.
 		 * @var resource\Subscriptions
@@ -354,6 +361,19 @@ namespace cardgate\api {
 			}
 			return $this->_oTransactions;
 		}
+
+        /**
+         * Accessor for the recurring resource.
+         * @return resource\Recurring
+         * @access public
+         * @api
+         */
+        public function recurring() {
+            if ( NULL == $this->_oRecurring ) {
+                $this->_oRecurring = new resource\Recurring( $this );
+            }
+            return $this->_oRecurring;
+        }
 
 		/**
 		 * Accessor for the subscriptions resource.

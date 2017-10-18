@@ -27,7 +27,9 @@
  */
 namespace cardgate\api {
 
-	/**
+    use phpDocumentor\Reflection\Types\Boolean;
+
+    /**
 	 * Transaction instance.
 	 */
 	final class Transaction {
@@ -143,6 +145,13 @@ namespace cardgate\api {
 		 * @access private
 		 */
 		private $_sActionUrl = NULL;
+
+        /**
+         * Activate for recurring payments
+         * @var Boolean
+         * @access private
+         */
+        private $_bRecurring = 0;
 
 		/**
 		 * The constructor.
@@ -560,6 +569,27 @@ namespace cardgate\api {
 			return $this->_sActionUrl;
 		}
 
+        /**
+         * Set the recurring option to true
+         * @return Boolean Is recurring requested yes or no.
+         * @access public
+         * @api
+         */
+        public function setRecurring( $bRecurring_ ) {
+            $this->_bRecurring = $bRecurring_;
+            return $this;
+        }
+
+        /**
+         * Get the status of the recurring option
+         * @return Boolean Is recurring set to true of false?
+         * @access public
+         * @api
+         */
+        public function getRecurring() {
+            return $this->_bRecurring;
+        }
+
 		/**
 		 * Registers the transaction with the cardgate payment gateway.
 		 * @return Transaction
@@ -577,7 +607,8 @@ namespace cardgate\api {
 				'url_failure'	=> $this->_sFailureUrl,
 				'url_pending'	=> $this->_sPendingUrl,
 				'description'	=> $this->_sDescription,
-				'reference'		=> $this->_sReference
+				'reference'		=> $this->_sReference,
+                'recurring'     => $this->_bRecurring
 			];
 			if ( ! is_null( $this->_oCustomer ) ) {
 				$aData['email'] = $this->_oCustomer->getEmail();
