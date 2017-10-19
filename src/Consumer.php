@@ -28,19 +28,19 @@
 namespace cardgate\api {
 
 	/**
-	 * Customer instance.
+	 * Consumer instance.
 	 *
-	 * @method Customer setEmail( string $sEmail_ )
+	 * @method Consumer setEmail( string $sEmail_ )
 	 * @method string getEmail()
 	 * @method boolean hasEmail()
-	 * @method Customer unsetEmail()
+	 * @method Consumer unsetEmail()
 	 *
-	 * @method Customer setPhone( string $sPhone_ )
+	 * @method Consumer setPhone( string $sPhone_ )
 	 * @method string getPhone()
 	 * @method boolean hasPhone()
-	 * @method Customer unsetPhone()
+	 * @method Consumer unsetPhone()
 	 */
-	final class Customer extends Entity {
+	final class Consumer extends Entity {
 
 		/**
 		 * @ignore

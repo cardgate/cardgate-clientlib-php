@@ -110,11 +110,11 @@ namespace cardgate\api {
 		private $_bRecurring = FALSE;
 
 		/**
-		 * The customer for the transaction.
-		 * @var Customer
+		 * The consumer for the transaction.
+		 * @var Consumer
 		 * @access protected
 		 */
-		protected $_oCustomer = NULL;
+		protected $_oConsumer = NULL;
 
 		/**
 		 * The cart for the transaction.
@@ -445,29 +445,29 @@ namespace cardgate\api {
 		}
 
 		/**
-		 * Set the customer for the transaction.
-		 * @param Customer $oCustomer_ The customer for the transaction.
+		 * Set the consumer for the transaction.
+		 * @param Consumer $oConsumer_ The consumer for the transaction.
 		 * @return Transaction
 		 * @throws Exception
 		 * @access public
 		 * @api
 		 */
-		public function setCustomer( Customer $oCustomer_ ) {
-			$this->_oCustomer = $oCustomer_;
+		public function setConsumer( Consumer $oConsumer_ ) {
+			$this->_oConsumer = $oConsumer_;
 			return $this;
 		}
 
 		/**
-		 * Get the customer for the transaction.
-		 * @return Customer The customer for the transaction.
+		 * Get the consumer for the transaction.
+		 * @return Consumer The consumer for the transaction.
 		 * @access public
 		 * @api
 		 */
-		public function getCustomer() {
-			if ( empty( $this->_oCustomer ) ) {
-				$this->_oCustomer = new Customer();
+		public function getConsumer() {
+			if ( empty( $this->_oConsumer ) ) {
+				$this->_oConsumer = new Consumer();
 			}
-			return $this->_oCustomer;
+			return $this->_oConsumer;
 		}
 
 		/**
@@ -643,14 +643,14 @@ namespace cardgate\api {
 				'reference'		=> $this->_sReference,
 				'recurring'		=> $this->_bRecurring ? '1' : '0'
 			];
-			if ( ! is_null( $this->_oCustomer ) ) {
-				$aData['email'] = $this->_oCustomer->getEmail();
-				$aData['phone'] = $this->_oCustomer->getPhone();
+			if ( ! is_null( $this->_oConsumer ) ) {
+				$aData['email'] = $this->_oConsumer->getEmail();
+				$aData['phone'] = $this->_oConsumer->getPhone();
 				$aData['consumer'] = array_merge(
-					$this->_oCustomer->address()->getData(),
-					$this->_oCustomer->shippingAddress()->getData( 'shipto_' )
+					$this->_oConsumer->address()->getData(),
+					$this->_oConsumer->shippingAddress()->getData( 'shipto_' )
 				);
-				$aData['country_id'] = $this->_oCustomer->address()->getCountry();
+				$aData['country_id'] = $this->_oConsumer->address()->getCountry();
 			}
 			if ( ! is_null( $this->_oCart ) ) {
 				$aData['cartitems'] = $this->_oCart->getData();
