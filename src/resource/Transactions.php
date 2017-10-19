@@ -59,12 +59,16 @@ namespace cardgate\api\resource {
 			}
 
 			$oTransaction = new \cardgate\api\Transaction( $this->_oClient, (int)$aResult['transaction']['site_id'], (int)$aResult['transaction']['amount'], $aResult['transaction']['currency_id'] );
-			$oTransaction
-				->setId( $aResult['transaction']['id'] )
-				->setDescription( $aResult['transaction']['description'] )
-				->setReference( $aResult['transaction']['reference'] )
-				->setPaymentMethod( $aResult['transaction']['option'] )
-			;
+			$oTransaction->setId( $aResult['transaction']['id'] );
+			if ( ! empty( $aResult['transaction']['description'] ) ) {
+				$oTransaction->setDescription( $aResult['transaction']['description'] );
+			}
+			if ( ! empty( $aResult['transaction']['reference'] ) ) {
+				$oTransaction->setReference( $aResult['transaction']['reference'] );
+			}
+			if ( ! empty( $aResult['transaction']['option'] ) ) {
+				$oTransaction->setPaymentMethod( $aResult['transaction']['option'] );
+			}
 
 			// TODO set consumer?
 

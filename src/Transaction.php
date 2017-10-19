@@ -96,6 +96,13 @@ namespace cardgate\api {
 		private $_sIssuer = NULL;
 
 		/**
+		 * The recurring flag
+		 * @var Boolean
+		 * @access private
+		 */
+		private $_bRecurring = FALSE;
+
+		/**
 		 * The customer for the transaction.
 		 * @var Customer
 		 * @access private
@@ -382,6 +389,29 @@ namespace cardgate\api {
 		}
 
 		/**
+		 * Set the recurring flag on the transaction.
+		 * @param Boolean $bRecurring_ Wether or not this transaction can be used for recurring.
+		 * @return Transaction
+		 * @throws Exception
+		 * @access public
+		 * @api
+		 */
+		public function setRecurring( $bRecurring_ ) {
+			$this->_bRecurring = $bRecurring_;
+			return $this;
+		}
+
+		/**
+		 * Get the recurring flag of the transaction.
+		 * @return Boolean Returns wether or not this transaction can be used for recurring.
+		 * @access public
+		 * @api
+		 */
+		public function getRecurring() {
+			return $this->_bRecurring;
+		}
+
+		/**
 		 * Set the customer for the transaction.
 		 * @param Customer $oCustomer_ The customer for the transaction.
 		 * @return Transaction
@@ -577,7 +607,8 @@ namespace cardgate\api {
 				'url_failure'	=> $this->_sFailureUrl,
 				'url_pending'	=> $this->_sPendingUrl,
 				'description'	=> $this->_sDescription,
-				'reference'		=> $this->_sReference
+				'reference'		=> $this->_sReference,
+				'recurring'		=> $this->_bRecurring ? '1' : '0'
 			];
 			if ( ! is_null( $this->_oCustomer ) ) {
 				$aData['email'] = $this->_oCustomer->getEmail();
@@ -640,12 +671,12 @@ namespace cardgate\api {
 		/**
 		 * This method can be used to (partially) refund a transaction.
 		 * @param Integer $iAmount_
-		 * @return Transaction
+		 * @return Transaction The new (refund) transaction.
 		 * @throws Exception
 		 * @access public
 		 * @api
 		 */
-		public function refund( $iAmount_ = NULL ) {
+		public function refund( $iAmount_ = NULL, $sDescription_ = NULL ) {
 			if (
 				! is_null( $iAmount_ )
 				&& ! is_integer( $iAmount_ )
@@ -656,7 +687,8 @@ namespace cardgate\api {
 			$aData = [
 				'site'			=> $this->_iSiteId,
 				'amount'		=> is_null( $iAmount_ ) ? $this->_iAmount : $iAmount_,
-				'currency_id'	=> $this->_sCurrency
+				'currency_id'	=> $this->_sCurrency,
+				'description'	=> $sDescription_
 			];
 
 			$sResource = "refund/{$this->_sId}/";
@@ -671,7 +703,42 @@ namespace cardgate\api {
 				throw new Exception( 'Transaction.Request.Invalid', 'invalid payment data returned' );
 			}
 
-			return $this;
+			return $this->_oClient->transactions()->get( $aResult['refund']['transaction'] );
+		}
+
+		/**
+		 * This method can be used to recur a transaction.
+		 * @param Integer $iAmount_
+		 * @return Transaction The new (recurred) transaction.
+		 * @throws Exception
+		 * @access public
+		 * @api
+		 */
+		public function recur( $iAmount_, $sReference_ = NULL, $sDescription_ = NULL ) {
+			if ( ! is_integer( $iAmount_ ) ) {
+				throw new Exception( 'Transaction.Amount.Invalid', 'invalid amount: ' . $iAmount_ );
+			}
+
+			$aData = [
+				'amount'		=> $iAmount_,
+				'currency_id'	=> $this->_sCurrency,
+				'reference'		=> $sReference_,
+				'description'	=> $sDescription_
+			];
+
+			$sResource = "recurring/{$this->_sId}/";
+
+			$aData = array_filter( $aData ); // remove NULL values
+			$aResult = $this->_oClient->doRequest( $sResource, $aData, 'POST' );
+
+			if (
+				empty( $aResult['recurring'] )
+				|| empty( $aResult['recurring']['transaction_id'] )
+			) {
+				throw new Exception( 'Transaction.Request.Invalid', 'invalid payment data returned' );
+			}
+
+			return $this->_oClient->transactions()->get( $aResult['recurring']['transaction_id'] );
 		}
 
 	}
