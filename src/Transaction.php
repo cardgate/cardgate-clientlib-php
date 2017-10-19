@@ -30,14 +30,14 @@ namespace cardgate\api {
 	/**
 	 * Transaction instance.
 	 */
-	final class Transaction {
+	class Transaction {
 
 		/**
 		 * The client associated with this transaction.
 		 * @var Client
-		 * @access private
+		 * @access protected
 		 */
-		private $_oClient;
+		protected $_oClient;
 
 		/**
 		 * The transaction id.
@@ -47,102 +47,109 @@ namespace cardgate\api {
 		private $_sId;
 
 		/**
-		 * The transaction site id.
+		 * The site id to use for payments.
 		 * @var Integer
-		 * @access private
+		 * @access protected
 		 */
-		private $_iSiteId;
+		protected $_iSiteId;
+
+		/**
+		 * The site key to use for payments.
+		 * @var String
+		 * @access protected
+		 */
+		protected $_sSiteKey;
 
 		/**
 		 * The transaction amount in cents.
 		 * @var Integer
-		 * @access private
+		 * @access protected
 		 */
-		private $_iAmount;
+		protected $_iAmount;
 
 		/**
 		 * The transaction currency (ISO 4217).
 		 * @var String
-		 * @access private
+		 * @access protected
 		 */
-		private $_sCurrency;
+		protected $_sCurrency;
 
 		/**
 		 * The description for the transaction.
 		 * @var String
-		 * @access private
+		 * @access protected
 		 */
-		private $_sDescription;
+		protected $_sDescription;
 
 		/**
 		 * A reference for the transaction.
 		 * @var String
-		 * @access private
+		 * @access protected
 		 */
-		private $_sReference;
+		protected $_sReference;
 
 		/**
 		 * The payment method for the transaction.
 		 * @var Method
-		 * @access private
+		 * @access protected
 		 */
-		private $_oPaymentMethod = NULL;
+		protected $_oPaymentMethod = NULL;
 
 		/**
 		 * The payment method issuer for the transaction.
 		 * @var String
-		 * @access private
+		 * @access protected
 		 */
-		private $_sIssuer = NULL;
+		protected $_sIssuer = NULL;
 
 		/**
 		 * The customer for the transaction.
 		 * @var Customer
-		 * @access private
+		 * @access protected
 		 */
-		private $_oCustomer = NULL;
+		protected $_oCustomer = NULL;
 
 		/**
 		 * The cart for the transaction.
 		 * @var Cart
-		 * @access private
+		 * @access protected
 		 */
-		private $_oCart = NULL;
+		protected $_oCart = NULL;
 
 		/**
 		 * The URL to send payment callback updates to.
 		 * @var String
-		 * @access private
+		 * @access protected
 		 */
-		private $_sCallbackUrl = NULL;
+		protected $_sCallbackUrl = NULL;
 
 		/**
 		 * The URL to redirect to on success.
 		 * @var String
-		 * @access private
+		 * @access protected
 		 */
-		private $_sSuccessUrl = NULL;
+		protected $_sSuccessUrl = NULL;
 
 		/**
 		 * The URL to redirect to on failre.
 		 * @var String
-		 * @access private
+		 * @access protected
 		 */
-		private $_sFailureUrl = NULL;
+		protected $_sFailureUrl = NULL;
 
 		/**
 		 * The URL to redirect to on pending.
 		 * @var String
-		 * @access private
+		 * @access protected
 		 */
-		private $_sPendingUrl = NULL;
+		protected $_sPendingUrl = NULL;
 
 		/**
 		 * The URL to redirect to after initial transaction register.
 		 * @var String
-		 * @access private
+		 * @access protected
 		 */
-		private $_sActionUrl = NULL;
+		protected $_sActionUrl = NULL;
 
 		/**
 		 * The constructor.
@@ -193,29 +200,55 @@ namespace cardgate\api {
 		}
 
 		/**
-		 * Configure the transaction object with a site id.
-		 * @param Integer $iSiteId_ Site id to set.
-		 * @return Transaction
+		 * Configure the client object with a site id.
+		 * @param String $iSiteId_ Site id to set.
+		 * @return Client
 		 * @throws Exception
 		 * @access public
 		 * @api
 		 */
 		public function setSiteId( $iSiteId_ ) {
 			if ( ! is_integer( $iSiteId_ ) ) {
-				throw new Exception( 'Transaction.SiteId.Invalid', 'invalid site: ' . $iSiteId_ );
+				throw new Exception( 'Client.SiteId.Invalid', 'invalid site: ' . $iSiteId_ );
 			}
 			$this->_iSiteId = $iSiteId_;
 			return $this;
 		}
 
 		/**
-		 * Get the site id associated with this transaction.
-		 * @return Integer The site id associated with this transaction.
+		 * Get the site id associated with this client.
+		 * @return String The merchant API key.
 		 * @access public
 		 * @api
 		 */
 		public function getSiteId() {
 			return $this->_iSiteId;
+		}
+
+		/**
+		 * Set the Site key to authenticate the hash in the request.
+		 * @param String $sSiteKey_ The site key to set.
+		 * @return Client
+		 * @throws Exception
+		 * @access public
+		 * @api
+		 */
+		public function setSiteKey( $sSiteKey_ ) {
+			if ( ! is_string( $sSiteKey_ ) ) {
+				throw new Exception( 'Client.SiteKey.Invalid', 'invalid site key: ' . $sSiteKey_ );
+			}
+			$this->_sSiteKey = $sSiteKey_;
+			return $this;
+		}
+
+		/**
+		 * Get the Merchant API key to authenticate the transaction request with.
+		 * @return String The merchant API key.
+		 * @access public
+		 * @api
+		 */
+		public function getSiteKey() {
+			return $this->_sSiteKey;
 		}
 
 		/**
@@ -569,7 +602,7 @@ namespace cardgate\api {
 		 */
 		public function register() {
 			$aData = [
-				'site'			=> $this->_iSiteId,
+				'site_id' 		=> $this->_iSiteId,
 				'amount'		=> $this->_iAmount,
 				'currency_id'	=> $this->_sCurrency,
 				'url_callback'	=> $this->_sCallbackUrl,
@@ -580,10 +613,12 @@ namespace cardgate\api {
 				'reference'		=> $this->_sReference
 			];
 			if ( ! is_null( $this->_oCustomer ) ) {
-				$aData['email'] = $this->_oCustomer->getEmail();
-				$aData['phone'] = $this->_oCustomer->getPhone();
-				$aData = array_merge( $aData, $this->_oCustomer->address()->getData() );
-				$aData = array_merge( $aData, $this->_oCustomer->shippingAddress()->getData( 'shipto_' ) );
+				$aData['consumer'] = array_merge( 
+					$this->_oCustomer->address()->getData() 
+					, $this->_oCustomer->shippingAddress()->getData( 'shipto_' ) 
+				);
+
+				$aData['country_id'] = $this->_oCustomer->address()->getCountry();
 			}
 			if ( ! is_null( $this->_oCart ) ) {
 				$aData['cartitems'] = $this->_oCart->getData();
@@ -654,7 +689,6 @@ namespace cardgate\api {
 			}
 
 			$aData = [
-				'site'			=> $this->_iSiteId,
 				'amount'		=> is_null( $iAmount_ ) ? $this->_iAmount : $iAmount_,
 				'currency_id'	=> $this->_sCurrency
 			];

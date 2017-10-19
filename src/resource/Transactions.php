@@ -59,6 +59,7 @@ namespace cardgate\api\resource {
 			}
 
 			$oTransaction = new \cardgate\api\Transaction( $this->_oClient, (int)$aResult['transaction']['site_id'], (int)$aResult['transaction']['amount'], $aResult['transaction']['currency_id'] );
+			
 			$oTransaction
 				->setId( $aResult['transaction']['id'] )
 				->setDescription( $aResult['transaction']['description'] )
