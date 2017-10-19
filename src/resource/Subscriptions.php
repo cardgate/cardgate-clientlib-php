@@ -58,31 +58,37 @@ namespace cardgate\api\resource {
 				$aDetails_ = array_merge( $aDetails_, $aResult['subscription'] );
 			}
 
-			$oSubscription = new \cardgate\api\Subscription( $this->_oClient, (int)$aResult['subscription']['site_id'], (int)$aResult['subscription']['amount'], $aResult['subscription']['currency_id'] );
+			$oSubscription = new \cardgate\api\Subscription( 
+				$this->_oClient
+				, (int) $aResult['subscription']['site_id']
+				, (int) $aResult['subscription']['period']
+				, $aResult['subscription']['period_type']
+				, (int) $aResult['subscription']['period_price'] 
+			);
+
 			$oSubscription
-				->setId( $aResult['subscription']['id'] )
+				->setId( $aResult['subscription']['nn_id'] )
 				->setDescription( $aResult['subscription']['description'] )
 				->setReference( $aResult['subscription']['reference'] )
-				->setPaymentMethod( $aResult['subscription']['option'] )
 			;
-
-			// TODO set consumer?
 
 			return $oSubscription;
 		}
 
 		/**
 		 * This method can be used to create a new subscription.
-		 * @param Integer $iSiteId_ Site id to create subscription for.
-		 * @param Integer $iAmount_ The amount of the subscription in cents.
+		 * @param Integer $iSiteId_ Site id to create the subscription for.
+		 * @param Integer $iPeriod_ The period length of the subscription.
+		 * @param String $sPeriodType_ The period type of the subscription (e.g. day, week, month, year).
+		 * @param Integer $iPeriodAmount_ The period amount of the subscription in cents.
 		 * @param String $sCurrency_ Currency (ISO 4217)
 		 * @return \cardgate\api\Subscription
 		 * @throws Exception
 		 * @access public
 		 * @api
 		 */
-		public function create( $iSiteId_, $iAmount_, $sCurrency_ = 'EUR' ) {
-			return new \cardgate\api\Subscription( $this->_oClient, $iSiteId_, $iAmount_, $sCurrency_ );
+		public function create( $iSiteId_, $iPeriod_, $sPeriodType_, $iPeriodAmount_, $sCurrency_ = 'EUR' ) {
+			return new \cardgate\api\Subscription( $this->_oClient, $iSiteId_, $iPeriod_, $sPeriodType_, $iPeriodAmount_, $sCurrency_ );
 		}
 
 	}
