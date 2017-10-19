@@ -58,7 +58,12 @@ namespace cardgate\api\resource {
 				$aDetails_ = array_merge( $aDetails_, $aResult['transaction'] );
 			}
 
-			$oTransaction = new \cardgate\api\Transaction( $this->_oClient, (int)$aResult['transaction']['site_id'], (int)$aResult['transaction']['amount'], $aResult['transaction']['currency_id'] );
+			$oTransaction = new \cardgate\api\Transaction(
+				$this->_oClient,
+				(int)$aResult['transaction']['site_id'],
+				(int)$aResult['transaction']['amount'],
+				$aResult['transaction']['currency_id']
+			);
 			$oTransaction->setId( $aResult['transaction']['id'] );
 			if ( ! empty( $aResult['transaction']['description'] ) ) {
 				$oTransaction->setDescription( $aResult['transaction']['description'] );
@@ -69,8 +74,6 @@ namespace cardgate\api\resource {
 			if ( ! empty( $aResult['transaction']['option'] ) ) {
 				$oTransaction->setPaymentMethod( $aResult['transaction']['option'] );
 			}
-
-			// TODO set consumer?
 
 			return $oTransaction;
 		}

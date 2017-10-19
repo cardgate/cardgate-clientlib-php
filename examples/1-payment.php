@@ -27,6 +27,9 @@ try {
 	// Configure customer.
 	$oCustomer = $oTransaction->getCustomer();
 
+	$oCustomer->setEmail( 'john@doe.com' );
+	$oCustomer->setPhone( '0123456789' );
+
 	$oCustomer->address()->setFirstName( 'John' );
 	$oCustomer->address()->setInitials( 'J.A.N.' );
 	$oCustomer->address()->setLastName( 'Doe' );
@@ -34,8 +37,6 @@ try {
 	$oCustomer->address()->setZipCode( '34342' );
 	$oCustomer->address()->setCity( 'Minneapolis' );
 	$oCustomer->address()->setCountry( 'US' );
-	$oCustomer->address()->setEmail( 'john@doe.com' );
-	$oCustomer->address()->setPhone( '0123456789' );
 
 	$oCustomer->shippingAddress()->setFirstName( 'Judy' );
 	$oCustomer->shippingAddress()->setInitials( 'J.' );

@@ -5,9 +5,7 @@ try {
 		die( 'init.php missing - copy or rename the init.example.php to init.php and configure it with your account details' );
 	}
 
-	if (
-		! empty( $_POST['subscription_id'] )
-	) {
+	if ( ! empty( $_POST['subscription_id'] ) ) {
 
 		$oSubscription = $oCardGate->subscriptions()->get( $_POST['subscription_id'] );
 		if ( TRUE == $oSubscription->changeStatus( $_POST['action'] ) ) {
@@ -20,16 +18,14 @@ try {
 
 		echo '<h5>Change subscription</h5>';
 		echo '<form method="post" id="2" action="8-subscription-statuschange.php">';
-		echo 'Subscr ID <input type="text" name="subscription_id" value=""> <br>';
-		echo '<br>';
+		echo 'Subscription Id <input type="text" name="subscription_id" value=""> ';
 		echo 'Action <select name="action">';
 
 		foreach( [ 'reactivate' , 'suspend', 'cancel', 'deactivate' ] as $aPeriod ) {
 			echo '<option value="' . $aPeriod . '">' . ucfirst( $aPeriod ) . '</option>';
 		}
 
-		echo '</select><br> ';
-		echo '<br>';
+		echo '</select> ';
 		echo '<button>Submit</button>';
 		echo '</form>';
 	}

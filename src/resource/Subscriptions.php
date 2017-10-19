@@ -58,19 +58,20 @@ namespace cardgate\api\resource {
 				$aDetails_ = array_merge( $aDetails_, $aResult['subscription'] );
 			}
 
-			$oSubscription = new \cardgate\api\Subscription( 
-				$this->_oClient
-				, (int) $aResult['subscription']['site_id']
-				, (int) $aResult['subscription']['period']
-				, $aResult['subscription']['period_type']
-				, (int) $aResult['subscription']['period_price'] 
+			$oSubscription = new \cardgate\api\Subscription(
+				$this->_oClient,
+				(int) $aResult['subscription']['site_id'],
+				(int) $aResult['subscription']['period'],
+				$aResult['subscription']['period_type'],
+				(int) $aResult['subscription']['period_price']
 			);
-
-			$oSubscription
-				->setId( $aResult['subscription']['nn_id'] )
-				->setDescription( $aResult['subscription']['description'] )
-				->setReference( $aResult['subscription']['reference'] )
-			;
+			$oSubscription->setId( $aResult['subscription']['nn_id'] );
+			if ( ! empty( $aResult['subscription']['description'] ) ) {
+				$oSubscription->setDescription( $aResult['subscription']['description'] );
+			}
+			if ( ! empty( $aResult['subscription']['reference'] ) ) {
+				$oSubscription->setReference( $aResult['subscription']['reference'] );
+			}
 
 			return $oSubscription;
 		}

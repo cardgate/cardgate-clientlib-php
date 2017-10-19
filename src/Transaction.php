@@ -207,24 +207,24 @@ namespace cardgate\api {
 		}
 
 		/**
-		 * Configure the client object with a site id.
-		 * @param String $iSiteId_ Site id to set.
-		 * @return Client
+		 * Configure the transaction object with a site id.
+		 * @param Integer $iSiteId_ Site id to set.
+		 * @return Transaction
 		 * @throws Exception
 		 * @access public
 		 * @api
 		 */
 		public function setSiteId( $iSiteId_ ) {
 			if ( ! is_integer( $iSiteId_ ) ) {
-				throw new Exception( 'Client.SiteId.Invalid', 'invalid site: ' . $iSiteId_ );
+				throw new Exception( 'Transaction.SiteId.Invalid', 'invalid site: ' . $iSiteId_ );
 			}
 			$this->_iSiteId = $iSiteId_;
 			return $this;
 		}
 
 		/**
-		 * Get the site id associated with this client.
-		 * @return String The merchant API key.
+		 * Get the site id associated with this transaction.
+		 * @return Integer The site id associated with this transaction.
 		 * @access public
 		 * @api
 		 */
@@ -644,11 +644,12 @@ namespace cardgate\api {
 				'recurring'		=> $this->_bRecurring ? '1' : '0'
 			];
 			if ( ! is_null( $this->_oCustomer ) ) {
-				$aData['consumer'] = array_merge( 
-					$this->_oCustomer->address()->getData() 
-					, $this->_oCustomer->shippingAddress()->getData( 'shipto_' ) 
+				$aData['email'] = $this->_oCustomer->getEmail();
+				$aData['phone'] = $this->_oCustomer->getPhone();
+				$aData['consumer'] = array_merge(
+					$this->_oCustomer->address()->getData(),
+					$this->_oCustomer->shippingAddress()->getData( 'shipto_' )
 				);
-
 				$aData['country_id'] = $this->_oCustomer->address()->getCountry();
 			}
 			if ( ! is_null( $this->_oCart ) ) {

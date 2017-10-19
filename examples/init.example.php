@@ -11,5 +11,5 @@ $oCardGate->version()->setPlatformVersion( phpversion() );
 $oCardGate->version()->setPluginName( 'Custom Implementation' );
 $oCardGate->version()->setPluginVersion( '0.0.1' );
 
-$iSiteId = 1;
-$sSiteKey = '<optional site key>';
+//$iSiteId = <optional site id>;
+//$sSiteKey = '<optional site key>';

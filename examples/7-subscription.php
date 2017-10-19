@@ -17,6 +17,9 @@ try {
 		// Configure customer.
 		$oCustomer = $oSubscription->getCustomer();
 
+		$oCustomer->setEmail( 'john@doe.com' );
+		$oCustomer->setPhone( '0123456789' );
+
 		$oCustomer->address()->setFirstName( 'John' );
 		$oCustomer->address()->setInitials( 'J.A.N.' );
 		$oCustomer->address()->setLastName( 'Doe' );
@@ -24,9 +27,7 @@ try {
 		$oCustomer->address()->setZipCode( '34342' );
 		$oCustomer->address()->setCity( 'Minneapolis' );
 		$oCustomer->address()->setCountry( 'US' );
-		$oCustomer->address()->setEmail( 'john@doe.com' );
-		$oCustomer->address()->setPhone( '0123456789' );
-		
+
 		$oCustomer->shippingAddress()->setFirstName( 'Judy' );
 		$oCustomer->shippingAddress()->setInitials( 'J.' );
 		$oCustomer->shippingAddress()->setLastName( 'Doe' );
@@ -67,16 +68,15 @@ try {
 
 		echo '<h5>New subscription</h5>';
 		echo '<form method="post" action="7-subscription.php">';
-		echo 'Amount (cents): <input type="number" name="period_amount" value="660596"> <br>';
-		echo '<br>';
+		echo 'Amount (cents): <input type="number" name="period_amount" value="660596"> ';
 		echo 'Every: <input type="number" name="period" value="1" style="width:40px;"> ';
 		echo '<select name="period_type">';
 
 		foreach( [
-			[ 'id' => 'day',  'name' => 'Days' ],
-			[ 'id' => 'week',  'name' => 'Weeks' ],
+			[ 'id' => 'day', 'name' => 'Days' ],
+			[ 'id' => 'week', 'name' => 'Weeks' ],
 			[ 'id' => 'month', 'name' => 'Months', 'selected' => TRUE ],
-			[ 'id' => 'year',  'name' => 'Years' ],
+			[ 'id' => 'year', 'name' => 'Years' ],
 		] as $aPeriod ) {
 			echo '<option value="' . $aPeriod['id'] . '"';
 			if ( isset( $aPeriod['selected'] ) ) {
@@ -85,8 +85,7 @@ try {
 			echo '>' . $aPeriod['name'] . '</option>';
 		}
 
-		echo '</select><br> ';
-		echo '<br>';
+		echo '</select> ';
 		echo '<button>Submit</button>';
 		echo '</form>';
 	}
