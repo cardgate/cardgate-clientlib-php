@@ -4,13 +4,8 @@
 /doc
 /doc.generate.sh
 INTERNAL
-
 *.log
-
 git.php
-
 cardgate-clientlib.sublime-project
-
 cardgate-clientlib.sublime-workspace
-
 sftp-config.json

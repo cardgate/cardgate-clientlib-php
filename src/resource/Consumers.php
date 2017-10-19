@@ -30,17 +30,17 @@ namespace cardgate\api\resource {
 	/**
 	 * CardGate resource object.
 	 */
-	final class Customers extends Base {
+	final class Consumers extends Base {
 
 		/**
-		 * This method can be used to create a new customer.
-		 * @return \cardgate\api\Customer
+		 * This method can be used to create a new consumer.
+		 * @return \cardgate\api\Consumer
 		 * @throws Exception
 		 * @access public
 		 * @api
 		 */
 		public function create() {
-			return new \cardgate\api\Customer();
+			return new \cardgate\api\Consumer();
 		}
 
 	}

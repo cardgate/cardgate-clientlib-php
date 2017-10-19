@@ -89,7 +89,7 @@ namespace cardgate\api {
 		private $_iTrialPeriodPrice;
 
 		/**
-		 * The start date (UTC) of the subscription in YYYY-MM-DD hh:mm:ss format. 
+		 * The start date (UTC) of the subscription in YYYY-MM-DD hh:mm:ss format.
 		 * If none is given the current date will be used.
 		 * @var String
 		 * @access private
@@ -97,7 +97,7 @@ namespace cardgate\api {
 		private $_sStartDate;
 
 		/**
-		 * The end date (UTC) of the subscription in YYYY-MM-DD hh:mm:ss format. 
+		 * The end date (UTC) of the subscription in YYYY-MM-DD hh:mm:ss format.
 		 * If none is given the subscription will never end.
 		 * @var String
 		 * @access private
@@ -189,8 +189,8 @@ namespace cardgate\api {
 		 * @api
 		 */
 		public function setPeriodType( $sPeriodType_ ) {
-			if ( 
-				! is_string( $sPeriodType_ ) 
+			if (
+				! is_string( $sPeriodType_ )
 				|| ! in_array( $sPeriodType_, [ 'day', 'week', 'month', 'year' ] )
 			) {
 				throw new Exception( 'Subscription.Period.Type.Invalid', 'invalid period type: ' . $sPeriodType_ );
@@ -287,8 +287,8 @@ namespace cardgate\api {
 		 * @api
 		 */
 		public function setTrialPeriodType( $sTrialPeriodType_ ) {
-			if ( 
-				! is_string( $sTrialPeriodType_ ) 
+			if (
+				! is_string( $sTrialPeriodType_ )
 				|| ! in_array( $sTrialPeriodType_, [ 'day', 'week', 'month', 'year' ] )
 			) {
 				throw new Exception( 'Subscription.Period.Type.Invalid', 'invalid trial period type: ' . $sTrialPeriodType_ );
@@ -424,20 +424,21 @@ namespace cardgate\api {
 				'start_date'			=> $this->_sStartDate,
 				'end_date'				=> $this->_sEndDate,
 			];
-			if ( ! is_null( $this->_oCustomer ) ) {
-				$aData['consumer'] = array_merge( 
-					$this->_oCustomer->address()->getData() 
-					, $this->_oCustomer->shippingAddress()->getData( 'shipto_' ) 
+			if ( ! is_null( $this->_oConsumer ) ) {
+				$aData['email'] = $this->_oConsumer->getEmail();
+				$aData['phone'] = $this->_oConsumer->getPhone();
+				$aData['consumer'] = array_merge(
+					$this->_oConsumer->address()->getData(),
+					$this->_oConsumer->shippingAddress()->getData( 'shipto_' )
 				);
-
-				$aData['country_id'] = $this->_oCustomer->address()->getCountry();
+				$aData['country_id'] = $this->_oConsumer->address()->getCountry();
 			}
 			if ( ! is_null( $this->_oCart ) ) {
 				$aData['cartitems'] = $this->_oCart->getData();
 			}
 
 			$sResource = 'subscription/register/';
-			
+
 			if ( ! empty( $this->_oPaymentMethod ) ) {
 				$aData['pt'] = $this->_oPaymentMethod->getId();
 				$aData['issuer'] = $this->_sIssuer;
@@ -493,7 +494,7 @@ namespace cardgate\api {
 			if ( FALSE == $aResult['success'] ) {
 				throw new Exception( 'Subscription.Request.Invalid', 'error changing status' );
 			}
-			
+
 			return TRUE;
 		}
 

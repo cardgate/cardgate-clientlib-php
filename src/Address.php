@@ -76,16 +76,6 @@ namespace cardgate\api {
 	 * @method string getCountry() Returns the country.
 	 * @method boolean hasCountry() Checks for existence of country.
 	 * @method Address unsetCountry() Unsets the country.
-	 *
-	 * @method Address setPhone( string $sPhone_ ) Sets the phonenumber.
-	 * @method string getPhone() Returns the phonenumber.
-	 * @method boolean hasPhone() Checks for existence of phonenumber.
-	 * @method Address unsetPhone() Unsets the phonenumber.
-	 *
-	 * @method string getEmail() Returns the emailaddress.
-	 * @method boolean hasEmail() Checks for existence of emailaddress.
-	 * @method Address unsetEmail() Unsets the emailaddress.
-
 	 */
 	final class Address extends Entity {
 
@@ -103,9 +93,7 @@ namespace cardgate\api {
 			'Address'		=> 'address',
 			'City'			=> 'city',
 			'ZipCode'		=> 'zipcode',
-			'Country'		=> 'country_id',
-			'Phone'			=> 'phone',
-			'Email'			=> 'email',
+			'Country'		=> 'country_id'
 		];
 
 		/**
@@ -160,24 +148,6 @@ namespace cardgate\api {
 				throw new Exception( 'Address.Country.Invalid', 'invalid country: ' . $sCountry_ );
 			}
 			return parent::setCountry( $sCountry_ );
-		}
-
-		/**
-		 * Set's the emailaddress.
-		 * @param string $sEmail_ The emailaddress to set.
-		 * @return Address Returns this, makes the call chainable.
-		 * @throws Exception
-		 * @access public
-		 * @api
-		 */
-		function setEmail( $sEmail_ ) {
-			if (
-				! is_string( $sEmail_ )
-				|| FALSE == filter_var( $sEmail_, FILTER_VALIDATE_EMAIL)
-			) {
-				throw new Exception( 'Address.Email.Invalid', 'invalid email: ' . $sEmail_ );
-			}
-			return parent::setEmail( $sEmail_ );
 		}
 
 	}

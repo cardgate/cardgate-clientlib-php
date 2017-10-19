@@ -103,11 +103,18 @@ namespace cardgate\api {
 		protected $_sIssuer = NULL;
 
 		/**
-		 * The customer for the transaction.
-		 * @var Customer
+		 * The recurring flag
+		 * @var Boolean
+		 * @access private
+		 */
+		private $_bRecurring = FALSE;
+
+		/**
+		 * The consumer for the transaction.
+		 * @var Consumer
 		 * @access protected
 		 */
-		protected $_oCustomer = NULL;
+		protected $_oConsumer = NULL;
 
 		/**
 		 * The cart for the transaction.
@@ -200,24 +207,24 @@ namespace cardgate\api {
 		}
 
 		/**
-		 * Configure the client object with a site id.
-		 * @param String $iSiteId_ Site id to set.
-		 * @return Client
+		 * Configure the transaction object with a site id.
+		 * @param Integer $iSiteId_ Site id to set.
+		 * @return Transaction
 		 * @throws Exception
 		 * @access public
 		 * @api
 		 */
 		public function setSiteId( $iSiteId_ ) {
 			if ( ! is_integer( $iSiteId_ ) ) {
-				throw new Exception( 'Client.SiteId.Invalid', 'invalid site: ' . $iSiteId_ );
+				throw new Exception( 'Transaction.SiteId.Invalid', 'invalid site: ' . $iSiteId_ );
 			}
 			$this->_iSiteId = $iSiteId_;
 			return $this;
 		}
 
 		/**
-		 * Get the site id associated with this client.
-		 * @return String The merchant API key.
+		 * Get the site id associated with this transaction.
+		 * @return Integer The site id associated with this transaction.
 		 * @access public
 		 * @api
 		 */
@@ -415,29 +422,52 @@ namespace cardgate\api {
 		}
 
 		/**
-		 * Set the customer for the transaction.
-		 * @param Customer $oCustomer_ The customer for the transaction.
+		 * Set the recurring flag on the transaction.
+		 * @param Boolean $bRecurring_ Wether or not this transaction can be used for recurring.
 		 * @return Transaction
 		 * @throws Exception
 		 * @access public
 		 * @api
 		 */
-		public function setCustomer( Customer $oCustomer_ ) {
-			$this->_oCustomer = $oCustomer_;
+		public function setRecurring( $bRecurring_ ) {
+			$this->_bRecurring = $bRecurring_;
 			return $this;
 		}
 
 		/**
-		 * Get the customer for the transaction.
-		 * @return Customer The customer for the transaction.
+		 * Get the recurring flag of the transaction.
+		 * @return Boolean Returns wether or not this transaction can be used for recurring.
 		 * @access public
 		 * @api
 		 */
-		public function getCustomer() {
-			if ( empty( $this->_oCustomer ) ) {
-				$this->_oCustomer = new Customer();
+		public function getRecurring() {
+			return $this->_bRecurring;
+		}
+
+		/**
+		 * Set the consumer for the transaction.
+		 * @param Consumer $oConsumer_ The consumer for the transaction.
+		 * @return Transaction
+		 * @throws Exception
+		 * @access public
+		 * @api
+		 */
+		public function setConsumer( Consumer $oConsumer_ ) {
+			$this->_oConsumer = $oConsumer_;
+			return $this;
+		}
+
+		/**
+		 * Get the consumer for the transaction.
+		 * @return Consumer The consumer for the transaction.
+		 * @access public
+		 * @api
+		 */
+		public function getConsumer() {
+			if ( empty( $this->_oConsumer ) ) {
+				$this->_oConsumer = new Consumer();
 			}
-			return $this->_oCustomer;
+			return $this->_oConsumer;
 		}
 
 		/**
@@ -610,15 +640,17 @@ namespace cardgate\api {
 				'url_failure'	=> $this->_sFailureUrl,
 				'url_pending'	=> $this->_sPendingUrl,
 				'description'	=> $this->_sDescription,
-				'reference'		=> $this->_sReference
+				'reference'		=> $this->_sReference,
+				'recurring'		=> $this->_bRecurring ? '1' : '0'
 			];
-			if ( ! is_null( $this->_oCustomer ) ) {
-				$aData['consumer'] = array_merge( 
-					$this->_oCustomer->address()->getData() 
-					, $this->_oCustomer->shippingAddress()->getData( 'shipto_' ) 
+			if ( ! is_null( $this->_oConsumer ) ) {
+				$aData['email'] = $this->_oConsumer->getEmail();
+				$aData['phone'] = $this->_oConsumer->getPhone();
+				$aData['consumer'] = array_merge(
+					$this->_oConsumer->address()->getData(),
+					$this->_oConsumer->shippingAddress()->getData( 'shipto_' )
 				);
-
-				$aData['country_id'] = $this->_oCustomer->address()->getCountry();
+				$aData['country_id'] = $this->_oConsumer->address()->getCountry();
 			}
 			if ( ! is_null( $this->_oCart ) ) {
 				$aData['cartitems'] = $this->_oCart->getData();
@@ -675,12 +707,12 @@ namespace cardgate\api {
 		/**
 		 * This method can be used to (partially) refund a transaction.
 		 * @param Integer $iAmount_
-		 * @return Transaction
+		 * @return Transaction The new (refund) transaction.
 		 * @throws Exception
 		 * @access public
 		 * @api
 		 */
-		public function refund( $iAmount_ = NULL ) {
+		public function refund( $iAmount_ = NULL, $sDescription_ = NULL ) {
 			if (
 				! is_null( $iAmount_ )
 				&& ! is_integer( $iAmount_ )
@@ -690,7 +722,8 @@ namespace cardgate\api {
 
 			$aData = [
 				'amount'		=> is_null( $iAmount_ ) ? $this->_iAmount : $iAmount_,
-				'currency_id'	=> $this->_sCurrency
+				'currency_id'	=> $this->_sCurrency,
+				'description'	=> $sDescription_
 			];
 
 			$sResource = "refund/{$this->_sId}/";
@@ -705,7 +738,42 @@ namespace cardgate\api {
 				throw new Exception( 'Transaction.Request.Invalid', 'invalid payment data returned' );
 			}
 
-			return $this;
+			return $this->_oClient->transactions()->get( $aResult['refund']['transaction'] );
+		}
+
+		/**
+		 * This method can be used to recur a transaction.
+		 * @param Integer $iAmount_
+		 * @return Transaction The new (recurred) transaction.
+		 * @throws Exception
+		 * @access public
+		 * @api
+		 */
+		public function recur( $iAmount_, $sReference_ = NULL, $sDescription_ = NULL ) {
+			if ( ! is_integer( $iAmount_ ) ) {
+				throw new Exception( 'Transaction.Amount.Invalid', 'invalid amount: ' . $iAmount_ );
+			}
+
+			$aData = [
+				'amount'		=> $iAmount_,
+				'currency_id'	=> $this->_sCurrency,
+				'reference'		=> $sReference_,
+				'description'	=> $sDescription_
+			];
+
+			$sResource = "recurring/{$this->_sId}/";
+
+			$aData = array_filter( $aData ); // remove NULL values
+			$aResult = $this->_oClient->doRequest( $sResource, $aData, 'POST' );
+
+			if (
+				empty( $aResult['recurring'] )
+				|| empty( $aResult['recurring']['transaction_id'] )
+			) {
+				throw new Exception( 'Transaction.Request.Invalid', 'invalid payment data returned' );
+			}
+
+			return $this->_oClient->transactions()->get( $aResult['recurring']['transaction_id'] );
 		}
 
 	}

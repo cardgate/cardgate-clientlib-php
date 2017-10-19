@@ -40,12 +40,12 @@ namespace cardgate\api {
 		/**
 		 * Url to use for production.
 		 */
-		const URL_PRODUCTION = 'https://secure.curopayments.net/rest/v1/curo/';
+		const URL_PRODUCTION = 'https://bob.secure.curopayments.dev/rest/v1/curo/';
 
 		/**
 		 * Url to use for testing.
 		 */
-		const URL_STAGING = 'https://secure-staging.curopayments.net/rest/v1/curo/';
+		const URL_STAGING = 'https://bob.secure.curopayments.dev/rest/v1/curo/';
 
 		/**
 		 * Toggle testmode variable.
@@ -104,11 +104,11 @@ namespace cardgate\api {
 		private $_oSubscriptions = NULL;
 
 		/**
-		 * The customers resource.
-		 * @var resource\Customers
+		 * The consumers resource.
+		 * @var resource\Consumers
 		 * @access private
 		 */
-		private $_oCustomers = NULL;
+		private $_oConsumers = NULL;
 
 		/**
 		 * The issuers resource.
@@ -369,16 +369,16 @@ namespace cardgate\api {
 		}
 
 		/**
-		 * Accessor for the customers resource.
-		 * @return resource\Customers
+		 * Accessor for the consumers resource.
+		 * @return resource\Consumers
 		 * @access public
 		 * @api
 		 */
-		public function customers() {
-			if ( NULL == $this->_oCustomers ) {
-				$this->_oCustomers = new resource\Customers( $this );
+		public function consumers() {
+			if ( NULL == $this->_oConsumers ) {
+				$this->_oConsumers = new resource\Consumers( $this );
 			}
-			return $this->_oCustomers;
+			return $this->_oConsumers;
 		}
 
 		/**

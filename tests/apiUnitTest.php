@@ -1,5 +1,5 @@
 <?php
-class apiUnitTest extends PHPUnit_Framework_TestCase {
+class apiUnitTest extends \PHPUnit\Framework\TestCase {
 
 	private $_oClient;
 
