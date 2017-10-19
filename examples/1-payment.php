@@ -24,27 +24,27 @@ try {
 		$oTransaction->setPaymentMethod( cardgate\api\Method::IDEAL );
 	}
 
-	// Configure customer.
-	$oCustomer = $oTransaction->getCustomer();
+	// Configure consumer.
+	$oConsumer = $oTransaction->getConsumer();
 
-	$oCustomer->setEmail( 'john@doe.com' );
-	$oCustomer->setPhone( '0123456789' );
+	$oConsumer->setEmail( 'john@doe.com' );
+	$oConsumer->setPhone( '0123456789' );
 
-	$oCustomer->address()->setFirstName( 'John' );
-	$oCustomer->address()->setInitials( 'J.A.N.' );
-	$oCustomer->address()->setLastName( 'Doe' );
-	$oCustomer->address()->setAddress( 'Test Avenue 33' );
-	$oCustomer->address()->setZipCode( '34342' );
-	$oCustomer->address()->setCity( 'Minneapolis' );
-	$oCustomer->address()->setCountry( 'US' );
+	$oConsumer->address()->setFirstName( 'John' );
+	$oConsumer->address()->setInitials( 'J.A.N.' );
+	$oConsumer->address()->setLastName( 'Doe' );
+	$oConsumer->address()->setAddress( 'Test Avenue 33' );
+	$oConsumer->address()->setZipCode( '34342' );
+	$oConsumer->address()->setCity( 'Minneapolis' );
+	$oConsumer->address()->setCountry( 'US' );
 
-	$oCustomer->shippingAddress()->setFirstName( 'Judy' );
-	$oCustomer->shippingAddress()->setInitials( 'J.' );
-	$oCustomer->shippingAddress()->setLastName( 'Doe' );
-	$oCustomer->shippingAddress()->setAddress( 'Trialstreet 1334' );
-	$oCustomer->shippingAddress()->setZipCode( '77377' );
-	$oCustomer->shippingAddress()->setCity( 'Chicago' );
-	$oCustomer->shippingAddress()->setCountry( 'US' );
+	$oConsumer->shippingAddress()->setFirstName( 'Judy' );
+	$oConsumer->shippingAddress()->setInitials( 'J.' );
+	$oConsumer->shippingAddress()->setLastName( 'Doe' );
+	$oConsumer->shippingAddress()->setAddress( 'Trialstreet 1334' );
+	$oConsumer->shippingAddress()->setZipCode( '77377' );
+	$oConsumer->shippingAddress()->setCity( 'Chicago' );
+	$oConsumer->shippingAddress()->setCountry( 'US' );
 
 	// Configure cart.
 	$oCart = $oTransaction->getCart();
@@ -77,10 +77,10 @@ try {
 
 	$sActionUrl = $oTransaction->getActionUrl();
 	if ( NULL !== $sActionUrl ) {
-		// Redirect the customer to the CardGate payment gateway.
+		// Redirect the consumer to the CardGate payment gateway.
 		header( 'Location: ' . $sActionUrl );
 	} else {
-		// Transaction was successfull without need for customer interaction.
+		// Transaction was successfull without need for consumer interaction.
 		echo 'OK';
 	}
 
