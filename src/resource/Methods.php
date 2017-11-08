@@ -41,7 +41,7 @@ namespace cardgate\api\resource {
 		 * @api
 		 */
 		public function get( $sId_ ) {
-			return new \cardgate\api\Method( $this->_oClient, $sId_ );
+			return new \cardgate\api\Method( $this->_oClient, $sId_, $sId_ );
 		}
 
 		/**
