@@ -278,7 +278,11 @@ namespace cardgate\api {
 		 * @api
 		 */
 		public function getUrl() {
-			return ( $this->getTestmode() ? self::URL_STAGING : self::URL_PRODUCTION );
+			if ( ! empty( $_SERVER['CG_API_URL'] ) ) {
+				return $_SERVER['CG_API_URL'];
+			} else {
+				return ( $this->getTestmode() ? self::URL_STAGING : self::URL_PRODUCTION );
+			}
 		}
 
 		/**

@@ -11,7 +11,7 @@ try {
 	echo 'Select payment option: <select name="option">';
 
 	foreach( $aMethods as $oMethod ) {
-		echo '<option value="' . $oMethod->getId() . '">' . $oMethod->getId() . '</option>';
+		echo '<option value="' . $oMethod->getId() . '">' . $oMethod->getName() . '</option>';
 	}
 
 	echo '<option value="">or select later</option></select>';
