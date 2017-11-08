@@ -122,6 +122,13 @@ namespace cardgate\api {
 		private $_sId;
 
 		/**
+		 * The payment method name.
+		 * @var String
+		 * @access private
+		 */
+		private $_sName;
+
+		/**
 		 * The constructor.
 		 * @param Client $oClient_ The client associated with this transaction.
 		 * @param String $sId_ The payment method identifier to create a method instance for.
@@ -130,12 +137,13 @@ namespace cardgate\api {
 		 * @access public
 		 * @api
 		 */
-		function __construct( Client $oClient_, $sId_ ) {
+		function __construct( Client $oClient_, $sId_, $sName_ ) {
 			$this->_oClient = $oClient_;
 			if ( ! in_array( $sId_, ( new \ReflectionClass( '\cardgate\api\Method' ) )->getConstants() ) ) {
 				throw new Exception( 'Method.PaymentMethod.Invalid', 'invalid payment method: ' . $sId_ );
 			}
 			$this->setId( $sId_ );
+			$this->setName( $sName_ );
 		}
 
 		/**
@@ -165,6 +173,35 @@ namespace cardgate\api {
 		 */
 		public function getId() {
 			return $this->_sId;
+		}
+
+		/**
+		 * Set the method name.
+		 * @param String $sName_ Method name to set.
+		 * @return Method
+		 * @throws Exception
+		 * @access public
+		 * @api
+		 */
+		public function setName( $sName_ ) {
+			if (
+				! is_string( $sName_ )
+				|| empty( $sName_ )
+			) {
+				throw new Exception( 'Method.Name.Invalid', 'invalid name: ' . $sName_ );
+			}
+			$this->_sName = $sName_;
+			return $this;
+		}
+
+		/**
+		 * Get the payment method name.
+		 * @return String The payment method name for this instance.
+		 * @access public
+		 * @api
+		 */
+		public function getName() {
+			return $this->_sName;
 		}
 
 		/**
