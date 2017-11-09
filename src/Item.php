@@ -33,31 +33,47 @@ namespace cardgate\api {
 	 * @method Item setSKU( string $sSKU_ ) Sets the sku.
 	 * @method string getSKU() Returns the sku.
 	 * @method boolean hasSKU() Checks for existence of sku.
-	 * @method Address unsetSKU() Unsets the sku.
+	 * @method Item unsetSKU() Unsets the sku.
 	 *
 	 * @method Item setName( string $sName_ ) Sets the name.
 	 * @method string getName() Returns the name.
 	 * @method boolean hasName() Checks for existence of name.
-	 * @method Address unsetName() Unsets the name.
+	 * @method Item unsetName() Unsets the name.
 	 *
 	 * @method Item setLink( string $sLink_ ) Sets the link.
 	 * @method string getLink() Returns the link.
 	 * @method boolean hasLink() Checks for existence of link.
-	 * @method Address unsetLink() Unsets the link.
+	 * @method Item unsetLink() Unsets the link.
 	 *
 	 * @method Item setQuantity( string $sQuantity_ ) Sets the quantity.
 	 * @method string getQuantity() Returns the quantity.
 	 * @method boolean hasQuantity() Checks for existence of quantity.
-	 * @method Address unsetQuantity() Unsets the quantity.
+	 * @method Item unsetQuantity() Unsets the quantity.
 	 *
 	 * @method Item setPrice( string $sPrice_ ) Sets the price.
 	 * @method string getPrice() Returns the price.
 	 * @method boolean hasPrice() Checks for existence of price.
-	 * @method Address unsetPrice() Unsets the price.
+	 * @method Item unsetPrice() Unsets the price.
 	 *
 	 * @method string getType() Returns the type.
 	 * @method boolean hasType() Checks for existence of type.
-	 * @method Address unsetType() Unsets the type.
+	 * @method Item unsetType() Unsets the type.
+	 *
+	 * @method float getVat() Returns the vat.
+	 * @method boolean hasVat() Checks for existence of vat.
+	 * @method Item unsetVat() Unsets the vat.
+	 *
+	 * @method boolean getVatIncluded() Returns the vat included flag.
+	 * @method boolean hasVatIncluded() Checks for existence of vat included flag.
+	 * @method Item unsetVatIncluded() Unsets the vat included flag.
+	 *
+	 * @method float getVatAmount() Returns the vat amount.
+	 * @method boolean hasVatAmount() Checks for existence of vat amount.
+	 * @method Item unsetVatAmount() Unsets the vat amount.
+	 *
+	 * @method float getStock() Returns the stock.
+	 * @method boolean hasStock() Checks for existence of stock.
+	 * @method Item unsetStock() Unsets the stock.
 	 */
 	final class Item extends Entity {
 
@@ -100,6 +116,7 @@ namespace cardgate\api {
 			'Vat'			=> 'vat',
 			'VatIncluded'	=> 'vat_inc',
 			'VatAmount'		=> 'vat_amount',
+			'Stock'			=> 'stock'
 		];
 
 		/**
@@ -137,6 +154,63 @@ namespace cardgate\api {
 				throw new Exception( 'Item.Type.Invalid', 'invalid cart item type: ' . $iType_ );
 			}
 			return parent::setType( $iType_ );
+		}
+
+		/**
+		 * Set's the vat.
+		 * @param float $fVat_ The vat to set.
+		 * @return Item Returns this, makes the call chainable.
+		 * @throws Exception
+		 * @access public
+		 * @api
+		 */
+		function setVat( $fVat_ ) {
+			if ( ! is_numeric( $fVat_ ) ) {
+				throw new Exception( 'Item.Vat.Invalid', 'invalid vat: ' . $fVat_ );
+			}
+			return parent::setVat( $fVat_ );
+		}
+
+		/**
+		 * Set's the vat included flag.
+		 * @param boolean $bVatIncluded_ The vat included flag to set.
+		 * @return Item Returns this, makes the call chainable.
+		 * @throws Exception
+		 * @access public
+		 * @api
+		 */
+		function setVatIncluded( $bVatIncluded_ ) {
+			return parent::setVatIncluded( !!$bVatIncluded_ );
+		}
+
+		/**
+		 * Set's the vat amount.
+		 * @param float $fVatAmount_ The vat amount to set.
+		 * @return Item Returns this, makes the call chainable.
+		 * @throws Exception
+		 * @access public
+		 * @api
+		 */
+		function setVatAmount( $fVatAmount_ ) {
+			if ( ! is_numeric( $fVatAmount_ ) ) {
+				throw new Exception( 'Item.Vat.Amount.Invalid', 'invalid vat amount: ' . $fVatAmount_ );
+			}
+			return parent::setVatAmount( $fVatAmount_ );
+		}
+
+		/**
+		 * Set's the stock.
+		 * @param float $fStock_ The stock to set.
+		 * @return Item Returns this, makes the call chainable.
+		 * @throws Exception
+		 * @access public
+		 * @api
+		 */
+		function setStock( $fStock_ ) {
+			if ( ! is_numeric( $fStock_ ) ) {
+				throw new Exception( 'Item.Stock.Invalid', 'invalid stock: ' . $fStock_ );
+			}
+			return parent::setStock( $fStock_ );
 		}
 
 	}
