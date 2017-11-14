@@ -375,7 +375,7 @@ namespace cardgate\api {
 			if ( $mPaymentMethod_ instanceof Method ) {
 				$this->_oPaymentMethod = $mPaymentMethod_;
 			} elseif ( is_string( $mPaymentMethod_ ) ) {
-				$this->_oPaymentMethod = new Method( $this->_oClient, $mPaymentMethod_ );
+				$this->_oPaymentMethod = new Method( $this->_oClient, $mPaymentMethod_, $mPaymentMethod_ );
 			} else {
 				throw new Exception( 'Transaction.PaymentMethod.Invalid', 'invalid payment method: ' . $mPaymentMethod_ );
 			}
