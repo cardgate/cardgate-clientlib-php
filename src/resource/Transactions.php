@@ -79,6 +79,33 @@ namespace cardgate\api\resource {
 		}
 
 		/**
+		 * This method can be used to retrieve a transaction status.
+		 * @param String $sTransactionId_ The transaction identifier.
+		 * @return string
+		 * @throws Exception
+		 * @access public
+		 * @api
+		 */
+		public function status( $sTransactionId_ ) {
+			if ( ! is_string( $sTransactionId_ ) ) {
+				throw new \cardgate\api\Exception( 'Transaction.Id.Invalid', 'invalid transaction id: ' . $sTransactionId_ );
+			}
+
+			$sResource = "status/{$sTransactionId_}/";
+
+			$aResult = $this->_oClient->doRequest( $sResource, NULL, 'GET' );
+
+			if (
+				empty( $aResult['status'] )
+				|| ! is_string( $aResult['status'] )
+			) {
+				throw new \cardgate\api\Exception( 'Transaction.Status.Invalid', 'invalid transaction status returned' );
+			}
+
+			return $aResult['status'];
+		}
+
+		/**
 		 * This method can be used to create a new transaction.
 		 * @param Integer $iSiteId_ Site id to create transaction for.
 		 * @param Integer $iAmount_ The amount of the transaction in cents.
