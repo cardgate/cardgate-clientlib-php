@@ -68,6 +68,11 @@ namespace cardgate\api {
 	 * @method boolean hasCity() Checks for the existence of city.
 	 * @method Address unsetCity() Unsets the city.
 	 *
+	 * @method Address setState( string $sState_ ) Sets the state.
+	 * @method string getState() Returns the state.
+	 * @method boolean hasState() Checks for the existence of state.
+	 * @method Address unsetState() Unsets the state.
+	 *
 	 * @method Address setZipCode( string $sZipCode_ ) Sets the zipcode.
 	 * @method string getZipCode() Returns the zipcode.
 	 * @method boolean hasZipCode() Checks for existence of zipcode.
@@ -92,6 +97,7 @@ namespace cardgate\api {
 			'Company'		=> 'company',
 			'Address'		=> 'address',
 			'City'			=> 'city',
+			'State'			=> 'state',
 			'ZipCode'		=> 'zipcode',
 			'Country'		=> 'country_id'
 		];
