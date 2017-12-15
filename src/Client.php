@@ -35,17 +35,17 @@ namespace cardgate\api {
 		/**
 		 * Client version.
 		 */
-		const CLIENT_VERSION = "0.0.1";
+		const CLIENT_VERSION = "1.1.4";
 
 		/**
 		 * Url to use for production.
 		 */
-		const URL_PRODUCTION = 'https://bob.secure.curopayments.dev/rest/v1/curo/';
+		const URL_PRODUCTION = 'https://secure.curopayments.net/rest/v1/curo/';
 
 		/**
 		 * Url to use for testing.
 		 */
-		const URL_STAGING = 'https://bob.secure.curopayments.dev/rest/v1/curo/';
+		const URL_STAGING = 'https://secure-staging.curopayments.net/rest/v1/curo/';
 
 		/**
 		 * Toggle testmode variable.
