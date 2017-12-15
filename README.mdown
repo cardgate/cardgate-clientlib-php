@@ -16,7 +16,7 @@ to your `composer.json` file:
 ```json
 {
     "require": {
-        "cardgate/cardgate-clientlib-php": "~1.0.0"
+        "cardgate/cardgate-clientlib-php": "~1.1.4"
     }
 }
 ```
