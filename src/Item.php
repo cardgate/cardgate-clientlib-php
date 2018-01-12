@@ -103,6 +103,16 @@ namespace cardgate\api {
 		const TYPE_HANDLING = 5;
 
 		/**
+		 * Correction
+		 */
+		const TYPE_CORRECTION = 6;
+
+		/**
+		 * VAT Correction
+		 */
+		const TYPE_VAT_CORRECTION = 7;
+
+		/**
 		 * @ignore
 		 * @internal The methods these fields expose are configured in the class phpdoc.
 		 */
