@@ -116,14 +116,14 @@ namespace cardgate\api {
 
 		/**
 		 * The payment method.
-		 * @var String
+		 * @var string
 		 * @access private
 		 */
 		private $_sId;
 
 		/**
 		 * The payment method name.
-		 * @var String
+		 * @var string
 		 * @access private
 		 */
 		private $_sName;
@@ -131,16 +131,19 @@ namespace cardgate\api {
 		/**
 		 * The constructor.
 		 * @param Client $oClient_ The client associated with this transaction.
-		 * @param String $sId_ The payment method identifier to create a method instance for.
-		 * @return Method
+		 * @param string $sId_ The payment method identifier to create a method instance for.
 		 * @throws Exception
 		 * @access public
 		 * @api
 		 */
 		function __construct( Client $oClient_, $sId_, $sName_ ) {
 			$this->_oClient = $oClient_;
-			if ( ! in_array( $sId_, ( new \ReflectionClass( '\cardgate\api\Method' ) )->getConstants() ) ) {
-				throw new Exception( 'Method.PaymentMethod.Invalid', 'invalid payment method: ' . $sId_ );
+			try {
+				if ( ! in_array( $sId_, ( new \ReflectionClass( '\cardgate\api\Method' ) )->getConstants() ) ) {
+					throw new Exception('Method.PaymentMethod.Invalid', 'invalid payment method: ' . $sId_);
+				}
+			} catch ( \ReflectionException $oException_ ) {
+				throw new Exception('Method.PaymentMethod.Invalid', 'invalid payment method: ' . $sId_);
 			}
 			$this->setId( $sId_ );
 			$this->setName( $sName_ );
@@ -148,8 +151,8 @@ namespace cardgate\api {
 
 		/**
 		 * Set the method id.
-		 * @param String $sId_ Method id to set.
-		 * @return Method
+		 * @param string $sId_ Method id to set.
+		 * @return $this
 		 * @throws Exception
 		 * @access public
 		 * @api
@@ -167,7 +170,7 @@ namespace cardgate\api {
 
 		/**
 		 * Get the payment method id.
-		 * @return String The payment method id for this instance.
+		 * @return string The payment method id for this instance.
 		 * @access public
 		 * @api
 		 */
@@ -177,8 +180,8 @@ namespace cardgate\api {
 
 		/**
 		 * Set the method name.
-		 * @param String $sName_ Method name to set.
-		 * @return Method
+		 * @param string $sName_ Method name to set.
+		 * @return $this
 		 * @throws Exception
 		 * @access public
 		 * @api
@@ -196,7 +199,7 @@ namespace cardgate\api {
 
 		/**
 		 * Get the payment method name.
-		 * @return String The payment method name for this instance.
+		 * @return string The payment method name for this instance.
 		 * @access public
 		 * @api
 		 */
@@ -206,7 +209,7 @@ namespace cardgate\api {
 
 		/**
 		 * This method returns all the issuers available for the current payment method.
-		 * @return Array An array with {@link \cardgate\api\Issuer} instances.
+		 * @return array An array with issuers
 		 * @throws Exception
 		 * @access public
 		 * @api

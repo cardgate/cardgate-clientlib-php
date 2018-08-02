@@ -34,15 +34,14 @@ namespace cardgate\api\resource {
 
 		/**
 		 * The client associated with this resource.
-		 * @var Client
+		 * @var \cardgate\api\Client
 		 * @access private
 		 */
 		protected $_oClient;
 
 		/**
 		 * The constructor.
-		 * @param Client $oClient_ The client to associate the resource with.
-		 * @return Base
+		 * @param \cardgate\api\Client $oClient_ The client to associate the resource with.
 		 * @access public
 		 * @api
 		 */

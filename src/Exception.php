@@ -41,11 +41,10 @@ namespace cardgate\api {
 
 		/**
 		 * Constructs the exception.
-		 * @param String $sError_ A unified string code of the exception to throw.
-		 * @param String $sMessage_ The exception message to throw.
-		 * @param Integer $iCode_ The numeric exception code.
+		 * @param string $sError_ A unified string code of the exception to throw.
+		 * @param string $sMessage_ The exception message to throw.
+		 * @param int $iCode_ The numeric exception code.
 		 * @param \Throwable $oPrevious_ The previous exception used for the exception chaining.
-		 * @return Exception
 		 * @access public
 		 * @api
 		 */
@@ -56,7 +55,7 @@ namespace cardgate\api {
 
 		/**
 		 * Get the unified string code associated with this exception.
-		 * @return String The unified string code of the exception.
+		 * @return string The unified string code of the exception.
 		 * @access public
 		 * @api
 		 */

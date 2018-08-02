@@ -49,35 +49,35 @@ namespace cardgate\api {
 
 		/**
 		 * Toggle testmode variable.
-		 * @var Boolean
+		 * @var bool
 		 * @access private
 		 */
 		private $_bTestmode;
 
 		/**
 		 * The merchant id to use for authentication.
-		 * @var Integer
+		 * @var int
 		 * @access private
 		 */
 		private $_iMerchantId;
 
 		/**
 		 * The secret key to use for authentication.
-		 * @var String
+		 * @var string
 		 * @access private
 		 */
 		private $_sKey;
 
 		/**
 		 * The consumer IP address associated with the client.
-		 * @var String
+		 * @var string
 		 * @access private
 		 */
 		private $_sIp = NULL;
 
 		/**
 		 * The language to use when communicating with the API.
-		 * @var String
+		 * @var string
 		 * @access private
 		 */
 		private $_sLanguage = NULL;
@@ -111,13 +111,6 @@ namespace cardgate\api {
 		private $_oConsumers = NULL;
 
 		/**
-		 * The issuers resource.
-		 * @var resource\Issuers
-		 * @access private
-		 */
-		private $_oIssuers = NULL;
-
-		/**
 		 * The methods resource.
 		 * @var resource\Methods
 		 * @access private
@@ -126,10 +119,9 @@ namespace cardgate\api {
 
 		/**
 		 * The constructor.
-		 * @param Integer $iMerchantId_ The merchant id for the client.
-		 * @param String $sKey_ The merchant API key for the client.
-		 * @param Boolean $bTestmode_ Toggle testmode for the client.
-		 * @return Client
+		 * @param int $iMerchantId_ The merchant id for the client.
+		 * @param string $sKey_ The merchant API key for the client.
+		 * @param bool $bTestmode_ Toggle testmode for the client.
 		 * @throws Exception
 		 * @access public
 		 * @api
@@ -140,8 +132,8 @@ namespace cardgate\api {
 
 		/**
 		 * Toggle testmode.
-		 * @param Boolean $bTestmode_ Enable or disable testmode for this client.
-		 * @return Client
+		 * @param bool $bTestmode_ Enable or disable testmode for this client.
+		 * @return $this
 		 * @throws Exception
 		 * @access public
 		 * @api
@@ -156,7 +148,7 @@ namespace cardgate\api {
 
 		/**
 		 * Get currenct testmode setting.
-		 * @return Boolean The current testmode setting
+		 * @return bool The current testmode setting
 		 * @access public
 		 * @api
 		 */
@@ -166,8 +158,8 @@ namespace cardgate\api {
 
 		/**
 		 * Configure the client object with a merchant id.
-		 * @param Integer $iMerchantId_ Merchant id to set.
-		 * @return Client
+		 * @param int $iMerchantId_ Merchant id to set.
+		 * @return $this
 		 * @throws Exception
 		 * @access public
 		 * @api
@@ -182,7 +174,7 @@ namespace cardgate\api {
 
 		/**
 		 * Get the merchant id associated with this client.
-		 * @return Integer The merchant id associated with this client
+		 * @return int The merchant id associated with this client
 		 * @access public
 		 * @api
 		 */
@@ -192,8 +184,8 @@ namespace cardgate\api {
 
 		/**
 		 * Set the Merchant API key to authenticate the transaction request with.
-		 * @param String $sKey_ The merchant API key to set.
-		 * @return Client
+		 * @param string $sKey_ The merchant API key to set.
+		 * @return $this
 		 * @throws Exception
 		 * @access public
 		 * @api
@@ -208,7 +200,7 @@ namespace cardgate\api {
 
 		/**
 		 * Get the Merchant API key to authenticate the transaction request with.
-		 * @return String The merchant API key.
+		 * @return string The merchant API key.
 		 * @access public
 		 * @api
 		 */
@@ -218,8 +210,8 @@ namespace cardgate\api {
 
 		/**
 		 * Set the IP address.
-		 * @param String The IP address of the consumer.
-		 * @return Client
+		 * @param string The IP address of the consumer.
+		 * @return $this
 		 * @throws Exception
 		 * @access public
 		 * @api
@@ -237,7 +229,7 @@ namespace cardgate\api {
 
 		/**
 		 * Get the IP address.
-		 * @return String The consumer IP address.
+		 * @return string The consumer IP address.
 		 * @access public
 		 * @api
 		 */
@@ -247,8 +239,8 @@ namespace cardgate\api {
 
 		/**
 		 * Configure the language to use.
-		 * @param String $sLanguage_ The language to set.
-		 * @return Client
+		 * @param string $sLanguage_ The language to set.
+		 * @return $this
 		 * @throws Exception
 		 * @access public
 		 * @api
@@ -263,7 +255,7 @@ namespace cardgate\api {
 
 		/**
 		 * Get the language the client is configured with.
-		 * @return String The language the client is configured with.
+		 * @return string The language the client is configured with.
 		 * @access public
 		 * @api
 		 */
@@ -273,7 +265,7 @@ namespace cardgate\api {
 
 		/**
 		 * Get the URL to use with this connection, depending on testmode settings.
-		 * @return String The URL to use
+		 * @return string The URL to use
 		 * @access public
 		 * @api
 		 */
@@ -287,7 +279,8 @@ namespace cardgate\api {
 
 		/**
 		 * Pull the config from the API using a token provided by the site setup button in the backoffice.
-		 * @return Array Returns an array with settings.
+		 * @return array Returns an array with settings.
+		 * @throws Exception
 		 * @access public
 		 * @api
 		 */
@@ -386,19 +379,6 @@ namespace cardgate\api {
 		}
 
 		/**
-		 * Accessor for the issuers resource.
-		 * @return resource\Issuers
-		 * @access public
-		 * @api
-		 */
-		public function issuers() {
-			if ( NULL == $this->_oIssuers ) {
-				$this->_oIssuers = new resource\Issuers( $this );
-			}
-			return $this->_oIssuers;
-		}
-
-		/**
 		 * Accessor for the payment methods resource.
 		 * @return resource\Methods
 		 * @access public
@@ -413,10 +393,10 @@ namespace cardgate\api {
 
 		/**
 		 * Send a request to the CardGate API.
-		 * @param String $sResource_ The resource to call.
-		 * @param Array $aData_ Optional data to use for the call.
-		 * @param String $sHttpMethod_ The http method to use (GET or POST, which is the default).
-		 * @return Array An array with request results.
+		 * @param string $sResource_ The resource to call.
+		 * @param array $aData_ Optional data to use for the call.
+		 * @param string $sHttpMethod_ The http method to use (GET or POST, which is the default).
+		 * @return array An array with request results.
 		 * @throws Exception
 		 */
 		public function doRequest( $sResource_, $aData_ = NULL, $sHttpMethod_ = 'POST' ) {

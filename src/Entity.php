@@ -66,6 +66,8 @@ namespace cardgate\api {
 		/**
 		 * @ignore
 		 * @internal The __call method translates get-, set-, unset- and has-methods to their configured fields.
+		 * @return $this|mixed|bool Return $this on set and unset, mixed on get and bool on has
+		 * @throws Exception|\ReflectionException
 		 */
 		public function __call( $sMethod_, $aArgs_ ) {
 			$sClassName = ( new \ReflectionClass( $this ) )->getShortName();

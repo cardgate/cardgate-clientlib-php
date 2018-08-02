@@ -34,10 +34,10 @@ namespace cardgate\api\resource {
 
 		/**
 		 * This method can be used to retrieve subscription details.
-		 * @param String $sSubscriptionId_ The subscription identifier.
+		 * @param string $sSubscriptionId_ The subscription identifier.
 		 * @param array $aDetails_ Array that gets filled with additional subscription details.
 		 * @return \cardgate\api\Subscription
-		 * @throws Exception
+		 * @throws \cardgate\api\Exception
 		 * @access public
 		 * @api
 		 */
@@ -78,13 +78,13 @@ namespace cardgate\api\resource {
 
 		/**
 		 * This method can be used to create a new subscription.
-		 * @param Integer $iSiteId_ Site id to create the subscription for.
-		 * @param Integer $iPeriod_ The period length of the subscription.
-		 * @param String $sPeriodType_ The period type of the subscription (e.g. day, week, month, year).
-		 * @param Integer $iPeriodAmount_ The period amount of the subscription in cents.
-		 * @param String $sCurrency_ Currency (ISO 4217)
+		 * @param int $iSiteId_ Site id to create the subscription for.
+		 * @param int $iPeriod_ The period length of the subscription.
+		 * @param string $sPeriodType_ The period type of the subscription (e.g. day, week, month, year).
+		 * @param int $iPeriodAmount_ The period amount of the subscription in cents.
+		 * @param string $sCurrency_ Currency (ISO 4217)
 		 * @return \cardgate\api\Subscription
-		 * @throws Exception
+		 * @throws \cardgate\api\Exception
 		 * @access public
 		 * @api
 		 */

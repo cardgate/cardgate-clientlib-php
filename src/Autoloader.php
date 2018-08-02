@@ -35,7 +35,7 @@ namespace cardgate\api {
 
 		/**
 		 * Load the class.
-		 * @param String $sClass_ The class to load
+		 * @param string $sClass_ The class to load
 		 * @access private
 		 */
 		private static function autoload( $sClass_ ) {

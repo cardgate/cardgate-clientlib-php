@@ -41,7 +41,7 @@ namespace cardgate\api {
 
 		/**
 		 * Add a cart item to the cart.
-		 * @param integer $iType_ The cart item type.
+		 * @param int $iType_ The cart item type.
 		 * @param string $sSKU_ The SKU of the cart item.
 		 * @param string $sName_ The name of the cart item (productname).
 		 * @param string $iPrice_ The price of the cart item.
