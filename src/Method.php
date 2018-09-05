@@ -108,6 +108,11 @@ namespace cardgate\api {
 		const PAYSAFECARD = 'paysafecard';
 
 		/**
+		 * Billink
+		 */
+		const BILLINK = 'billink';
+		
+		/**
 		 * The client associated with this payment method.
 		 * @var Client
 		 * @access private
