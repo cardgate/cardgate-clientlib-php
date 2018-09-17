@@ -34,56 +34,56 @@ namespace cardgate\api {
 
 		/**
 		 * The subscription id.
-		 * @var String
+		 * @var string
 		 * @access private
 		 */
 		private $_sId;
 
 		/**
 		 * The length of the subscription period.
-		 * @var Integer
+		 * @var int
 		 * @access private
 		 */
 		private $_iPeriod;
 
 		/**
 		 * The type of period (ie day, week, month, year)
-		 * @var String
+		 * @var string
 		 * @access private
 		 */
 		private $_sPeriodType;
 
 		/**
 		 * The price per period in cents
-		 * @var Integer
+		 * @var int
 		 * @access private
 		 */
 		private $_iPeriodPrice;
 
 		/**
 		 * The amount of the initial (first) payment, used only when the first payment is different from the monthly costs.
-		 * @var Integer
+		 * @var int
 		 * @access private
 		 */
 		private $_iInitialPayment;
 
 		/**
 		 * The length of the trial period.
-		 * @var Integer
+		 * @var int
 		 * @access private
 		 */
 		private $_iTrialPeriod;
 
 		/**
 		 * The type of trial period (ie day, week, month, year)
-		 * @var String
+		 * @var string
 		 * @access private
 		 */
 		private $_sTrialPeriodType;
 
 		/**
 		 * The price for the trial period in cents
-		 * @var Integer
+		 * @var int
 		 * @access private
 		 */
 		private $_iTrialPeriodPrice;
@@ -91,7 +91,7 @@ namespace cardgate\api {
 		/**
 		 * The start date (UTC) of the subscription in YYYY-MM-DD hh:mm:ss format.
 		 * If none is given the current date will be used.
-		 * @var String
+		 * @var string
 		 * @access private
 		 */
 		private $_sStartDate;
@@ -99,7 +99,7 @@ namespace cardgate\api {
 		/**
 		 * The end date (UTC) of the subscription in YYYY-MM-DD hh:mm:ss format.
 		 * If none is given the subscription will never end.
-		 * @var String
+		 * @var string
 		 * @access private
 		 */
 		private $_sEndDate;
@@ -107,12 +107,11 @@ namespace cardgate\api {
 		/**
 		 * The constructor.
 		 * @param Client $oClient_ The client associated with this subscription.
-		 * @param Integer $iSiteId_ Site id to create the subscription for.
-		 * @param Integer $iPeriod_ The period length of the subscription.
-		 * @param String $sPeriodType_ The period type of the subscription (e.g. day, week, month, year).
-		 * @param Integer $iPeriodAmount_ The period amount of the subscription in cents.
-		 * @param String $sCurrency_ Currency (ISO 4217)
-		 * @return Subscription
+		 * @param int $iSiteId_ Site id to create the subscription for.
+		 * @param int $iPeriod_ The period length of the subscription.
+		 * @param string $sPeriodType_ The period type of the subscription (e.g. day, week, month, year).
+		 * @param int $iPeriodAmount_ The period amount of the subscription in cents.
+		 * @param string $sCurrency_ Currency (ISO 4217)
 		 * @throws Exception
 		 * @access public
 		 * @api
@@ -124,8 +123,8 @@ namespace cardgate\api {
 
 		/**
 		 * Set the subscription id.
-		 * @param String $sId_ Subscription id to set.
-		 * @return Subscription
+		 * @param string $sId_ Subscription id to set.
+		 * @return $this
 		 * @throws Exception
 		 * @access public
 		 * @api
@@ -143,7 +142,8 @@ namespace cardgate\api {
 
 		/**
 		 * Get the subscription id associated with this subscription.
-		 * @return String The subscription id associated with this subscription.
+		 * @return string The subscription id associated with this subscription.
+		 * @throws Exception
 		 * @access public
 		 * @api
 		 */
@@ -156,8 +156,8 @@ namespace cardgate\api {
 
 		/**
 		 * Configure the subscription object with a period.
-		 * @param Integer $iPeriod_ Period length to set.
-		 * @return Subscription
+		 * @param int $iPeriod_ Period length to set.
+		 * @return $this
 		 * @throws Exception
 		 * @access public
 		 * @api
@@ -172,7 +172,7 @@ namespace cardgate\api {
 
 		/**
 		 * Get the period of the subscription.
-		 * @return Integer The period of the subscription.
+		 * @return int The period of the subscription.
 		 * @access public
 		 * @api
 		 */
@@ -182,8 +182,8 @@ namespace cardgate\api {
 
 		/**
 		 * Configure the subscription object with a period type.
-		 * @param String $sPeriodType_ Period type to set.
-		 * @return Subscription
+		 * @param string $sPeriodType_ Period type to set.
+		 * @return $this
 		 * @throws Exception
 		 * @access public
 		 * @api
@@ -201,7 +201,7 @@ namespace cardgate\api {
 
 		/**
 		 * Get the period type of the subscription.
-		 * @return String The period type of the subscription.
+		 * @return string The period type of the subscription.
 		 * @access public
 		 * @api
 		 */
@@ -211,8 +211,8 @@ namespace cardgate\api {
 
 		/**
 		 * Configure the subscription object with a period price.
-		 * @param Integer $iPeriod_ Period price to set.
-		 * @return Subscription
+		 * @param int $iPeriod_ Period price to set.
+		 * @return $this
 		 * @throws Exception
 		 * @access public
 		 * @api
@@ -227,7 +227,7 @@ namespace cardgate\api {
 
 		/**
 		 * Get the period price of the subscription.
-		 * @return Integer The period price of the subscription.
+		 * @return int The period price of the subscription.
 		 * @access public
 		 * @api
 		 */
@@ -237,8 +237,8 @@ namespace cardgate\api {
 
 		/**
 		 * Configure the subscription initial payment amount.
-		 * @param Integer $iInitialPayment_ The initial payment amount to set.
-		 * @return Subscription
+		 * @param int $iInitialPayment_ The initial payment amount to set.
+		 * @return $this
 		 * @throws Exception
 		 * @access public
 		 * @api
@@ -254,8 +254,8 @@ namespace cardgate\api {
 
 		/**
 		 * Configure the subscription object with a trial period.
-		 * @param Integer $iPeriod_ Trial period length to set.
-		 * @return Subscription
+		 * @param int $iPeriod_ Trial period length to set.
+		 * @return $this
 		 * @throws Exception
 		 * @access public
 		 * @api
@@ -270,7 +270,7 @@ namespace cardgate\api {
 
 		/**
 		 * Get the trial period of the subscription.
-		 * @return Integer The trial period of the subscription.
+		 * @return int The trial period of the subscription.
 		 * @access public
 		 * @api
 		 */
@@ -280,8 +280,8 @@ namespace cardgate\api {
 
 		/**
 		 * Configure the subscription object with a trial period type.
-		 * @param String $sTrialPeriodType_ Trial Period type to set.
-		 * @return Subscription
+		 * @param string $sTrialPeriodType_ Trial Period type to set.
+		 * @return $this
 		 * @throws Exception
 		 * @access public
 		 * @api
@@ -299,7 +299,7 @@ namespace cardgate\api {
 
 		/**
 		 * Get the trial period type of the subscription.
-		 * @return String The trial period type of the subscription.
+		 * @return string The trial period type of the subscription.
 		 * @access public
 		 * @api
 		 */
@@ -309,8 +309,8 @@ namespace cardgate\api {
 
 		/**
 		 * Configure the subscription object with a trial period price.
-		 * @param Integer $iPeriod_ Trial period price to set.
-		 * @return Subscription
+		 * @param int $iPeriod_ Trial period price to set.
+		 * @return $this
 		 * @throws Exception
 		 * @access public
 		 * @api
@@ -325,7 +325,7 @@ namespace cardgate\api {
 
 		/**
 		 * Get the period price of the subscription.
-		 * @return Integer The period price of the subscription.
+		 * @return int The period price of the subscription.
 		 * @access public
 		 * @api
 		 */
@@ -335,8 +335,8 @@ namespace cardgate\api {
 
 		/**
 		 * Configure the subscription date on which it should start.
-		 * @param String $sStartDate_ The start date to set.
-		 * @return Subscription
+		 * @param string $sStartDate_ The start date to set.
+		 * @return $this
 		 * @throws Exception
 		 * @access public
 		 * @api
@@ -351,7 +351,7 @@ namespace cardgate\api {
 
 		/**
 		 * Get the start date of the subscription.
-		 * @return String The start date of the subscription.
+		 * @return string The start date of the subscription.
 		 * @access public
 		 * @api
 		 */
@@ -360,9 +360,9 @@ namespace cardgate\api {
 		}
 
 		/**
-		 * Configure the subscription date on which it should end.
-		 * @param String $sEndDate_ The end date to set.
-		 * @return Subscription
+		 * Configure the date on which the subscription should end.
+		 * @param string $sEndDate_ The end date to set.
+		 * @return $this
 		 * @throws Exception
 		 * @access public
 		 * @api
@@ -377,7 +377,7 @@ namespace cardgate\api {
 
 		/**
 		 * Get the end date of the subscription.
-		 * @return String The end date of the subscription.
+		 * @return string The end date of the subscription.
 		 * @access public
 		 * @api
 		 */
@@ -385,10 +385,9 @@ namespace cardgate\api {
 			return $this->_sEndDate;
 		}
 
-
 		/**
 		 * Get the status of the subscription.
-		 * @return String The end date of the subscription.
+		 * @return string The end date of the subscription.
 		 * @access public
 		 * @api
 		 */
@@ -397,8 +396,8 @@ namespace cardgate\api {
 		}
 
 		/**
-		 * Registers the subscription with the cardgate payment gateway.
-		 * @return Subscription
+		 * Registers the subscription with the CardGate payment gateway.
+		 * @return $this
 		 * @throws Exception
 		 * @access public
 		 * @api
@@ -465,8 +464,8 @@ namespace cardgate\api {
 		}
 
 		/**
-		 * Registers the subscription with the cardgate payment gateway.
-		 * @return Subscription
+		 * Change the subscription status.
+		 * @return bool Whether the status change succeeded.
 		 * @throws Exception
 		 * @access public
 		 * @api

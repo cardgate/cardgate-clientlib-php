@@ -34,9 +34,9 @@ namespace cardgate\api\resource {
 
 		/**
 		 * This method can be used to receive a {@link \cardgate\api\Method} instance.
-		 * @param String $sId_ Method id to receive method instance for.
+		 * @param string $sId_ Method id to receive method instance for.
 		 * @return \cardgate\api\Method
-		 * @throws Exception
+		 * @throws \cardgate\api\Exception
 		 * @access public
 		 * @api
 		 */
@@ -46,15 +46,15 @@ namespace cardgate\api\resource {
 
 		/**
 		 * This method can be used to retrieve a list of all available payment methods for a site.
-		 * @param Integer $iSiteId_ The site to retrieve payment methods for.
-		 * @return Array
-		 * @throws Exception
+		 * @param int $iSiteId_ The site to retrieve payment methods for.
+		 * @return array
+		 * @throws \cardgate\api\Exception
 		 * @access public
 		 * @pai
 		 */
 		public function all( $iSiteId_ ) {
 			if ( ! is_integer( $iSiteId_ ) ) {
-				throw new Exception( 'Methods.SiteId.Invalid', 'invalid site id: ' . $iSiteId_ );
+				throw new \cardgate\api\Exception( 'Methods.SiteId.Invalid', 'invalid site id: ' . $iSiteId_ );
 			}
 
 			$sResource = "options/{$iSiteId_}/";
@@ -67,8 +67,11 @@ namespace cardgate\api\resource {
 
 			$aMethods = [];
 			foreach( $aResult['options'] as $aOption ) {
-				if ( in_array( $aOption['id'], ( new \ReflectionClass( '\cardgate\api\Method' ) )->getConstants() ) ) {
-					$aMethods[] = new \cardgate\api\Method( $this->_oClient, $aOption['id'], $aOption['name'] );
+				try {
+					if ( in_array( $aOption['id'], ( new \ReflectionClass('\cardgate\api\Method'))->getConstants() ) ) {
+						$aMethods[] = new \cardgate\api\Method( $this->_oClient, $aOption['id'], $aOption['name'] );
+					}
+				} catch ( \ReflectionException $oException_ ) {
 				}
 			}
 

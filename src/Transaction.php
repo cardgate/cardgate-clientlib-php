@@ -41,49 +41,49 @@ namespace cardgate\api {
 
 		/**
 		 * The transaction id.
-		 * @var String
+		 * @var string
 		 * @access private
 		 */
 		private $_sId;
 
 		/**
 		 * The site id to use for payments.
-		 * @var Integer
+		 * @var int
 		 * @access protected
 		 */
 		protected $_iSiteId;
 
 		/**
 		 * The site key to use for payments.
-		 * @var String
+		 * @var string
 		 * @access protected
 		 */
 		protected $_sSiteKey;
 
 		/**
 		 * The transaction amount in cents.
-		 * @var Integer
+		 * @var int
 		 * @access protected
 		 */
 		protected $_iAmount;
 
 		/**
 		 * The transaction currency (ISO 4217).
-		 * @var String
+		 * @var string
 		 * @access protected
 		 */
 		protected $_sCurrency;
 
 		/**
 		 * The description for the transaction.
-		 * @var String
+		 * @var string
 		 * @access protected
 		 */
 		protected $_sDescription;
 
 		/**
 		 * A reference for the transaction.
-		 * @var String
+		 * @var string
 		 * @access protected
 		 */
 		protected $_sReference;
@@ -97,14 +97,14 @@ namespace cardgate\api {
 
 		/**
 		 * The payment method issuer for the transaction.
-		 * @var String
+		 * @var string
 		 * @access protected
 		 */
 		protected $_sIssuer = NULL;
 
 		/**
 		 * The recurring flag
-		 * @var Boolean
+		 * @var bool
 		 * @access private
 		 */
 		private $_bRecurring = FALSE;
@@ -125,35 +125,35 @@ namespace cardgate\api {
 
 		/**
 		 * The URL to send payment callback updates to.
-		 * @var String
+		 * @var string
 		 * @access protected
 		 */
 		protected $_sCallbackUrl = NULL;
 
 		/**
 		 * The URL to redirect to on success.
-		 * @var String
+		 * @var string
 		 * @access protected
 		 */
 		protected $_sSuccessUrl = NULL;
 
 		/**
 		 * The URL to redirect to on failre.
-		 * @var String
+		 * @var string
 		 * @access protected
 		 */
 		protected $_sFailureUrl = NULL;
 
 		/**
 		 * The URL to redirect to on pending.
-		 * @var String
+		 * @var string
 		 * @access protected
 		 */
 		protected $_sPendingUrl = NULL;
 
 		/**
 		 * The URL to redirect to after initial transaction register.
-		 * @var String
+		 * @var string
 		 * @access protected
 		 */
 		protected $_sActionUrl = NULL;
@@ -161,10 +161,9 @@ namespace cardgate\api {
 		/**
 		 * The constructor.
 		 * @param Client $oClient_ The client associated with this transaction.
-		 * @param Integer $iSiteId_ Site id to create transaction for.
-		 * @param Integer $iAmount_ The amount of the transaction in cents.
-		 * @param String $sCurrency_ Currency (ISO 4217)
-		 * @return Transaction
+		 * @param int $iSiteId_ Site id to create transaction for.
+		 * @param int $iAmount_ The amount of the transaction in cents.
+		 * @param string $sCurrency_ Currency (ISO 4217)
 		 * @throws Exception
 		 * @access public
 		 * @api
@@ -176,8 +175,8 @@ namespace cardgate\api {
 
 		/**
 		 * Set the transaction id.
-		 * @param String $sId_ Transaction id to set.
-		 * @return Transaction
+		 * @param string $sId_ Transaction id to set.
+		 * @return $this
 		 * @throws Exception
 		 * @access public
 		 * @api
@@ -195,7 +194,8 @@ namespace cardgate\api {
 
 		/**
 		 * Get the transaction id associated with this transaction.
-		 * @return String The transaction id associated with this transaction.
+		 * @return string The transaction id associated with this transaction.
+		 * @throws Exception
 		 * @access public
 		 * @api
 		 */
@@ -208,8 +208,8 @@ namespace cardgate\api {
 
 		/**
 		 * Configure the transaction object with a site id.
-		 * @param Integer $iSiteId_ Site id to set.
-		 * @return Transaction
+		 * @param int $iSiteId_ Site id to set.
+		 * @return $this
 		 * @throws Exception
 		 * @access public
 		 * @api
@@ -224,7 +224,7 @@ namespace cardgate\api {
 
 		/**
 		 * Get the site id associated with this transaction.
-		 * @return Integer The site id associated with this transaction.
+		 * @return int The site id associated with this transaction.
 		 * @access public
 		 * @api
 		 */
@@ -234,8 +234,8 @@ namespace cardgate\api {
 
 		/**
 		 * Set the Site key to authenticate the hash in the request.
-		 * @param String $sSiteKey_ The site key to set.
-		 * @return Client
+		 * @param string $sSiteKey_ The site key to set.
+		 * @return $this
 		 * @throws Exception
 		 * @access public
 		 * @api
@@ -250,7 +250,7 @@ namespace cardgate\api {
 
 		/**
 		 * Get the Merchant API key to authenticate the transaction request with.
-		 * @return String The merchant API key.
+		 * @return string The merchant API key.
 		 * @access public
 		 * @api
 		 */
@@ -260,8 +260,8 @@ namespace cardgate\api {
 
 		/**
 		 * Configure the transaction object with an amount.
-		 * @param Integer $iAmount_ Amount in cents to set.
-		 * @return Transaction
+		 * @param int $iAmount_ Amount in cents to set.
+		 * @return $this
 		 * @throws Exception
 		 * @access public
 		 * @api
@@ -276,7 +276,7 @@ namespace cardgate\api {
 
 		/**
 		 * Get the amount of the transaction.
-		 * @return Integer The amount of the transaction.
+		 * @return int The amount of the transaction.
 		 * @access public
 		 * @api
 		 */
@@ -286,8 +286,8 @@ namespace cardgate\api {
 
 		/**
 		 * Configure the transaction currency.
-		 * @param String $sCurrency_ The currency to set.
-		 * @return Transaction
+		 * @param string $sCurrency_ The currency to set.
+		 * @return $this
 		 * @throws Exception
 		 * @access public
 		 * @api
@@ -302,7 +302,7 @@ namespace cardgate\api {
 
 		/**
 		 * Get the currency of the transaction.
-		 * @return String The currency of the transaction.
+		 * @return string The currency of the transaction.
 		 * @access public
 		 * @api
 		 */
@@ -312,8 +312,8 @@ namespace cardgate\api {
 
 		/**
 		 * Configure the description for the transaction.
-		 * @param String $sDescription_ The description to set.
-		 * @return Transaction
+		 * @param string $sDescription_ The description to set.
+		 * @return $this
 		 * @throws Exception
 		 * @access public
 		 * @api
@@ -328,7 +328,7 @@ namespace cardgate\api {
 
 		/**
 		 * Get the description for the transaction.
-		 * @return String The description of the transaction.
+		 * @return string The description of the transaction.
 		 * @access public
 		 * @api
 		 */
@@ -338,8 +338,8 @@ namespace cardgate\api {
 
 		/**
 		 * Configure the reference for the transaction.
-		 * @param String $sReference_ The reference to set.
-		 * @return Transaction
+		 * @param string $sReference_ The reference to set.
+		 * @return $this
 		 * @throws Exception
 		 * @access public
 		 * @api
@@ -354,7 +354,7 @@ namespace cardgate\api {
 
 		/**
 		 * Get the reference for the transaction.
-		 * @return String The reference of the transaction.
+		 * @return string The reference of the transaction.
 		 * @access public
 		 * @api
 		 */
@@ -366,7 +366,7 @@ namespace cardgate\api {
 		 * Set the payment method to use for the transaction.
 		 * @param Mixed $mPaymentMethod_ The payment method to use for the transaction. Can be one of the
 		 * consts defined in {@link Method} or a {@link Method} instance.
-		 * @return Transaction
+		 * @return $this
 		 * @throws Exception
 		 * @access public
 		 * @api
@@ -394,8 +394,8 @@ namespace cardgate\api {
 
 		/**
 		 * Set the optional payment method issuer to use for the transaction.
-		 * @param String $sIssuer_ The payment method issuer to use for the transaction.
-		 * @return Transaction
+		 * @param string $sIssuer_ The payment method issuer to use for the transaction.
+		 * @return $this
 		 * @throws Exception
 		 * @access public
 		 * @api
@@ -413,18 +413,18 @@ namespace cardgate\api {
 
 		/**
 		 * Get the optional payment method issuer that will be used for the transaction.
-		 * @return Issuer The payment method issuer that will be used for the transaction.
+		 * @return string The payment method issuer that will be used for the transaction.
 		 * @access public
 		 * @api
 		 */
 		public function getIssuer() {
-			return $this->_oIssuer;
+			return $this->_sIssuer;
 		}
 
 		/**
 		 * Set the recurring flag on the transaction.
-		 * @param Boolean $bRecurring_ Wether or not this transaction can be used for recurring.
-		 * @return Transaction
+		 * @param bool $bRecurring_ Wether or not this transaction can be used for recurring.
+		 * @return $this
 		 * @throws Exception
 		 * @access public
 		 * @api
@@ -436,7 +436,7 @@ namespace cardgate\api {
 
 		/**
 		 * Get the recurring flag of the transaction.
-		 * @return Boolean Returns wether or not this transaction can be used for recurring.
+		 * @return bool Returns wether or not this transaction can be used for recurring.
 		 * @access public
 		 * @api
 		 */
@@ -447,7 +447,7 @@ namespace cardgate\api {
 		/**
 		 * Set the consumer for the transaction.
 		 * @param Consumer $oConsumer_ The consumer for the transaction.
-		 * @return Transaction
+		 * @return $this
 		 * @throws Exception
 		 * @access public
 		 * @api
@@ -473,7 +473,7 @@ namespace cardgate\api {
 		/**
 		 * Set the cart for the transaction.
 		 * @param Cart $oCart_ The cart for the transaction.
-		 * @return Transaction
+		 * @return $this
 		 * @throws Exception
 		 * @access public
 		 * @api
@@ -498,8 +498,8 @@ namespace cardgate\api {
 
 		/**
 		 * Set the callback URL.
-		 * @param String $sUrl_ The URL to send callbacks to.
-		 * @return Transaction
+		 * @param string $sUrl_ The URL to send callbacks to.
+		 * @return $this
 		 * @throws Exception
 		 * @access public
 		 * @api
@@ -514,7 +514,7 @@ namespace cardgate\api {
 
 		/**
 		 * Get the callbacl URL.
-		 * @return String The URL callbacks are being sent to.
+		 * @return string The URL callbacks are being sent to.
 		 * @access public
 		 * @api
 		 */
@@ -524,8 +524,8 @@ namespace cardgate\api {
 
 		/**
 		 * Set the success URL.
-		 * @param String $sUrl_ The URL to send successful transaction redirects.
-		 * @return Transaction
+		 * @param string $sUrl_ The URL to send successful transaction redirects.
+		 * @return $this
 		 * @throws Exception
 		 * @access public
 		 * @api
@@ -540,7 +540,7 @@ namespace cardgate\api {
 
 		/**
 		 * Get the success URL.
-		 * @return String The URL successful transactions are being redirected to.
+		 * @return string The URL successful transactions are being redirected to.
 		 * @access public
 		 * @api
 		 */
@@ -550,8 +550,8 @@ namespace cardgate\api {
 
 		/**
 		 * Set the failure URL.
-		 * @param String $sUrl_ The URL to send failed transaction redirects.
-		 * @return Transaction
+		 * @param string $sUrl_ The URL to send failed transaction redirects.
+		 * @return $this
 		 * @throws Exception
 		 * @access public
 		 * @api
@@ -566,7 +566,7 @@ namespace cardgate\api {
 
 		/**
 		 * Get the failure URL.
-		 * @return String The URL failed transactions are being redirected to.
+		 * @return string The URL failed transactions are being redirected to.
 		 * @access public
 		 * @api
 		 */
@@ -576,8 +576,8 @@ namespace cardgate\api {
 
 		/**
 		 * Set the failure URL.
-		 * @param String $sUrl_ The URL to send failed transaction redirects.
-		 * @return Transaction
+		 * @param string $sUrl_ The URL to send failed transaction redirects.
+		 * @return $this
 		 * @throws Exception
 		 * @access public
 		 * @api
@@ -592,8 +592,8 @@ namespace cardgate\api {
 
 		/**
 		 * Use this method to set the url for success, failure and pending all at once.
-		 * @param String $sUrl_ The URL to use for success, failure and pending.
-		 * @return Transaction
+		 * @param string $sUrl_ The URL to use for success, failure and pending.
+		 * @return $this
 		 * @throws Exception
 		 * @access public
 		 * @api
@@ -605,7 +605,7 @@ namespace cardgate\api {
 
 		/**
 		 * Get the pending URL.
-		 * @return String The URL pending transactions are being redirected to.
+		 * @return string The URL pending transactions are being redirected to.
 		 * @access public
 		 * @api
 		 */
@@ -615,7 +615,7 @@ namespace cardgate\api {
 
 		/**
 		 * Get the redirect URL after transaction register.
-		 * @return String The URL to redirect to after register.
+		 * @return string The URL to redirect to after register.
 		 * @access public
 		 * @api
 		 */
@@ -625,7 +625,7 @@ namespace cardgate\api {
 
 		/**
 		 * Registers the transaction with the cardgate payment gateway.
-		 * @return Transaction
+		 * @return $this
 		 * @throws Exception
 		 * @access public
 		 * @api
@@ -684,9 +684,9 @@ namespace cardgate\api {
 
 		/**
 		 * This method can be used to determine if this transaction can be refunded.
-		 * @param Boolean $iRemainder_ Will be set to the amount that can be refunded.
+		 * @param bool $iRemainder_ Will be set to the amount that can be refunded.
 		 * refunds are supported.
-		 * @return Boolean
+		 * @return bool
 		 * @throws Exception
 		 * @access public
 		 */
@@ -699,14 +699,14 @@ namespace cardgate\api {
 				throw new \cardgate\api\Exception( 'Transaction.Details.Invalid', 'invalid transaction data returned' );
 			}
 
-			$iRemainder_ = (integer)@$aResult['transaction']['refund_remainder'];
+			$iRemainder_ = (int) @$aResult['transaction']['refund_remainder'];
 
 			return !!@$aResult['transaction']['can_refund'];
 		}
 
 		/**
 		 * This method can be used to (partially) refund a transaction.
-		 * @param Integer $iAmount_
+		 * @param int $iAmount_
 		 * @return Transaction The new (refund) transaction.
 		 * @throws Exception
 		 * @access public
@@ -743,7 +743,7 @@ namespace cardgate\api {
 
 		/**
 		 * This method can be used to recur a transaction.
-		 * @param Integer $iAmount_
+		 * @param int $iAmount_
 		 * @return Transaction The new (recurred) transaction.
 		 * @throws Exception
 		 * @access public

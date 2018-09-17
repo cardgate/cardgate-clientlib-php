@@ -30,49 +30,49 @@ namespace cardgate\api {
 	/**
 	 * Item instance.
 	 *
-	 * @method Item setSKU( string $sSKU_ ) Sets the sku.
+	 * @method Item setSKU( \string $sSKU_ ) Sets the sku.
 	 * @method string getSKU() Returns the sku.
-	 * @method boolean hasSKU() Checks for existence of sku.
+	 * @method bool hasSKU() Checks for existence of sku.
 	 * @method Item unsetSKU() Unsets the sku.
 	 *
-	 * @method Item setName( string $sName_ ) Sets the name.
+	 * @method Item setName( \string $sName_ ) Sets the name.
 	 * @method string getName() Returns the name.
-	 * @method boolean hasName() Checks for existence of name.
+	 * @method bool hasName() Checks for existence of name.
 	 * @method Item unsetName() Unsets the name.
 	 *
-	 * @method Item setLink( string $sLink_ ) Sets the link.
+	 * @method Item setLink( \string $sLink_ ) Sets the link.
 	 * @method string getLink() Returns the link.
-	 * @method boolean hasLink() Checks for existence of link.
+	 * @method bool hasLink() Checks for existence of link.
 	 * @method Item unsetLink() Unsets the link.
 	 *
-	 * @method Item setQuantity( string $sQuantity_ ) Sets the quantity.
+	 * @method Item setQuantity( \string $sQuantity_ ) Sets the quantity.
 	 * @method string getQuantity() Returns the quantity.
-	 * @method boolean hasQuantity() Checks for existence of quantity.
+	 * @method bool hasQuantity() Checks for existence of quantity.
 	 * @method Item unsetQuantity() Unsets the quantity.
 	 *
-	 * @method Item setPrice( string $sPrice_ ) Sets the price.
-	 * @method string getPrice() Returns the price.
-	 * @method boolean hasPrice() Checks for existence of price.
+	 * @method Item setPrice( \int $iPrice_ ) Sets the price.
+	 * @method int getPrice() Returns the price.
+	 * @method bool hasPrice() Checks for existence of price.
 	 * @method Item unsetPrice() Unsets the price.
 	 *
 	 * @method string getType() Returns the type.
-	 * @method boolean hasType() Checks for existence of type.
+	 * @method bool hasType() Checks for existence of type.
 	 * @method Item unsetType() Unsets the type.
 	 *
 	 * @method float getVat() Returns the vat.
-	 * @method boolean hasVat() Checks for existence of vat.
+	 * @method bool hasVat() Checks for existence of vat.
 	 * @method Item unsetVat() Unsets the vat.
 	 *
-	 * @method boolean getVatIncluded() Returns the vat included flag.
-	 * @method boolean hasVatIncluded() Checks for existence of vat included flag.
+	 * @method bool getVatIncluded() Returns the vat included flag.
+	 * @method bool hasVatIncluded() Checks for existence of vat included flag.
 	 * @method Item unsetVatIncluded() Unsets the vat included flag.
 	 *
 	 * @method float getVatAmount() Returns the vat amount.
-	 * @method boolean hasVatAmount() Checks for existence of vat amount.
+	 * @method bool hasVatAmount() Checks for existence of vat amount.
 	 * @method Item unsetVatAmount() Unsets the vat amount.
 	 *
 	 * @method float getStock() Returns the stock.
-	 * @method boolean hasStock() Checks for existence of stock.
+	 * @method bool hasStock() Checks for existence of stock.
 	 * @method Item unsetStock() Unsets the stock.
 	 */
 	final class Item extends Entity {
@@ -131,12 +131,11 @@ namespace cardgate\api {
 
 		/**
 		 * The constructor.
-		 * @param integer $iType_ The cart item type.
+		 * @param int $iType_ The cart item type.
 		 * @param string $sSKU_ The SKU of the cart item.
 		 * @param string $sName_ The name of the cart item (productname).
-		 * @param string $iPrice_ The price of the cart item.
+		 * @param int $iPrice_ The price of the cart item.
 		 * @param string $sLink_ An optional link to the product.
-		 * @return Item
 		 * @throws Exception
 		 * @access public
 		 * @api
@@ -149,10 +148,10 @@ namespace cardgate\api {
 		}
 
 		/**
-		 * Set's the type (must be one of the {@link \cardgate\api\Item::TYPE_*}} constants.
-		 * @param integer $iType_ The cart item type to set.
+		 * Sets the type (must be one of the {@link \cardgate\api\Item::TYPE_*}} constants.
+		 * @param int $iType_ The cart item type to set.
 		 * @return Item Returns this, makes the call chainable.
-		 * @throws Exception
+		 * @throws Exception|\ReflectionException
 		 * @access public
 		 * @api
 		 */
@@ -167,7 +166,7 @@ namespace cardgate\api {
 		}
 
 		/**
-		 * Set's the vat.
+		 * Sets the vat.
 		 * @param float $fVat_ The vat to set.
 		 * @return Item Returns this, makes the call chainable.
 		 * @throws Exception
@@ -182,8 +181,8 @@ namespace cardgate\api {
 		}
 
 		/**
-		 * Set's the vat included flag.
-		 * @param boolean $bVatIncluded_ The vat included flag to set.
+		 * Sets the vat included flag.
+		 * @param bool $bVatIncluded_ The vat included flag to set.
 		 * @return Item Returns this, makes the call chainable.
 		 * @throws Exception
 		 * @access public
@@ -194,7 +193,7 @@ namespace cardgate\api {
 		}
 
 		/**
-		 * Set's the vat amount.
+		 * Sets the vat amount.
 		 * @param float $fVatAmount_ The vat amount to set.
 		 * @return Item Returns this, makes the call chainable.
 		 * @throws Exception
@@ -209,7 +208,7 @@ namespace cardgate\api {
 		}
 
 		/**
-		 * Set's the stock.
+		 * Sets the stock.
 		 * @param float $fStock_ The stock to set.
 		 * @return Item Returns this, makes the call chainable.
 		 * @throws Exception

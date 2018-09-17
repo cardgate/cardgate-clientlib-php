@@ -35,7 +35,6 @@ namespace cardgate\api\resource {
 		/**
 		 * This method can be used to create a new consumer.
 		 * @return \cardgate\api\Consumer
-		 * @throws Exception
 		 * @access public
 		 * @api
 		 */

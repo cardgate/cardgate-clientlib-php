@@ -32,12 +32,12 @@ namespace cardgate\api {
 	 *
 	 * @method Consumer setEmail( string $sEmail_ )
 	 * @method string getEmail()
-	 * @method boolean hasEmail()
+	 * @method bool hasEmail()
 	 * @method Consumer unsetEmail()
 	 *
 	 * @method Consumer setPhone( string $sPhone_ )
 	 * @method string getPhone()
-	 * @method boolean hasPhone()
+	 * @method bool hasPhone()
 	 * @method Consumer unsetPhone()
 	 */
 	final class Consumer extends Entity {
