@@ -116,7 +116,12 @@ namespace cardgate\api {
 		 * IDEALQR
 		 */
 		const IDEALQR = 'idealqr';
-		
+
+		/**
+		 * Paysafecash
+		 */
+		const PAYSAFECASH = 'paysafecash';
+
 		/**
 		 * The client associated with this payment method.
 		 * @var Client
@@ -142,17 +147,19 @@ namespace cardgate\api {
 		 * The constructor.
 		 * @param Client $oClient_ The client associated with this transaction.
 		 * @param string $sId_ The payment method identifier to create a method instance for.
-		 * @throws Exception
+		 * @throws Exception|\ReflectionException
 		 * @access public
 		 * @api
+		 * @throws
 		 */
 		function __construct( Client $oClient_, $sId_, $sName_ ) {
+			static $aValidMethods; // use static cache for this
+
+			if ( ! isset( $aValidMethods ) ) {
+				$aValidMethods  = ( new \ReflectionClass( '\cardgate\api\Method' ) )->getConstants();
+			}
 			$this->_oClient = $oClient_;
-			try {
-				if ( ! in_array( $sId_, ( new \ReflectionClass( '\cardgate\api\Method' ) )->getConstants() ) ) {
-					throw new Exception('Method.PaymentMethod.Invalid', 'invalid payment method: ' . $sId_);
-				}
-			} catch ( \ReflectionException $oException_ ) {
+			if ( ! in_array( $sId_, $aValidMethods ) ) {
 				throw new Exception('Method.PaymentMethod.Invalid', 'invalid payment method: ' . $sId_);
 			}
 			$this->setId( $sId_ );
@@ -225,10 +232,23 @@ namespace cardgate\api {
 		 * @api
 		 */
 		public function getIssuers() {
-			$sResource = $this->_sId . '/issuers/';
 
-			$aResult = $this->_oClient->doRequest( $sResource, NULL, 'GET' );
-
+			if ( TRUE ) {
+				// Use the static version which is automatically updated every day
+				$aResult = [
+					'issuers' => $this->_oClient->doRequest(
+						$this->_oClient->getTestMode()
+							?   '../../../cache/idealDirectoryCUROPayments-TEST.json'
+							:   '../../../cache/idealDirectoryCUROPayments.json'
+						, NULL, 'GET'
+					)
+				];
+			} else {
+				// Retrieve using API call.
+				// TODO: The response should be cached on the local system for 24 hours!
+				$sResource = $this->_sId . '/issuers/';
+				$aResult = $this->_oClient->doRequest( $sResource, NULL, 'GET' );
+			}
 			if ( empty( $aResult['issuers'] ) ) {
 				throw new Exception( 'Method.Issuers.Invalid', 'invalid issuer data returned' );
 			}

@@ -104,7 +104,7 @@ namespace cardgate\api {
 
 		/**
 		 * Sets the gender.
-		 * @param string $sGender The gender to set.
+		 * @param string $sGender_ The gender to set.
 		 * @return Address Returns this, makes the call chainable.
 		 * @throws Exception
 		 * @access public

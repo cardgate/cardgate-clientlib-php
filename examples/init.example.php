@@ -11,6 +11,8 @@ try {
 	$oCardGate->version()->setPlatformVersion( phpversion() );
 	$oCardGate->version()->setPluginName( 'Custom implementation' );
 	$oCardGate->version()->setPluginVersion( '0.0.1' );
+	// Add extra debug info during development
+	$oCardGate->setDebugLevel( $oCardGate::DEBUG_RESULTS );
 } catch ( \cardgate\api\Exception $oException_ ) {
 	echo 'something went wrong: ' . $oException_->getCode() . ': ' . $oException_->getMessage();
 }

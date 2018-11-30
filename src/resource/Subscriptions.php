@@ -72,6 +72,24 @@ namespace cardgate\api\resource {
 			if ( ! empty( $aResult['subscription']['reference'] ) ) {
 				$oSubscription->setReference( $aResult['subscription']['reference'] );
 			}
+			if ( ! empty( $aResult['subscription']['start_date'] ) ) {
+				$oSubscription->setStartDate( $aResult['subscription']['start_date'] );
+			}
+			if ( ! empty( $aResult['subscription']['end_date'] ) ) {
+				$oSubscription->setEndDate( $aResult['subscription']['end_date'] );
+			}
+			// TODO: map other subscription fields? method_id can't be used in client::Method currently...
+			/*
+			if ( ! empty( $aResult['subscription']['code'] ) ) {
+				$oSubscription->setCode( $aResult['subscription']['code'] );
+			}
+			if ( ! empty( $aResult['subscription']['payment_type_id'] ) ) {
+				$oSubscription->setPaymentMethod( $aResult['subscription']['payment_type_id'] );
+			}
+			if ( ! empty( $aResult['subscription']['last_payment_date'] ) ) {
+				$oSubscription->setPaymentMethod( $aResult['subscription']['last_payment_date'] );
+			}
+			*/
 
 			return $oSubscription;
 		}
