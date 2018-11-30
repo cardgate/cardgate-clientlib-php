@@ -105,7 +105,7 @@ namespace cardgate\api {
 		private $_sEndDate;
 
 		/**
-		 * The statuc of the subscription.
+		 * The status of the subscription.
 		 * @var string
 		 * @access private
 		 */
@@ -461,7 +461,7 @@ namespace cardgate\api {
 				empty( $aResult )
 				|| empty( $aResult['subscription'] )
 			) {
-				throw new Exception('Subscription.Request.Invalid', 'unexpected result: ' . $this->_oClient->getLastResult() . $this->_oClient->getDebugInfo( TRUE, FALSE ) );
+				throw new Exception( 'Subscription.Request.Invalid', 'unexpected result: ' . $this->_oClient->getLastResult() . $this->_oClient->getDebugInfo( TRUE, FALSE ) );
 			}
 			$this->_sId = $aResult['subscription'];
 			if (
@@ -503,7 +503,7 @@ namespace cardgate\api {
 
 			if ( FALSE == $aResult['success'] ) {
 				// oClient will have thrown an error if there was a proper error from the API, so this is weird!
-				throw new Exception('Subscription.Request.Invalid', 'unexpected result: ' . $this->_oClient->getLastResult() . $this->_oClient->getDebugInfo( TRUE, FALSE ) );
+				throw new Exception( 'Subscription.Request.Invalid', 'unexpected result: ' . $this->_oClient->getLastResult() . $this->_oClient->getDebugInfo( TRUE, FALSE ) );
 			}
 
 			return TRUE;

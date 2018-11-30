@@ -155,13 +155,13 @@ namespace cardgate\api {
 		 */
 		public function __debugInfo() {
 			return [
-				'Version'       => $this->_oVersion
-				, 'Testmode'    => $this->_bTestmode
-				, 'DebugLevel'  => $this->_iDebugLevel
-				, 'iMerchantId' => $this->_iMerchantId
-				, 'API_URL'     => $this->getUrl()
-				, 'LastRequest' => $this->_sLastRequest
-				, 'LastResult'  => $this->_sLastResult
+				'Version'       => $this->_oVersion,
+				'Testmode'    => $this->_bTestmode,
+				'DebugLevel'  => $this->_iDebugLevel,
+				'iMerchantId' => $this->_iMerchantId,
+				'API_URL'     => $this->getUrl(),
+				'LastRequest' => $this->_sLastRequest,
+				'LastResult'  => $this->_sLastResult
 			];
 		}
 
