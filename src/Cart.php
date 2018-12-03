@@ -47,7 +47,7 @@ namespace cardgate\api {
 		 * @param string $iPrice_ The price of the cart item.
 		 * @param string $sLink_ An optional link to the product.
 		 * @return Item Returns the item that was added.
-		 * @throws Exception
+		 * @throws Exception|\ReflectionException
 		 * @access public
 		 * @api
 		 */

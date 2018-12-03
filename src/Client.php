@@ -118,6 +118,25 @@ namespace cardgate\api {
 		private $_oMethods = NULL;
 
 		/**
+		 * Debug level. 0 = None, 1 = Include result in errors, 2 = Verbose CURL calls.
+		 * @var int
+		 * @access private
+		 */
+		const DEBUG_NONE    = 0;
+		const DEBUG_RESULTS = 1;
+		const DEBUG_VERBOSE = 2;
+
+		private $_iDebugLevel = 0;
+
+		/**
+		 * Last request and result for debugging.
+		 * @var string
+		 * @access private
+		 */
+		private $_sLastRequest = NULL;
+		private $_sLastResult = NULL;
+
+		/**
 		 * The constructor.
 		 * @param int $iMerchantId_ The merchant id for the client.
 		 * @param string $sKey_ The merchant API key for the client.
@@ -128,6 +147,22 @@ namespace cardgate\api {
 		 */
 		function __construct( $iMerchantId_, $sKey_, $bTestmode_ = FALSE ) {
 			$this->setMerchantId( $iMerchantId_ )->setKey( $sKey_ )->setTestmode( $bTestmode_ );
+		}
+
+		/**
+		 * Prevent leaking info in dumps.
+		 * @ignore
+		 */
+		public function __debugInfo() {
+			return [
+				'Version'       => $this->_oVersion,
+				'Testmode'    => $this->_bTestmode,
+				'DebugLevel'  => $this->_iDebugLevel,
+				'iMerchantId' => $this->_iMerchantId,
+				'API_URL'     => $this->getUrl(),
+				'LastRequest' => $this->_sLastRequest,
+				'LastResult'  => $this->_sLastResult
+			];
 		}
 
 		/**
@@ -154,6 +189,49 @@ namespace cardgate\api {
 		 */
 		public function getTestmode() {
 			return $this->_bTestmode;
+		}
+
+		/**
+		 * Set debug level.
+		 * @param int $iDebugLevel_ Level: 0 = None, 1 = Include request/resule in errors, 2 = Verbose cURL calls.
+		 * @return $this
+		 * @access public
+		 * @api
+		 */
+		public function setDebugLevel( $iLevel_ ) {
+			$this->_iDebugLevel = $iLevel_;
+			return $this;
+		}
+
+		/**
+		 * Get current debug level setting.
+		 * @return int The current debug level.
+		 * @access public
+		 * @api
+		 */
+		public function getDebugLevel() {
+			return $this->_iDebugLevel;
+		}
+
+		/**
+		 * Get debug information according to debug level.
+		 * @param bool $bStartWithNewLine_ Optional flag to indicate the info should start with a new-line.
+		 * @param bool $bAddResult_ Optional flag to indicate the result should be included too.
+		 * @return string Debug info or empty if level = 0.
+		 * @access public
+		 * @api
+		 */
+		public function getDebugInfo( $bStartWithNewLine_ = TRUE, $bAddResult_ = TRUE ) {
+			if ( $this->getDebugLevel() > self::DEBUG_NONE ) {
+				$sResult = ( $bStartWithNewLine_ ? PHP_EOL : '' );
+				$sResult .= 'Request: ' . $this->getLastRequest();
+				if ( $bAddResult_ ) {
+					$sResult .= PHP_EOL . 'Result: ' . $this->getLastResult();
+				}
+				return $sResult;
+			} else {
+				return '';
+			}
 		}
 
 		/**
@@ -275,6 +353,26 @@ namespace cardgate\api {
 			} else {
 				return ( $this->getTestmode() ? self::URL_STAGING : self::URL_PRODUCTION );
 			}
+		}
+
+		/**
+		 * Get the last request sent to the API.
+		 * @return string The request string.
+		 * @access public
+		 * @api
+		 */
+		public function getLastRequest() {
+			return (string) $this->_sLastRequest;
+		}
+
+		/**
+		 * Get the last result from an API call.
+		 * @return string The result string.
+		 * @access public
+		 * @api
+		 */
+		public function getLastResult() {
+			return (string) $this->_sLastResult;
 		}
 
 		/**
@@ -409,10 +507,6 @@ namespace cardgate\api {
 			if ( is_array( $aData_ ) ) {
 				$aData_['ip'] = $this->getIp();
 				$aData_['language_id'] = $this->getLanguage();
-				if ( 'GET' == $sHttpMethod_ ) {
-					$sDelim = ( FALSE === strchr( $sUrl, '?' ) ? '?' : '&' );
-					$sUrl .= $sDelim . http_build_query( $aData_ );
-				}
 			} elseif ( is_null( $aData_ ) ) {
 				$aData_ = [ 'ip' => $this->getIp(), 'language_id' => $this->getLanguage() ];
 			} else {
@@ -424,7 +518,6 @@ namespace cardgate\api {
 			}
 
 			$rCh = curl_init();
-			curl_setopt( $rCh, CURLOPT_URL, $sUrl );
 			curl_setopt( $rCh, CURLOPT_HTTPAUTH, CURLAUTH_BASIC );
 			curl_setopt( $rCh, CURLOPT_USERPWD, $this->_iMerchantId . ':' . $this->_sKey );
 			curl_setopt( $rCh, CURLOPT_RETURNTRANSFER, 1 );
@@ -443,22 +536,36 @@ namespace cardgate\api {
 			}
 
 			if ( 'POST' == $sHttpMethod_ ) {
+				$this->_sLastRequest = json_encode( $aData_ );
+				curl_setopt( $rCh, CURLOPT_URL, $sUrl );
 				curl_setopt( $rCh, CURLOPT_POST, TRUE );
-				curl_setopt( $rCh, CURLOPT_POSTFIELDS, json_encode( $aData_ ) );
+				curl_setopt( $rCh, CURLOPT_POSTFIELDS, $this->_sLastRequest );
+				$this->_sLastRequest = "[POST $sUrl] " . $this->_sLastRequest;
+			} else {
+				$this->_sLastRequest = $sUrl
+					. ( FALSE === strchr( $sUrl, '?' ) ? '?' : '&' )
+					. http_build_query( $aData_ )
+				;
+				curl_setopt( $rCh, CURLOPT_URL, $this->_sLastRequest );
 			}
 
-			if ( FALSE == ( $sResults = curl_exec( $rCh ) ) ) {
+			if ( self::DEBUG_VERBOSE == $this->_iDebugLevel ) {
+				curl_setopt( $rCh, CURLOPT_VERBOSE, TRUE );
+			}
+
+			$this->_sLastResult = curl_exec( $rCh );
+			if ( FALSE == $this->_sLastResult ) {
 				$sError = curl_error( $rCh );
 				curl_close( $rCh );
 				throw new Exception( 'Client.Request.Curl.Error', $sError );
 			} else {
 				curl_close( $rCh );
 			}
-			if ( NULL === ( $aResults = json_decode( $sResults, TRUE ) ) ) {
-				throw new Exception( 'Client.Request.JSON.Invalid', 'remote gave invalid JSON: ' . $sResults );
+			if ( NULL === ( $aResults = json_decode( $this->_sLastResult, TRUE ) ) ) {
+				throw new Exception( 'Client.Request.JSON.Invalid', 'remote gave invalid JSON: ' . $this->_sLastResult );
 			}
 			if ( isset( $aResults['error'] ) ) {
-				throw new Exception( 'Client.Request.Remote.' . $aResults['error']['code'], $aResults['error']['message'] );
+				throw new Exception( 'Client.Request.Remote.' . $aResults['error']['code'], $aResults['error']['message']	. $this->getDebugInfo()	);
 			}
 
 			return $aResults;

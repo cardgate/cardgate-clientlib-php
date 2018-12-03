@@ -105,6 +105,13 @@ namespace cardgate\api {
 		private $_sEndDate;
 
 		/**
+		 * The status of the subscription.
+		 * @var string
+		 * @access private
+		 */
+		private $_sStatus;
+
+		/**
 		 * The constructor.
 		 * @param Client $oClient_ The client associated with this subscription.
 		 * @param int $iSiteId_ Site id to create the subscription for.
@@ -118,7 +125,11 @@ namespace cardgate\api {
 		 */
 		function __construct( Client $oClient_, $iSiteId_, $iPeriod_, $sPeriodType_, $iPeriodAmount_, $sCurrency_ = 'EUR' ) {
 			$this->_oClient = $oClient_;
-			$this->setSiteId( $iSiteId_ )->setPeriod( $iPeriod_ )->setPeriodType( $sPeriodType_ )->setPeriodPrice( $iPeriodAmount_ )->setCurrency( $sCurrency_ );
+			$this->setSiteId( $iSiteId_ )
+			     ->setPeriod( $iPeriod_ )
+			     ->setPeriodType( $sPeriodType_ )
+			     ->setPeriodPrice( $iPeriodAmount_ )
+			     ->setCurrency( $sCurrency_ );
 		}
 
 		/**
@@ -450,7 +461,7 @@ namespace cardgate\api {
 				empty( $aResult )
 				|| empty( $aResult['subscription'] )
 			) {
-				throw new Exception( 'Subscription.Request.Invalid', 'invalid payment data returned' );
+				throw new Exception( 'Subscription.Request.Invalid', 'unexpected result: ' . $this->_oClient->getLastResult() . $this->_oClient->getDebugInfo( TRUE, FALSE ) );
 			}
 			$this->_sId = $aResult['subscription'];
 			if (
@@ -491,7 +502,8 @@ namespace cardgate\api {
 			$aResult = $this->_oClient->doRequest( $sResource, $aData, 'POST' );
 
 			if ( FALSE == $aResult['success'] ) {
-				throw new Exception( 'Subscription.Request.Invalid', 'error changing status' );
+				// oClient will have thrown an error if there was a proper error from the API, so this is weird!
+				throw new Exception( 'Subscription.Request.Invalid', 'unexpected result: ' . $this->_oClient->getLastResult() . $this->_oClient->getDebugInfo( TRUE, FALSE ) );
 			}
 
 			return TRUE;

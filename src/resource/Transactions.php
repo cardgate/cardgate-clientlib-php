@@ -51,7 +51,7 @@ namespace cardgate\api\resource {
 			$aResult = $this->_oClient->doRequest( $sResource, NULL, 'GET' );
 
 			if ( empty( $aResult['transaction'] ) ) {
-				throw new \cardgate\api\Exception( 'Transaction.Details.Invalid', 'invalid transaction data returned' );
+				throw new \cardgate\api\Exception( 'Transaction.Details.Invalid', 'invalid transaction data returned' . $this->_oClient->getDebugInfo() );
 			}
 
 			if ( ! is_null( $aDetails_ ) ) {
@@ -60,8 +60,8 @@ namespace cardgate\api\resource {
 
 			$oTransaction = new \cardgate\api\Transaction(
 				$this->_oClient,
-				(int)$aResult['transaction']['site_id'],
-				(int)$aResult['transaction']['amount'],
+				(int) $aResult['transaction']['site_id'],
+				(int) $aResult['transaction']['amount'],
 				$aResult['transaction']['currency_id']
 			);
 			$oTransaction->setId( $aResult['transaction']['id'] );
@@ -99,7 +99,7 @@ namespace cardgate\api\resource {
 				empty( $aResult['status'] )
 				|| ! is_string( $aResult['status'] )
 			) {
-				throw new \cardgate\api\Exception( 'Transaction.Status.Invalid', 'invalid transaction status returned' );
+				throw new \cardgate\api\Exception( 'Transaction.Status.Invalid', 'invalid transaction status returned' . $this->_oClient->getDebugInfo() );
 			}
 
 			return $aResult['status'];

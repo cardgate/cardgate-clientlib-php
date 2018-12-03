@@ -42,7 +42,7 @@ namespace cardgate\api {
 		 * @ignore
 		 * @internal To make the data in an Entity available through magic functions (setName, getAmount, unsetName,
 		 * hasCart) populate the _aFields property below. To make autocompletion work in Zend, use the @method phpdoc
-		 * directove like this: @method null setId( int $iId ).
+		 * directive like this: @method null setId( int $iId ).
 		 * Example: [ 'MerchantId' => 'merchant_id', 'Name' => 'name' ]
 		 */
 		static protected $_aFields = [];
@@ -52,15 +52,16 @@ namespace cardgate\api {
 		 * @param string $sPrefix_ Optionally prefix all the data entries.
 		 * @return array Returns an array with the data in the entity.
 		 */
-		public function getData( $sPrefix_ = FALSE ) {
-			$aResult = [];
-			foreach( $this->_aData as $sKey => $mValue ) {
-				if ( is_string( $sPrefix_ ) ) {
-					$sKey = $sPrefix_ . $sKey;
+		public function getData( $sPrefix_ = NULL ) {
+			if ( is_string( $sPrefix_ ) ) {
+				$aResult = [];
+				foreach( $this->_aData as $sKey => $mValue ) {
+					$aResult[$sPrefix_ . $sKey] = $mValue;
 				}
-				$aResult[$sKey] = $mValue;
+				return $aResult;
+			} else {
+				return $this->_aData;
 			}
-			return $aResult;
 		}
 
 		/**

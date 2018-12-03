@@ -367,7 +367,7 @@ namespace cardgate\api {
 		 * @param Mixed $mPaymentMethod_ The payment method to use for the transaction. Can be one of the
 		 * consts defined in {@link Method} or a {@link Method} instance.
 		 * @return $this
-		 * @throws Exception
+		 * @throws Exception|\ReflectionException
 		 * @access public
 		 * @api
 		 */
@@ -425,12 +425,11 @@ namespace cardgate\api {
 		 * Set the recurring flag on the transaction.
 		 * @param bool $bRecurring_ Wether or not this transaction can be used for recurring.
 		 * @return $this
-		 * @throws Exception
 		 * @access public
 		 * @api
 		 */
 		public function setRecurring( $bRecurring_ ) {
-			$this->_bRecurring = $bRecurring_;
+			$this->_bRecurring = (bool) $bRecurring_;
 			return $this;
 		}
 
@@ -448,7 +447,6 @@ namespace cardgate\api {
 		 * Set the consumer for the transaction.
 		 * @param Consumer $oConsumer_ The consumer for the transaction.
 		 * @return $this
-		 * @throws Exception
 		 * @access public
 		 * @api
 		 */
@@ -485,7 +483,6 @@ namespace cardgate\api {
 		 * Set the cart for the transaction.
 		 * @param Cart $oCart_ The cart for the transaction.
 		 * @return $this
-		 * @throws Exception
 		 * @access public
 		 * @api
 		 */
@@ -680,7 +677,7 @@ namespace cardgate\api {
 				empty( $aResult['payment'] )
 				|| empty( $aResult['payment']['transaction'] )
 			) {
-				throw new Exception( 'Transaction.Request.Invalid', 'invalid payment data returned' );
+				throw new Exception( 'Transaction.Request.Invalid', 'unexpected result: ' . $this->_oClient->getLastResult() . $this->_oClient->getDebugInfo( TRUE, FALSE ) );
 			}
 			$this->_sId = $aResult['payment']['transaction'];
 			if (
@@ -707,12 +704,12 @@ namespace cardgate\api {
 			$aResult = $this->_oClient->doRequest( $sResource, NULL, 'GET' );
 
 			if ( empty( $aResult['transaction'] ) ) {
-				throw new \cardgate\api\Exception( 'Transaction.Details.Invalid', 'invalid transaction data returned' );
+				throw new Exception( 'Transaction.CanRefund.Invalid', 'unexpected result: ' . $this->_oClient->getLastResult() . $this->_oClient->getDebugInfo( TRUE, FALSE ) );
 			}
 
 			$iRemainder_ = (int) @$aResult['transaction']['refund_remainder'];
 
-			return !!@$aResult['transaction']['can_refund'];
+			return !empty( $aResult['transaction']['can_refund'] );
 		}
 
 		/**
@@ -746,15 +743,18 @@ namespace cardgate\api {
 				empty( $aResult['refund'] )
 				|| empty( $aResult['refund']['transaction'] )
 			) {
-				throw new Exception( 'Transaction.Request.Invalid', 'invalid payment data returned' );
+				throw new Exception( 'Transaction.Refund.Invalid', 'unexpected result: ' . $this->_oClient->getLastResult() . $this->_oClient->getDebugInfo( TRUE, FALSE ) );
 			}
 
+			// This is a bit unlogical! Why not leave this to the callee?
 			return $this->_oClient->transactions()->get( $aResult['refund']['transaction'] );
 		}
 
 		/**
 		 * This method can be used to recur a transaction.
 		 * @param int $iAmount_
+		 * @param string $sReference_ Optional reference for the recurring transaction.
+		 * @param string $sDescription_ Optional description for the recurring transaction.
 		 * @return Transaction The new (recurred) transaction.
 		 * @throws Exception
 		 * @access public
@@ -781,9 +781,10 @@ namespace cardgate\api {
 				empty( $aResult['recurring'] )
 				|| empty( $aResult['recurring']['transaction_id'] )
 			) {
-				throw new Exception( 'Transaction.Request.Invalid', 'invalid payment data returned' );
+				throw new Exception( 'Transaction.Recur.Invalid', 'unexpected result: ' . $this->_oClient->getLastResult() . $this->_oClient->getDebugInfo( TRUE, FALSE ) );
 			}
 
+			// Same unlogical stuff as method above! Why not leave this to the callee?
 			return $this->_oClient->transactions()->get( $aResult['recurring']['transaction_id'] );
 		}
 
