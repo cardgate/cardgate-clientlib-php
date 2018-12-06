@@ -121,6 +121,11 @@ namespace cardgate\api {
 		 * Paysafecash
 		 */
 		const PAYSAFECASH = 'paysafecash';
+		
+		/**
+		 * SofortPay
+		 */
+		const SOFORTPAY = 'sofortpay';
 
 		/**
 		 * The client associated with this payment method.
