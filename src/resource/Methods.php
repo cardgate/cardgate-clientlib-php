@@ -50,7 +50,7 @@ namespace cardgate\api\resource {
 		 * @return array
 		 * @throws \cardgate\api\Exception|\ReflectionException
 		 * @access public
-		 * @pai
+		 * @api
 		 */
 		public function all( $iSiteId_ ) {
 			if ( ! is_integer( $iSiteId_ ) ) {
@@ -66,14 +66,13 @@ namespace cardgate\api\resource {
 			}
 
 			$aMethods = [];
-			try {
-				foreach( $aResult['options'] as $aOption ) {
+			foreach( $aResult['options'] as $aOption ) {
+				try {
 					$aMethods[] = new \cardgate\api\Method( $this->_oClient, $aOption['id'], $aOption['name'] );
+				} catch ( \cardgate\api\Exception $oException_ ) {
+					trigger_error( $oException_->getMessage() . '. Please update this SDK to the latest version.', E_USER_WARNING );
 				}
-			} catch ( \cardgate\api\Exception $oException_ ) {
-				throw new \cardgate\api\Exception( 'Method.Option.Invalid', $oException_->getMessage() . '. Please update this SDK to the latest version.' );
 			}
-
 			return $aMethods;
 		}
 
