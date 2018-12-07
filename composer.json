@@ -19,7 +19,7 @@
 		"afterpay", "bitcoin", "directdebit"
 	],
 	"require" : {
-		"php": "~5.6.0|~7.0.0|~7.1.0|~7.2.0"
+		"php": "^5.6 | ^7.0"
 	},
 	"autoload": {
 		"psr-4": {
