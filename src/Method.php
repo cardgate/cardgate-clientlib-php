@@ -126,6 +126,11 @@ namespace cardgate\api {
 		 * SofortPay
 		 */
 		const SOFORTPAY = 'sofortpay';
+		
+		/**
+		 * Gift Card
+		 */
+		const GIFTCARD = 'giftcard';
 
 		/**
 		 * The client associated with this payment method.
