@@ -32,7 +32,7 @@ You may also git clone or [download the files manually](https://github.com/cardg
 
 ```php
 	cardgate\api\Autoloader::register();
-	$oCardGate = new cardgate\api\Client( 1, '<merchant key>', TRUE );
+	$oCardGate = new cardgate\api\Client( <merchant id>, '<merchant key>', TRUE );
 ```
 
 ## Support ##
