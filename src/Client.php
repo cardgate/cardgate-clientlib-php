@@ -35,7 +35,7 @@ namespace cardgate\api {
 		/**
 		 * Client version.
 		 */
-		const CLIENT_VERSION = "1.1.10";
+		const CLIENT_VERSION = "1.1.11";
 
 		/**
 		 * Url to use for production.
@@ -295,14 +295,14 @@ namespace cardgate\api {
 		 * @api
 		 */
 		public function setIp( $sIp_ ) {
-			if (
-				! is_string( $sIp_ )
-				|| FALSE === filter_var( $sIp_, FILTER_VALIDATE_IP ) // NOTE ipv6
-			) {
-				throw new Exception( 'Client.Ip.Invalid', 'invalid IP address: ' . $sIp_ );
-			}
-			$this->_sIp = $sIp_;
-			return $this;
+		    if (
+		        ! is_string( $sIp_ )
+		        || FALSE === filter_var( $sIp_, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6 | FILTER_FLAG_IPV4)
+		        ) {
+		            throw new Exception( 'Client.Ip.Invalid', 'invalid IP address: ' . $sIp_ );
+		        }
+		        $this->_sIp = $sIp_;
+		        return $this;
 		}
 
 		/**
