@@ -123,9 +123,9 @@ namespace cardgate\api {
 		const PAYSAFECASH = 'paysafecash';
 		
 		/**
-		 * SofortPay
+		 * OnlineUberweisen
 		 */
-		const SOFORTPAY = 'sofortpay';
+		const ONLINEUEBERWEISEN = 'onlineueberweisen';
 		
 		/**
 		 * Gift Card
