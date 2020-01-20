@@ -3,7 +3,7 @@ class apiUnitTest extends \PHPUnit\Framework\TestCase {
 
 	private $_oClient;
 
-	protected function setUp() {
+	protected function setUp() : void {
 		$this->_oClient = new cardgate\api\Client( 1, 'fake_key', TRUE );
 		return;
 	}
