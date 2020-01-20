@@ -5,7 +5,6 @@ class apiUnitTest extends \PHPUnit\Framework\TestCase {
 
 	protected function setUp() {
 		$this->_oClient = new cardgate\api\Client( 1, 'fake_key', TRUE );
-		parent::setUp();
 	}
 
 	protected function tearDown() {
