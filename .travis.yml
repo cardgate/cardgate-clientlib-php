@@ -22,5 +22,4 @@ install:
   - composer require --dev "phpunit/phpunit"
 
 script:
-  - composer validate --strict
   - vendor/bin/phpunit -c phpunit.xml
