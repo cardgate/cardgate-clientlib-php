@@ -8,9 +8,9 @@ class apiUnitTest extends \PHPUnit\Framework\TestCase {
 		return;
 	}
 
-	protected function tearDown() {
+	protected function tearDown() : void{
 		$this->_oClient = NULL;
-		parent::tearDown();
+		return;
 	}
 
 	public function testCreateClientInstance() {
