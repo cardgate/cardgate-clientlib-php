@@ -20,6 +20,3 @@ cache:
 install:
   - travis_retry composer install --no-interaction
   - composer require --dev "phpunit/phpunit"
-
-script:
-  - vendor/bin/phpunit -c phpunit.xml
