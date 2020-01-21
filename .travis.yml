@@ -19,4 +19,4 @@ cache:
 
 install:
   - travis_retry composer install --no-interaction
-  - composer require --dev "phpunit/phpunit: 5.7.27"
+  - composer require --dev "phpunit/phpunit"
