@@ -3,14 +3,14 @@ class apiUnitTest extends \PHPUnit\Framework\TestCase {
 
 	private $_oClient;
 
-	protected function setUp() : void {
+	protected function setUp() {
 		$this->_oClient = new cardgate\api\Client( 1, 'fake_key', TRUE );
-		return;
+		return null;
 	}
 
-	protected function tearDown() : void{
+	protected function tearDown() {
 		$this->_oClient = NULL;
-		return;
+		return null;
 	}
 
 	public function testCreateClientInstance() {
