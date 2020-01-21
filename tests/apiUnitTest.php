@@ -3,15 +3,8 @@ class apiUnitTest extends \PHPUnit\Framework\TestCase {
 
 	private $_oClient;
 
-	protected function setUp() {
-		$this->_oClient = new cardgate\api\Client( 1, 'fake_key', TRUE );
-	}
-
-	protected function tearDown() {
-		$this->_oClient = NULL;
-	}
-
 	public function testCreateClientInstance() {
+		$this->_oClient = new cardgate\api\Client( 1, 'fake_key', TRUE );
 		$this->_oClient->setLanguage( 'nl' );
 		$this->assertEquals( 'nl', $this->_oClient->getLanguage(), 'language not set' );
 		$this->_oClient->version()->setPlatformName( 'PHP' );
@@ -22,6 +15,7 @@ class apiUnitTest extends \PHPUnit\Framework\TestCase {
 		$this->assertEquals( 'Test Implementation', $this->_oClient->version()->getPluginName(), 'plugin name not set' );
 		$this->_oClient->version()->setPluginVersion( '0.0.1' );
 		$this->assertEquals( '0.0.1', $this->_oClient->version()->getPluginVersion(), 'plugin version not set' );
+		$this->_oClient = NULL;
 	}
 
 }
