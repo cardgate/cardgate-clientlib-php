@@ -502,7 +502,7 @@ namespace cardgate\api {
 			}
 
 			if ( 'POST' == $sHttpMethod_ ) {
-				$this->_sLastRequest = json_encode( $aData_ );
+				$this->_sLastRequest = json_encode( $aData_, JSON_PARTIAL_OUTPUT_ON_ERROR );
 				curl_setopt( $rCh, CURLOPT_URL, $sUrl );
 				curl_setopt( $rCh, CURLOPT_POST, TRUE );
 				curl_setopt( $rCh, CURLOPT_POSTFIELDS, $this->_sLastRequest );
