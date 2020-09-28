@@ -133,6 +133,11 @@ namespace cardgate\api {
 		const GIFTCARD = 'giftcard';
 
 		/**
+		 * EPS
+		 */
+		const EPS = 'eps';
+
+		/**
 		 * The client associated with this payment method.
 		 * @var Client
 		 * @access private
