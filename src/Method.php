@@ -138,6 +138,11 @@ namespace cardgate\api {
 		const EPS = 'eps';
 
 		/**
+		 * SprayPay
+		 */
+		const SPRAYPAY = 'spraypay';
+
+		/**
 		 * The client associated with this payment method.
 		 * @var Client
 		 * @access private
