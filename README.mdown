@@ -1,0 +1,41 @@
+![CardGate](https://cdn.curopayments.net/thumb/200/logos/cardgate.png)
+
+# CardGate API client library for PHP #
+
+[![Total Downloads](https://img.shields.io/packagist/dt/cardgate/cardgate-clientlib-php.svg)](https://packagist.org/packages/cardgate/cardgate-clientlib-php)
+[![Latest Version](https://img.shields.io/packagist/v/cardgate/cardgate-clientlib-php.svg)](https://github.com/cardgate/cardgate-clientlib-php/releases)
+[![Build Status](https://travis-ci.org/cardgate/cardgate-clientlib-php.svg?branch=master)](https://travis-ci.org/cardgate/cardgate-clientlib-php)
+
+## Installation ##
+
+![CardGate API](https://cdn.curopayments.net/thumb/50/logos/cardgate.api.png)
+
+The CardGate API client library is installed via [Composer](http://getcomposer.org/). To install, simply add it
+to your `composer.json` file:
+
+```json
+{
+    "require": {
+        "cardgate/cardgate-clientlib-php": "~1.1.4"
+    }
+}
+```
+
+And run composer to update your dependencies:
+
+    $ curl -s http://getcomposer.org/installer | php
+    $ php composer.phar update
+
+You may also git clone or [download the files manually](https://github.com/cardgate/cardgate-clientlib-php/releases), and include the client library in your project.
+
+## Basic Usage ##
+
+```php
+	cardgate\api\Autoloader::register();
+	$oCardGate = new cardgate\api\Client( <merchant id>, '<merchant key>', TRUE );
+```
+
+## Support ##
+
+If you believe you have found a bug, please report it using the [GitHub issue tracker](https://github.com/cardgate/cardgate-clientlib-php/issues) or
+contact us at [tech@cardgate.com](mailto:tech@cardgate.com?subject=CardGate%20API%20client%20library%20for%20PHP%20Support).
