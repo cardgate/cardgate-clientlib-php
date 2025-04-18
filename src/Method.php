@@ -142,6 +142,11 @@ namespace cardgate\api {
 		 */
 		const SPRAYPAY = 'spraypay';
 
+        /**
+         * Crypto
+         */
+        const CRYPTO = 'crypto';
+
 		/**
 		 * The client associated with this payment method.
 		 * @var Client
