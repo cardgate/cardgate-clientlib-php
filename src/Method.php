@@ -47,7 +47,12 @@ namespace cardgate\api {
 		 */
 		const BANCONTACT = 'bancontact';
 
-		/**
+        /**
+         * MisterCash (legacy)
+         */
+        const MISTERCASH = 'mistercash';
+
+        /**
 		 * CreditCard.
 		 */
 		const CREDITCARD = 'creditcard';
