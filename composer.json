@@ -2,7 +2,7 @@
 	"name": "cardgate/cardgate-clientlib-php",
 	"description": "CardGate API client library for PHP",
 	"homepage": "https://github.com/cardgate/cardgate-clientlib-php",
-	"version": "1.1.21",
+	"version": "1.1.22",
 	"license": "MIT",
 	"authors": [
 		{
