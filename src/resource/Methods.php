@@ -65,8 +65,14 @@ namespace cardgate\api\resource {
 				throw new \cardgate\api\Exception( 'Method.Options.Invalid', 'unexpected result: ' . $this->_oClient->getLastResult() . $this->_oClient->getDebugInfo( TRUE, FALSE )	);
 			}
 
+            $aValidMethods  = ( new \ReflectionClass( '\cardgate\api\Method' ) )->getConstants();
 			$aMethods = [];
 			foreach( $aResult['options'] as $aOption ) {
+
+                if (!in_array($aOption['id'],$aValidMethods)) {
+                    continue;
+                }
+
 				try {
 					$aMethods[] = new \cardgate\api\Method( $this->_oClient, $aOption['id'], $aOption['name'] );
 				} catch ( \cardgate\api\Exception $oException_ ) {
@@ -75,7 +81,6 @@ namespace cardgate\api\resource {
 			}
 			return $aMethods;
 		}
-
 	}
 
 }
