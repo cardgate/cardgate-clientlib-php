@@ -35,7 +35,7 @@ namespace cardgate\api {
 		/**
 		 * Client version.
 		 */
-		const CLIENT_VERSION = "1.1.23";
+		const CLIENT_VERSION = "1.1.24";
 
 		/**
 		 * Url to use for production.
