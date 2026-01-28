@@ -34,7 +34,7 @@ namespace cardgate\api {
      *
      * @method Address setFirstName( string $sFirstName_ ) Sets the first name.
      * @method string getFirstName() Returns the first name.
-     * @method bool hasFirstName() Checks for existence of first name.
+     * @method bool hasFirstName() Checks for the existence of first name.
      * @method Address unsetFirstName() Unsets the first name.
      *
      * @method Address setInitials( string $sInitials_ ) Sets the initials.
@@ -57,31 +57,31 @@ namespace cardgate\api {
      *
      * @method Address setCompany( string $sCompany_ ) Sets the company.
      * @method string getCompany() Returns the company.
-     * @method bool hasCompany() Checks for the existence of company.
+     * @method bool hasCompany() Checks for the existence of a company.
      * @method Address unsetCompany() Unsets the company.
      *
      * @method Address setAddress( string $sAddress_ ) Sets the address.
      * @method string getAddress() Returns the address.
-     * @method bool hasAddress() Checks for the existence of address.
+     * @method bool hasAddress() Checks for the existence of an address.
      * @method Address unsetAddress() Unsets the address.
      *
      * @method Address setCity( string $sCity_ ) Sets the city.
-     * @method string getCity() Returns the city.
-     * @method bool hasCity() Checks for the existence of city.
+     * @method string getCity() Returns city.
+     * @method bool hasCity() Checks for the existence of a city.
      * @method Address unsetCity() Unsets the city.
      *
      * @method Address setState( string $sState_ ) Sets the state.
      * @method string getState() Returns the state.
-     * @method bool hasState() Checks for the existence of state.
+     * @method bool hasState() Checks for the existence of a state.
      * @method Address unsetState() Unsets the state.
      *
      * @method Address setZipCode( string $sZipCode_ ) Sets the zipcode.
      * @method string getZipCode() Returns the zipcode.
-     * @method bool hasZipCode() Checks for existence of zipcode.
+     * @method bool hasZipCode() Checks for the existence of zipcode.
      * @method Address unsetZipCode() Unsets the zipcode.
      *
-     * @method string getCountry() Returns the country.
-     * @method bool hasCountry() Checks for existence of country.
+     * @method string getCountry() Returns country.
+     * @method bool hasCountry() Checks for the existence of a country.
      * @method Address unsetCountry() Unsets the country.
      */
     final class Address extends Entity
@@ -112,12 +112,10 @@ namespace cardgate\api {
          * @access public
          * @api
          */
-        public function setGender($sGender_)
+        public function setGender(?string $sGender_): Address
         {
-            if (
-                ! is_string($sGender_)
-                || strlen($sGender_) != 1
-            ) {
+            if (strlen($sGender_) != 1 )
+            {
                 throw new Exception('Address.Gender.Invalid', 'invalid gender: ' . $sGender_);
             }
             return parent::setGender($sGender_);
@@ -131,11 +129,9 @@ namespace cardgate\api {
          * @access public
          * @api
          */
-        public function setDayOfBirth($sDayOfBirth_)
+        public function setDayOfBirth(?string $sDayOfBirth_): Address
         {
-            if (
-                ! is_string($sDayOfBirth_)
-                || false == ( $iDayOfBirthUnix = strtotime($sDayOfBirth_) )
+            if ( !( $iDayOfBirthUnix = strtotime( $sDayOfBirth_ ) )
             ) {
                 throw new Exception('Address.DayOfBirth.Invalid', 'invalid day of birth: ' . $sDayOfBirth_);
             }
@@ -150,15 +146,14 @@ namespace cardgate\api {
          * @access public
          * @api
          */
-        public function setCountry($sCountry_)
+        public function setCountry(?string $sCountry_): Address
         {
-            if (
-                ! is_string($sCountry_)
-                || strlen($sCountry_) != 2
-            ) {
-                throw new Exception('Address.Country.Invalid', 'invalid country: ' . $sCountry_);
+            if ( strlen( $sCountry_ ) == 2)
+            {
+                return parent::setCountry( $sCountry_ );
+            } else {
+                throw new Exception( 'Address.Country.Invalid', 'invalid country: ' . $sCountry_ );
             }
-            return parent::setCountry($sCountry_);
         }
     }
 
