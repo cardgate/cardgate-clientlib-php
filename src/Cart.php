@@ -29,6 +29,8 @@
 
 namespace cardgate\api {
 
+    use ReflectionException;
+
     /**
      * Cart instance.
      */
@@ -43,17 +45,19 @@ namespace cardgate\api {
 
         /**
          * Add a cart item to the cart.
+         *
          * @param int $iType_ The cart item type.
          * @param string $sSKU_ The SKU of the cart item.
-         * @param string $sName_ The name of the cart item (productname).
-         * @param string $iPrice_ The price of the cart item.
-         * @param string $sLink_ An optional link to the product.
+         * @param string $sName_ The product name of the cart item.
+         * @param int $iPrice_ The price of the cart item.
+         * @param string | null $sLink_ An optional link to the product.
+         *
          * @return Item Returns the item that was added.
-         * @throws Exception|\ReflectionException
+         * @throws Exception|ReflectionException
          * @access public
          * @api
          */
-        public function addItem($iType_, $sSKU_, $sName_, $iQuantity_, $iPrice_, $sLink_ = null)
+        public function addItem(int $iType_, string $sSKU_, string $sName_, int $iQuantity_, int $iPrice_, ?string $sLink_ = null): Item
         {
             $oItem = new Item($iType_, $sSKU_, $sName_, $iQuantity_, $iPrice_, $sLink_);
             $this->aItems[] = $oItem;
@@ -64,7 +68,7 @@ namespace cardgate\api {
         {
         }
 
-        public function getData()
+        public function getData(): array
         {
             $aData = [];
             foreach ($this->aItems as $oItem) {

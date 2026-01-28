@@ -40,7 +40,7 @@ namespace cardgate\api {
          * @param string $sClass_ The class to load
          * @access private
          */
-        private static function autoload($sClass_)
+        private static function autoload(string $sClass_)
         {
             $iLength = strlen(__NAMESPACE__);
             if (substr($sClass_, 0, $iLength) == __NAMESPACE__) {
@@ -52,7 +52,7 @@ namespace cardgate\api {
          * Register the autoloader.
          * @access public
          */
-        public static function register()
+        public static function register(): bool
         {
             return spl_autoload_register([ __CLASS__, 'autoload' ]);
         }
