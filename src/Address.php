@@ -106,7 +106,7 @@ namespace cardgate\api {
 
         /**
          * Sets the gender.
-         * @param string $sGender_ The gender to set.
+         * @param string | null $sGender_ The gender to set.
          * @return Address Returns this, makes the call chainable.
          * @throws Exception
          * @access public
@@ -123,7 +123,7 @@ namespace cardgate\api {
 
         /**
          * Sets the day of birth.
-         * @param string $sDayOfBirth_ The day of birth to set.
+         * @param string|null $sDayOfBirth_ The day of birth to set.
          * @return Address Returns this, makes the call chainable.
          * @throws Exception
          * @access public
@@ -140,7 +140,7 @@ namespace cardgate\api {
 
         /**
          * Sets the country.
-         * @param string $sCountry_ The country to set (ISO 3166-1 alpha-2).
+         * @param string | null $sCountry_ The country to set (ISO 3166-1 alpha-2).
          * @return Address Returns this, makes the call chainable.
          * @throws Exception
          * @access public
