@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) 2018 CardGate B.V.
  *
@@ -25,23 +26,24 @@
  * @copyright   CardGate B.V.
  * @link        https://www.cardgate.com
  */
+
 namespace cardgate\api\resource {
 
-	/**
-	 * CardGate resource object.
-	 */
-	final class Consumers extends Base {
-
-		/**
-		 * This method can be used to create a new consumer.
-		 * @return \cardgate\api\Consumer
-		 * @access public
-		 * @api
-		 */
-		public function create() {
-			return new \cardgate\api\Consumer();
-		}
-
-	}
+    /**
+     * CardGate resource object.
+     */
+    final class Consumers extends Base
+    {
+        /**
+         * This method can be used to create a new consumer.
+         * @return \cardgate\api\Consumer
+         * @access public
+         * @api
+         */
+        public function create()
+        {
+            return new \cardgate\api\Consumer();
+        }
+    }
 
 }
