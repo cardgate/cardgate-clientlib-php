@@ -50,7 +50,7 @@ namespace cardgate\api {
          * @access public
          * @api
          */
-        public function __construct($sError_, $sMessage_, $iCode_ = 0, \Throwable $oPrevious_ = null)
+        public function __construct($sError_, $sMessage_, $iCode_ = 0, ?\Throwable $oPrevious_ = null)
         {
             $this->sError = $sError_;
             parent::__construct($sMessage_, $iCode_, $oPrevious_);

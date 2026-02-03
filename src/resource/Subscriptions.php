@@ -29,6 +29,9 @@
 
 namespace cardgate\api\resource {
 
+    use cardgate\api\Exception;
+    use cardgate\api\Subscription;
+
     /**
      * CardGate resource object.
      */
@@ -36,33 +39,35 @@ namespace cardgate\api\resource {
     {
         /**
          * This method can be used to retrieve subscription details.
+         *
          * @param string $sSubscriptionId_ The subscription identifier.
-         * @param array $aDetails_ Array that gets filled with additional subscription details.
-         * @return \cardgate\api\Subscription
-         * @throws \cardgate\api\Exception
+         * @param array|null $aDetails_ Array that gets filled with additional subscription details.
+         *
+         * @return Subscription
+         * @throws Exception
          * @access public
          * @api
          */
-        public function get($sSubscriptionId_, &$aDetails_ = null)
+        public function get(string $sSubscriptionId_, array &$aDetails_ = null): Subscription
         {
             if (! is_string($sSubscriptionId_)) {
-                throw new \cardgate\api\Exception('Subscription.Id.Invalid', 'invalid subscription id: ' . $sSubscriptionId_);
+                throw new Exception('Subscription.Id.Invalid', 'invalid subscription id: ' . $sSubscriptionId_);
             }
 
             $sResource = "subscription/{$sSubscriptionId_}/";
 
-            $aResult = $this->_oClient->doRequest($sResource, null, 'GET');
+            $aResult = $this->oClient->doRequest($sResource, null, 'GET');
 
             if (empty($aResult['subscription'])) {
-                throw new \cardgate\api\Exception('Subscription.Details.Invalid', 'invalid subscription data returned');
+                throw new Exception('Subscription.Details.Invalid', 'invalid subscription data returned');
             }
 
             if (! is_null($aDetails_)) {
                 $aDetails_ = array_merge($aDetails_, $aResult['subscription']);
             }
 
-            $oSubscription = new \cardgate\api\Subscription(
-                $this->_oClient,
+            $oSubscription = new Subscription(
+                $this->oClient,
                 (int) $aResult['subscription']['site_id'],
                 (int) $aResult['subscription']['period'],
                 $aResult['subscription']['period_type'],
@@ -99,19 +104,26 @@ namespace cardgate\api\resource {
 
         /**
          * This method can be used to create a new subscription.
+         *
          * @param int $iSiteId_ Site id to create the subscription for.
          * @param int $iPeriod_ The period length of the subscription.
-         * @param string $sPeriodType_ The period type of the subscription (e.g. day, week, month, year).
+         * @param string $sPeriodType_ The period type of the subscription (e.g., day, week, month, year).
          * @param int $iPeriodAmount_ The period amount of the subscription in cents.
          * @param string $sCurrency_ Currency (ISO 4217)
-         * @return \cardgate\api\Subscription
-         * @throws \cardgate\api\Exception
+         *
+         * @throws Exception
          * @access public
          * @api
          */
-        public function create($iSiteId_, $iPeriod_, $sPeriodType_, $iPeriodAmount_, $sCurrency_ = 'EUR')
+        public function create(
+            int $iSiteId_,
+            int $iPeriod_,
+            string $sPeriodType_,
+            int $iPeriodAmount_,
+            string $sCurrency_ = 'EUR'
+        ): Subscription
         {
-            return new \cardgate\api\Subscription($this->_oClient, $iSiteId_, $iPeriod_, $sPeriodType_, $iPeriodAmount_, $sCurrency_);
+            return new Subscription($this->oClient, $iSiteId_, $iPeriod_, $sPeriodType_, $iPeriodAmount_, $sCurrency_);
         }
     }
 

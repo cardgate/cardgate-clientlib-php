@@ -73,7 +73,7 @@ namespace cardgate\api {
          * @access public
          * @api
          */
-        public function address()
+        public function address(): Address
         {
             if (null == $this->oAddress) {
                 $this->oAddress = new Address();
@@ -83,11 +83,10 @@ namespace cardgate\api {
 
         /**
          * Accessor for the ship-to address.
-         * @return Address
          * @access public
          * @api
          */
-        public function shippingAddress()
+        public function shippingAddress(): Address
         {
             if (null == $this->oShippingAddress) {
                 $this->oShippingAddress = new Address();

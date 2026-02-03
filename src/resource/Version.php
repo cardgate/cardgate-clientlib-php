@@ -29,30 +29,32 @@
 
 namespace cardgate\api\resource {
 
+    use cardgate\api\Entity;
+
     /**
      * Version instance.
      *
-     * @method Version setPlatformName( \string $sName_ ) Sets the platform name.
+     * @method Version setPlatformName( string $sName_ ) Sets the platform name.
      * @method string getPlatformName() Returns the platform name.
      * @method bool hasPlatformName() Checks for existence of platform name.
      * @method Version unsetPlatformName() Unsets the platform name.
      *
-     * @method Version setPlatformVersion( \string $sVersion_ ) Sets the platform version.
+     * @method Version setPlatformVersion( string $sVersion_ ) Sets the platform version.
      * @method string getPlatformVersion() Returns the platform version.
-     * @method bool hasPlatformVersion() Checks for existence of platform version.
+     * @method bool hasPlatformVersion() Checks for the existence of a platform version.
      * @method Version unsetPlatformVersion() Unsets the platform version.
      *
-     * @method Version setPluginName( \string $sName_ ) Sets the plugin name.
+     * @method Version setPluginName( string $sName_ ) Sets the plugin name.
      * @method string getPluginName() Returns the plugin name.
      * @method bool hasPluginName() Checks for existence of plugin name.
      * @method Version unsetPluginName() Unsets the plugin name.
      *
-     * @method Version setPluginVersion( \string $sVersion_ ) Sets the plugin version.
+     * @method Version setPluginVersion( string $sVersion_ ) Sets the plugin version.
      * @method string getPluginVersion() Returns the plugin version.
-     * @method bool hasPluginVersion() Checks for existence of plugin version.
+     * @method bool hasPluginVersion() Checks for the existence of a plugin version.
      * @method Version unsetPluginVersion() Unsets the plugin version.
      */
-    final class Version extends \cardgate\api\Entity
+    final class Version extends Entity
     {
         /**
          * @ignore

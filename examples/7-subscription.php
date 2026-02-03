@@ -40,7 +40,20 @@ try {
         $oItem = $oCart->addItem(\cardgate\api\Item::TYPE_PRODUCT, 'AA21484', 'iMac 27"', 3, 219999, 'http://www.apple.com/imac/');
         $oItem = $oCart->addItem(\cardgate\api\Item::TYPE_SHIPPING, 'SHIPPING', 'Shipping by UPS', 1, 599);
 
-        $sOrderId = 'cardgate_order_' . time();
+
+        // Create unique order id with corresponding database file.
+
+        $sOrderFile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'cardgate_order_' . time();
+        if (! is_writable(dirname($sOrderFile))) {
+            die('unable to create order file');
+        }
+        $sOrderId = basename($sOrderFile);
+
+        // Fill with test data
+        file_put_contents($sOrderFile, json_encode([
+            'status'            => 'pending',
+            'subscription_id'    => 'test'
+        ]));
 
         // Configure communication endpoint locations.
         $sProtocol = isset($_SERVER['HTTPS']) && strcasecmp('off', $_SERVER['HTTPS']) !== 0 ? 'https' : 'http';

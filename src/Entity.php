@@ -29,6 +29,8 @@
 
 namespace cardgate\api {
 
+    use ReflectionClass;
+
     /**
      * CardGate client object.
      */
@@ -42,8 +44,8 @@ namespace cardgate\api {
 
         /**
          * @ignore
-         * @internal To make the data in an Entity available through magic functions (setName, getAmount, unsetName,
-         * hasCart) populate the aFields property below. To make autocompletion work in Zend, use the @method phpdoc
+         * @internal To make the data in an Entity available through magic functions setName, getAmount, unsetName,
+         * hasCart populate the aFields property below. To make autocompletion work in Zend, use the @method phpdoc
          * directive like this: @method null setId( int $iId ).
          * Example: [ 'MerchantId' => 'merchant_id', 'Name' => 'name' ]
          */
@@ -51,10 +53,10 @@ namespace cardgate\api {
 
         /**
          * This method can be used to retrieve all the data of the instance.
-         * @param string $sPrefix_ Optionally prefix all the data entries.
+         * @param string|null $sPrefix_ Optionally prefix all the data entries.
          * @return array Returns an array with the data in the entity.
          */
-        public function getData($sPrefix_ = null)
+        public function getData(?string $sPrefix_ = null): array
         {
             if (is_string($sPrefix_)) {
                 $aResult = [];
@@ -68,21 +70,19 @@ namespace cardgate\api {
         }
 
         /**
-         * @ignore
+         * @return $this|mixed|bool Return $this on set and unset, mixed on get and bool
+         * @throws Exception
+         *@ignore
          * @internal The __call method translates get-, set-, unset- and has-methods to their configured fields.
-         * @return $this|mixed|bool Return $this on set and unset, mixed on get and bool on has
-         * @throws Exception|\ReflectionException
          */
         public function __call($sMethod_, $aArgs_)
         {
-            $sClassName = ( new \ReflectionClass($this) )->getShortName();
+            $sClassName = ( new ReflectionClass($this) )->getShortName();
             switch (substr($sMethod_, 0, 3)) {
                 case 'get':
                     $sKey = substr($sMethod_, 3);
                     if (isset(static::$aFields[$sKey])) {
-                        return isset($this->aData[static::$aFields[$sKey]])
-                            ? $this->aData[static::$aFields[$sKey]]
-                            : null;
+                        return $this->aData[ static::$aFields[ $sKey ] ] ?? null;
                     }
                     break;
                 case 'set':
@@ -99,10 +99,10 @@ namespace cardgate\api {
                                 $this->aData[static::$aFields[$sKey]] = $aArgs_[0];
                                 return $this; // makes the call chainable
                             } else {
-                                throw new Exception("{$sClassName}.Invalid.Method", "invalid value for {$sMethod_}");
+                                throw new Exception("$sClassName.Invalid.Method", "invalid value for $sMethod_");
                             }
                         } else {
-                            throw new Exception("{$sClassName}.Invalid.Method", "missing parameter 1 for {$sMethod_}");
+                            throw new Exception("$sClassName.Invalid.Method", "missing parameter 1 for $sMethod_");
                         }
                     }
                     break;
@@ -120,7 +120,7 @@ namespace cardgate\api {
                     }
                     break;
             }
-            throw new Exception("{$sClassName}.Invalid.Method", "call to undefined method {$sMethod_}");
+            throw new Exception("$sClassName.Invalid.Method", "call to undefined method $sMethod_");
         }
     }
 

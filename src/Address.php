@@ -112,7 +112,7 @@ namespace cardgate\api {
          * @access public
          * @api
          */
-        public function setGender(?string $sGender_): Address
+        public function setGender(?string $sGender_): Entity
         {
             if (strlen($sGender_) != 1 )
             {
@@ -129,7 +129,7 @@ namespace cardgate\api {
          * @access public
          * @api
          */
-        public function setDayOfBirth(?string $sDayOfBirth_): Address
+        public function setDayOfBirth(?string $sDayOfBirth_): Entity
         {
             if ( !( $iDayOfBirthUnix = strtotime( $sDayOfBirth_ ) )
             ) {
@@ -146,7 +146,7 @@ namespace cardgate\api {
          * @access public
          * @api
          */
-        public function setCountry(?string $sCountry_): Address
+        public function setCountry(?string $sCountry_): Entity
         {
             if ( strlen( $sCountry_ ) == 2)
             {

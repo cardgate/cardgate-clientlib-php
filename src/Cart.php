@@ -64,10 +64,9 @@ namespace cardgate\api {
             return $oItem;
         }
 
-        public function getAll()
-        {
-        }
-
+        /**
+         * @return array
+         */
         public function getData(): array
         {
             $aData = [];

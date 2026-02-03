@@ -29,6 +29,8 @@
 
 namespace cardgate\api\resource {
 
+    use cardgate\api\Consumer;
+
     /**
      * CardGate resource object.
      */
@@ -36,13 +38,13 @@ namespace cardgate\api\resource {
     {
         /**
          * This method can be used to create a new consumer.
-         * @return \cardgate\api\Consumer
+         * @return Consumer
          * @access public
          * @api
          */
-        public function create()
+        public function create(): Consumer
         {
-            return new \cardgate\api\Consumer();
+            return new Consumer();
         }
     }
 

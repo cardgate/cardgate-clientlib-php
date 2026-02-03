@@ -29,6 +29,8 @@
 
 namespace cardgate\api {
 
+    use ReflectionClass;
+
     /**
      * Paymentmethod instance.
      */
@@ -172,19 +174,21 @@ namespace cardgate\api {
 
         /**
          * The constructor.
+         *
          * @param Client $oClient_ The client associated with this transaction.
          * @param string $sId_ The payment method identifier to create a method instance for.
-         * @throws Exception|\ReflectionException
+         *
+         * @throws Exception
          * @access public
-         * @api
          * @throws
+         *@api
          */
-        public function __construct(Client $oClient_, $sId_, $sName_)
+        public function __construct( Client $oClient_, string $sId_, $sName_)
         {
             static $aValidMethods; // use static cache for this
 
             if (! isset($aValidMethods)) {
-                $aValidMethods  = ( new \ReflectionClass('\cardgate\api\Method') )->getConstants();
+                $aValidMethods  = ( new ReflectionClass('\cardgate\api\Method') )->getConstants();
             }
             $this->oClient = $oClient_;
             if (! in_array($sId_, $aValidMethods)) {
@@ -196,17 +200,16 @@ namespace cardgate\api {
 
         /**
          * Set the method id.
+         *
          * @param string $sId_ Method id to set.
+         *
          * @return $this
          * @throws Exception
          * @access public
          * @api
          */
-        public function setId($sId_)
-        {
-            if (
-                ! is_string($sId_)
-                || empty($sId_)
+        public function setId(string $sId_): Method {
+            if (empty($sId_)
             ) {
                 throw new Exception('Method.Id.Invalid', 'invalid id: ' . $sId_);
             }
@@ -220,21 +223,21 @@ namespace cardgate\api {
          * @access public
          * @api
          */
-        public function getId()
-        {
+        public function getId(): string {
             return $this->sId;
         }
 
         /**
          * Set the method name.
+         *
          * @param string $sName_ Method name to set.
+         *
          * @return $this
          * @throws Exception
          * @access public
          * @api
          */
-        public function setName($sName_)
-        {
+        public function setName(string $sName_): Method {
             if (
                 ! is_string($sName_)
                 || empty($sName_)
@@ -251,22 +254,20 @@ namespace cardgate\api {
          * @access public
          * @api
          */
-        public function getName()
+        public function getName(): string
         {
-            return $this->_sName;
+            return $this->sName;
         }
 
         /**
          * This method returns all the issuers available for the current payment method.
          * @return array An array with issuers
-         * @throws Exception
          * @access public
          * @api
          */
-        public function getIssuers()
+        public function getIssuers(): array
         {
-            $aIssuers   = [0 => ["id" => "ZERO", "name" => "Deprecated"]];
-            return  $aIssuers; //Deprecated since iDEAL2
+            return [ 0 => [ "id" => "ZERO", "name" => "Deprecated"]]; //Deprecated since iDEAL2
         }
     }
 

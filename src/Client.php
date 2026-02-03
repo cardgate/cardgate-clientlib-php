@@ -147,7 +147,7 @@ namespace cardgate\api {
          * @access public
          * @api
          */
-        public function __construct($iMerchantId_, $sKey_, $bTestmode_ = false)
+        public function __construct(int $iMerchantId_, string $sKey_, bool $bTestmode_ = false)
         {
             $this->setMerchantId($iMerchantId_)->setKey($sKey_)->setTestmode($bTestmode_);
         }
@@ -177,7 +177,7 @@ namespace cardgate\api {
          * @access public
          * @api
          */
-        public function setTestmode($bTestmode_)
+        public function setTestmode(bool $bTestmode_): Client
         {
             if (! is_bool($bTestmode_)) {
                 throw new Exception('Client.Testmode.Invalid', 'invalid testmode: ' . $bTestmode_);
@@ -192,19 +192,19 @@ namespace cardgate\api {
          * @access public
          * @api
          */
-        public function getTestmode()
+        public function getTestmode(): bool
         {
             return $this->bTestmode;
         }
 
         /**
          * Set debug level.
-         * @param int $iDebugLevel_ Level: 0 = None, 1 = Include request/resule in errors, 2 = Verbose cURL calls.
+         * @param int $iLevel_ Level: 0 = None, 1 = Include request/resule in errors, 2 = Verbose cURL calls.
          * @return $this
          * @access public
          * @api
          */
-        public function setDebugLevel($iLevel_)
+        public function setDebugLevel(int $iLevel_): Client
         {
             $this->iDebugLevel = $iLevel_;
             return $this;
@@ -216,7 +216,7 @@ namespace cardgate\api {
          * @access public
          * @api
          */
-        public function getDebugLevel()
+        public function getDebugLevel(): int
         {
             return $this->iDebugLevel;
         }
@@ -229,7 +229,7 @@ namespace cardgate\api {
          * @access public
          * @api
          */
-        public function getDebugInfo($bStartWithNewLine_ = true, $bAddResult_ = true)
+        public function getDebugInfo(bool $bStartWithNewLine_ = true, bool $bAddResult_ = true): string
         {
             if ($this->getDebugLevel() > self::DEBUG_NONE) {
                 $sResult = ( $bStartWithNewLine_ ? PHP_EOL : '' );
@@ -251,11 +251,12 @@ namespace cardgate\api {
          * @access public
          * @api
          */
-        public function setMerchantId($iMerchantId_)
+        public function setMerchantId( int $iMerchantId_)
         {
             if (! is_integer($iMerchantId_)) {
                 throw new Exception('Client.MerchantId.Invalid', 'invalid merchant: ' . $iMerchantId_);
             }
+
             $this->iMerchantId = $iMerchantId_;
             return $this;
         }

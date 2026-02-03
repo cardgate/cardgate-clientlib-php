@@ -763,7 +763,7 @@ namespace cardgate\api {
          * @access public
          * @api
          */
-        public function refund($iAmount_ = null, string $sDescription_ = null)
+        public function refund(?int $iAmount_ = null, ?string $sDescription_ = null)
         {
             if (
                 ! is_null($iAmount_)

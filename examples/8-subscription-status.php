@@ -14,7 +14,7 @@ try {
         }
     } else {
         echo '<h5>Change subscription</h5>';
-        echo '<form method="post" id="2" action="8-subscription-statuschange.php">';
+        echo '<form method="post" id="2" action="8-subscription-status.php">';
         echo 'Subscription Id <input type="text" name="subscription_id" value=""> ';
         echo 'Action <select name="action">';
 

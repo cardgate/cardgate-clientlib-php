@@ -115,23 +115,25 @@ namespace cardgate\api {
 
         /**
          * The constructor.
+         *
          * @param Client $oClient_ The client associated with this subscription.
          * @param int $iSiteId_ Site id to create the subscription for.
          * @param int $iPeriod_ The period length of the subscription.
          * @param string $sPeriodType_ The period type of the subscription (e.g. day, week, month, year).
          * @param int $iPeriodAmount_ The period amount of the subscription in cents.
          * @param string $sCurrency_ Currency (ISO 4217)
+         *
          * @throws Exception
          * @access public
          * @api
          */
         public function __construct(
             Client $oClient_,
-            $iSiteId_,
-            $iPeriod_,
-            $sPeriodType_,
-            $iPeriodAmount_,
-            $sCurrency_ = 'EUR'
+            int $iSiteId_,
+            int $iPeriod_,
+            string $sPeriodType_,
+            int $iPeriodAmount_,
+            string $sCurrency_ = 'EUR'
         ) {
             $this->oClient = $oClient_;
             $this->setSiteId($iSiteId_)
@@ -143,17 +145,17 @@ namespace cardgate\api {
 
         /**
          * Set the subscription id.
+         *
          * @param string $sId_ Subscription id to set.
+         *
          * @return $this
          * @throws Exception
          * @access public
          * @api
          */
-        public function setId($sId_)
-        {
+        public function setId(string $sId_): Transaction {
             if (
-                ! is_string($sId_)
-                || empty($sId_)
+                empty($sId_)
             ) {
                 throw new Exception('Subscription.Id.Invalid', 'invalid id: ' . $sId_);
             }
@@ -168,8 +170,7 @@ namespace cardgate\api {
          * @access public
          * @api
          */
-        public function getId()
-        {
+        public function getId(): string {
             if (empty($this->sId)) {
                 throw new Exception('Subscription.Not.Initialized', 'invalid subscription state');
             }
@@ -178,13 +179,15 @@ namespace cardgate\api {
 
         /**
          * Configure the subscription object with a period.
+         *
          * @param int $iPeriod_ Period length to set.
+         *
          * @return $this
          * @throws Exception
          * @access public
          * @api
          */
-        public function setPeriod($iPeriod_)
+        public function setPeriod(int $iPeriod_): Subscription
         {
             if (! is_integer($iPeriod_)) {
                 throw new Exception('Subscription.Period.Invalid', 'invalid period: ' . $iPeriod_);
@@ -199,24 +202,24 @@ namespace cardgate\api {
          * @access public
          * @api
          */
-        public function getPeriod()
-        {
+        public function getPeriod(): int {
             return $this->iPeriod;
         }
 
         /**
          * Configure the subscription object with a period type.
+         *
          * @param string $sPeriodType_ Period type to set.
+         *
          * @return $this
          * @throws Exception
          * @access public
          * @api
          */
-        public function setPeriodType($sPeriodType_)
+        public function setPeriodType(string $sPeriodType_): Subscription
         {
             if (
-                ! is_string($sPeriodType_)
-                || ! in_array($sPeriodType_, [ 'day', 'week', 'month', 'year' ])
+                ! in_array($sPeriodType_, [ 'day', 'week', 'month', 'year' ])
             ) {
                 throw new Exception('Subscription.Period.Type.Invalid', 'invalid period type: ' . $sPeriodType_);
             }
@@ -230,8 +233,7 @@ namespace cardgate\api {
          * @access public
          * @api
          */
-        public function getPeriodType()
-        {
+        public function getPeriodType(): string {
             return $this->sPeriodType;
         }
 
@@ -442,8 +444,7 @@ namespace cardgate\api {
          * @access public
          * @api
          */
-        public function register()
-        {
+        public function register(): Transaction {
             $aData = [
                 'site_id'               => $this->iSiteId,
                 'currency_id'           => $this->sCurrency,
@@ -519,7 +520,7 @@ namespace cardgate\api {
             }
 
             if (! in_array($sStatus_, [ 'reactivate' , 'suspend', 'cancel', 'deactivate' ])) {
-                throw new Exception('Subscription.Status.Invalid', 'invalid subscription status provided');
+                throw new Exception('Subscription.Status.Invalid', 'invalid subscription status provided: '.$sStatus_);
             }
 
             $aData = [

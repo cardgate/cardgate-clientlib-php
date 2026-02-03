@@ -6,7 +6,7 @@ try {
     }
 
     $aDetails = [];
-    $oTransaction = $oCardGate->transactions()->get('T16A21948968', $aDetails);
+    $oTransaction = $oCardGate->transactions()->get('T26123456789', $aDetails);
 
     if ($oTransaction->canRefund()) {
         $oTransaction->refund(50);
