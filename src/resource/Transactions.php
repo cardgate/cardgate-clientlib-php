@@ -55,55 +55,55 @@ namespace cardgate\api\resource {
                 throw new Exception('Transaction.Id.Invalid', 'invalid transaction id: ' . $transactionId);
             }
 
-            $sResource = "transaction/$transactionId/";
+            $resource = "transaction/$transactionId/";
 
-            $aResult = $this->client->doRequest($sResource, null, 'GET');
+            $result = $this->client->doRequest($resource, null, 'GET');
 
-            if (empty($aResult['transaction'])) {
+            if (empty($result['transaction'])) {
                 throw new Exception('Transaction.Details.Invalid', 'invalid transaction data returned' . $this->client->getDebugInfo());
             }
 
             if (! is_null($details)) {
-                $details = array_merge($details, $aResult['transaction']);
+                $details = array_merge($details, $result['transaction']);
             }
 
-            $oTransaction = new Transaction(
+            $transaction = new Transaction(
                 $this->client,
-                (int) $aResult['transaction']['site_id'],
-                (int) $aResult['transaction']['amount'],
-                $aResult['transaction']['currency_id']
+                (int) $result['transaction']['site_id'],
+                (int) $result['transaction']['amount'],
+                $result['transaction']['currency_id']
             );
-            $oTransaction->setId($aResult['transaction']['id']);
-            if (! empty($aResult['transaction']['description'])) {
-                $oTransaction->setDescription($aResult['transaction']['description']);
+            $transaction->setId($result['transaction']['id']);
+            if (! empty($result['transaction']['description'])) {
+                $transaction->setDescription($result['transaction']['description']);
             }
-            if (! empty($aResult['transaction']['reference'])) {
-                $oTransaction->setReference($aResult['transaction']['reference']);
+            if (! empty($result['transaction']['reference'])) {
+                $transaction->setReference($result['transaction']['reference']);
             }
-            if (! empty($aResult['transaction']['option'])) {
-                $oTransaction->setPaymentMethod($aResult['transaction']['option']);
+            if (! empty($result['transaction']['option'])) {
+                $transaction->setPaymentMethod($result['transaction']['option']);
             }
 
-            return $oTransaction;
+            return $transaction;
         }
 
         /**
          * This method can be used to retrieve a transaction status.
          *
-         * @param string $sTransactionId_ The transaction identifier.
+         * @param string $transactionId The transaction identifier.
          *
          * @return string
          * @throws Exception
          * @access public
          * @api
          */
-        public function status(string $sTransactionId_): string
+        public function status(string $transactionId): string
         {
-            if (! is_string($sTransactionId_)) {
-                throw new Exception('Transaction.Id.Invalid', 'invalid transaction id: ' . $sTransactionId_);
+            if (! is_string($transactionId)) {
+                throw new Exception('Transaction.Id.Invalid', 'invalid transaction id: ' . $transactionId);
             }
 
-            $sResource = "status/$sTransactionId_/";
+            $sResource = "status/$transactionId/";
 
             $aResult = $this->client->doRequest($sResource, null, 'GET');
 
@@ -148,19 +148,19 @@ namespace cardgate\api\resource {
          */
         public function verifyCallback(array $data, string $siteKey = null): bool
         {
-            foreach ([ 'transaction', 'currency', 'amount', 'reference', 'code', 'hash', 'status' ] as $sRequiredKey) {
-                if (! isset($data[$sRequiredKey])) {
-                    throw new Exception('Transaction.Callback.Missing', 'missing callback data: ' . $sRequiredKey);
+            foreach ([ 'transaction', 'currency', 'amount', 'reference', 'code', 'hash', 'status' ] as $requiredKey) {
+                if (! isset($data[$requiredKey])) {
+                    throw new Exception('Transaction.Callback.Missing', 'missing callback data: ' . $requiredKey);
                 }
             }
 
-            $sPrefix = empty($data['testmode']) ? '': 'TEST';
+            $prefix = empty($data['testmode']) ? '': 'TEST';
 
             return (
                 (
                     null !== $siteKey
                     && md5(
-                           $sPrefix
+                           $prefix
                            . $data['transaction']
                            . $data['currency']
                            . $data['amount']
@@ -170,13 +170,13 @@ namespace cardgate\api\resource {
                     ) == $data['hash']
                 )
                 || md5(
-                       $sPrefix
+                       $prefix
                        . $data['transaction']
                        . $data['currency']
                        . $data['amount']
                        . $data['reference']
                        . $data['code']
-                    . $this->client->getKey()
+                       . $this->client->getKey()
                 ) == $data['hash']
             );
         }

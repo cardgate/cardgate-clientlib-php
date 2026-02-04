@@ -70,28 +70,28 @@ namespace cardgate\api\resource {
                 throw new Exception('Methods.SiteId.Invalid', 'invalid site id: ' . $siteId);
             }
 
-            $sResource = "options/{$siteId}/";
+            $resource = "options/{$siteId}/";
 
-            $aResult = $this->client->doRequest($sResource, null, 'GET');
+            $result = $this->client->doRequest($resource, null, 'GET');
 
-            if (empty($aResult['options'])) {
+            if (empty($result['options'])) {
                 throw new Exception('Method.Options.Invalid', 'unexpected result: ' . $this->client->getLastResult() . $this->client->getDebugInfo(true, false));
             }
 
-            $aValidMethods  = ( new ReflectionClass('\cardgate\api\Method') )->getConstants();
-            $aMethods = [];
-            foreach ($aResult['options'] as $aOption) {
-                if (!in_array($aOption['id'], $aValidMethods)) {
+            $validMethods = ( new ReflectionClass('\cardgate\api\Method') )->getConstants();
+            $methods      = [];
+            foreach ($result['options'] as $option) {
+                if (!in_array($option['id'], $validMethods)) {
                     continue;
                 }
 
                 try {
-                    $aMethods[] = new Method($this->client, $aOption['id'], $aOption['name']);
+                    $methods[] = new Method($this->client, $option['id'], $option['name']);
                 } catch ( Exception $exception) {
                     trigger_error( $exception->getMessage() . '. Please update this SDK to the latest version.', E_USER_WARNING);
                 }
             }
-            return $aMethods;
+            return $methods;
         }
     }
 

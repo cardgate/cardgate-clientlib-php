@@ -180,19 +180,19 @@ namespace cardgate\api {
         /**
          * Configure the subscription object with a period.
          *
-         * @param int $iPeriod_ Period length to set.
+         * @param int $period Period length to set.
          *
          * @return $this
          * @throws Exception
          * @access public
          * @api
          */
-        public function setPeriod(int $iPeriod_): Subscription
+        public function setPeriod(int $period): Subscription
         {
-            if (! is_integer($iPeriod_)) {
-                throw new Exception('Subscription.Period.Invalid', 'invalid period: ' . $iPeriod_);
+            if (! is_integer($period)) {
+                throw new Exception('Subscription.Period.Invalid', 'invalid period: ' . $period);
             }
-            $this->period = $iPeriod_;
+            $this->period = $period;
             return $this;
         }
 
@@ -209,21 +209,21 @@ namespace cardgate\api {
         /**
          * Configure the subscription object with a period type.
          *
-         * @param string $sPeriodType_ Period type to set.
+         * @param string $periodType Period type to set.
          *
          * @return $this
          * @throws Exception
          * @access public
          * @api
          */
-        public function setPeriodType(string $sPeriodType_): Subscription
+        public function setPeriodType(string $periodType): Subscription
         {
             if (
-                ! in_array($sPeriodType_, [ 'day', 'week', 'month', 'year' ])
+                ! in_array($periodType, [ 'day', 'week', 'month', 'year' ])
             ) {
-                throw new Exception('Subscription.Period.Type.Invalid', 'invalid period type: ' . $sPeriodType_);
+                throw new Exception('Subscription.Period.Type.Invalid', 'invalid period type: ' . $periodType);
             }
-            $this->periodType = $sPeriodType_;
+            $this->periodType = $periodType;
             return $this;
         }
 
@@ -245,12 +245,12 @@ namespace cardgate\api {
          * @access public
          * @api
          */
-        public function setPeriodPrice($iPeriodPrice_)
+        public function setPeriodPrice($periodPrice)
         {
-            if (! is_integer($iPeriodPrice_)) {
-                throw new Exception('Subscription.Period.Price.Invalid', 'invalid period price: ' . $iPeriodPrice_);
+            if (! is_integer($periodPrice)) {
+                throw new Exception('Subscription.Period.Price.Invalid', 'invalid period price: ' . $periodPrice);
             }
-            $this->periodPrice = $iPeriodPrice_;
+            $this->periodPrice = $periodPrice;
             return $this;
         }
 
@@ -273,12 +273,12 @@ namespace cardgate\api {
          * @access public
          * @api
          */
-        public function setInitialPayment($iAmount_)
+        public function setInitialPayment($amount)
         {
-            if (! is_integer($iAmount_)) {
-                throw new Exception('Subscription.Initial.Payment.Invalid', 'invalid initial payment amount: ' . $iAmount_);
+            if (! is_integer($amount)) {
+                throw new Exception('Subscription.Initial.Payment.Invalid', 'invalid initial payment amount: ' . $amount);
             }
-            $this->initialPayment = $iAmount_;
+            $this->initialPayment = $amount;
             return $this;
         }
 
@@ -291,12 +291,12 @@ namespace cardgate\api {
          * @access public
          * @api
          */
-        public function setTrialPeriod($iTrialPeriod_)
+        public function setTrialPeriod($trialPeriod)
         {
-            if (! is_integer($iTrialPeriod_)) {
-                throw new Exception('Subscription.Period.Invalid', 'invalid trial period: ' . $iTrialPeriod_);
+            if (! is_integer($trialPeriod)) {
+                throw new Exception('Subscription.Period.Invalid', 'invalid trial period: ' . $trialPeriod);
             }
-            $this->trialPeriod = $iTrialPeriod_;
+            $this->trialPeriod = $trialPeriod;
             return $this;
         }
 
@@ -313,21 +313,23 @@ namespace cardgate\api {
 
         /**
          * Configure the subscription object with a trial period type.
-         * @param string $sTrialPeriodType_ Trial Period type to set.
+         *
+         * @param string $trialPeriodType Trial Period type to set.
+         *
          * @return $this
          * @throws Exception
          * @access public
          * @api
          */
-        public function setTrialPeriodType($sTrialPeriodType_)
+        public function setTrialPeriodType($trialPeriodType)
         {
             if (
-                ! is_string($sTrialPeriodType_)
-                || ! in_array($sTrialPeriodType_, [ 'day', 'week', 'month', 'year' ])
+                ! is_string($trialPeriodType)
+                || ! in_array($trialPeriodType, [ 'day', 'week', 'month', 'year' ])
             ) {
-                throw new Exception('Subscription.Period.Type.Invalid', 'invalid trial period type: ' . $sTrialPeriodType_);
+                throw new Exception('Subscription.Period.Type.Invalid', 'invalid trial period type: ' . $trialPeriodType);
             }
-            $this->trialPeriodType = $sTrialPeriodType_;
+            $this->trialPeriodType = $trialPeriodType;
             return $this;
         }
 
@@ -350,12 +352,12 @@ namespace cardgate\api {
          * @access public
          * @api
          */
-        public function setTrialPeriodPrice($iTrialPeriodPrice_)
+        public function setTrialPeriodPrice($trialPeriodPrice)
         {
-            if (! is_integer($iTrialPeriodPrice_)) {
-                throw new Exception('Subscription.Period.Price.Invalid', 'invalid trial period price: ' . $iTrialPeriodPrice_);
+            if (! is_integer($trialPeriodPrice)) {
+                throw new Exception('Subscription.Period.Price.Invalid', 'invalid trial period price: ' . $trialPeriodPrice);
             }
-            $this->trialPeriodPrice = $iTrialPeriodPrice_;
+            $this->trialPeriodPrice = $trialPeriodPrice;
             return $this;
         }
 
@@ -372,18 +374,20 @@ namespace cardgate\api {
 
         /**
          * Configure the subscription date on which it should start.
-         * @param string $sStartDate_ The start date to set.
+         *
+         * @param string $startDate The start date to set.
+         *
          * @return $this
          * @throws Exception
          * @access public
          * @api
          */
-        public function setStartDate($sStartDate_)
+        public function setStartDate($startDate)
         {
-            if (! is_string($sStartDate_)) {
-                throw new Exception('Subscription.Date.Start.Invalid', 'invalid start date: ' . $sStartDate_);
+            if (! is_string($startDate)) {
+                throw new Exception('Subscription.Date.Start.Invalid', 'invalid start date: ' . $startDate);
             }
-            $this->startDate = $sStartDate_;
+            $this->startDate = $startDate;
             return $this;
         }
 
@@ -400,7 +404,7 @@ namespace cardgate\api {
 
         /**
          * Configure the date on which the subscription should end.
-         * @param string $sEndDate_ The end date to set.
+         * @param string $endDate The end date to set.
          * @return $this
          * @throws Exception
          * @access public
@@ -445,7 +449,7 @@ namespace cardgate\api {
          * @api
          */
         public function register(): Transaction {
-            $aData = [
+            $data = [
                 'site_id'               => $this->siteId,
                 'currency_id'           => $this->currency,
                 'url_callback'          => $this->callbackUrl,
@@ -466,40 +470,40 @@ namespace cardgate\api {
                 'end_date'              => $this->endDate,
             ];
             if (! is_null($this->consumer)) {
-                $aData['email'] = $this->consumer->getEmail();
-                $aData['phone'] = $this->consumer->getPhone();
-                $aData['consumer'] = array_merge(
+                $data['email'] = $this->consumer->getEmail();
+                $data['phone'] = $this->consumer->getPhone();
+                $data['consumer'] = array_merge(
                     $this->consumer->address()->getData(),
                     $this->consumer->shippingAddress()->getData('shipto_')
                 );
-                $aData['country_id'] = $this->consumer->address()->getCountry();
+                $data['country_id'] = $this->consumer->address()->getCountry();
             }
             if (! is_null($this->cart)) {
-                $aData['cartitems'] = $this->cart->getData();
+                $data['cartitems'] = $this->cart->getData();
             }
 
-            $sResource = 'subscription/register/';
+            $resource = 'subscription/register/';
 
             if (! empty($this->paymentMethod)) {
-                $aData['pt'] = $this->paymentMethod->getId();
-                $aData['issuer'] = $this->issuer;
+                $data['pt'] = $this->paymentMethod->getId();
+                $data['issuer'] = $this->issuer;
             }
 
-            $aData = array_filter($aData); // remove NULL values
-            $aResult = $this->client->doRequest($sResource, $aData, 'POST');
+            $data = array_filter($data); // remove NULL values
+            $result = $this->client->doRequest($resource, $data, 'POST');
 
             if (
-                empty($aResult)
-                || empty($aResult['subscription'])
+                empty($result)
+                || empty($result['subscription'])
             ) {
                 throw new Exception('Subscription.Request.Invalid', 'unexpected result: ' . $this->client->getLastResult() . $this->client->getDebugInfo(true, false));
             }
-            $this->id = $aResult['subscription'];
+            $this->id = $result['subscription'];
             if (
-                isset($aResult['subscription']['action'])
-                && 'redirect' == $aResult['subscription']['action']
+                isset($result['subscription']['action'])
+                && 'redirect' == $result['subscription']['action']
             ) {
-                $this->actionUrl = $aResult['subscription']['url'];
+                $this->actionUrl = $result['subscription']['url'];
             }
 
             return $this;
@@ -512,28 +516,28 @@ namespace cardgate\api {
          * @access public
          * @api
          */
-        public function changeStatus($sStatus_)
+        public function changeStatus($status)
         {
 
             if (empty($this->id)) {
                 throw new Exception('Subscription.Request.Invalid', 'invalid subscription id');
             }
 
-            if (! in_array($sStatus_, [ 'reactivate' , 'suspend', 'cancel', 'deactivate' ])) {
-                throw new Exception('Subscription.Status.Invalid', 'invalid subscription status provided: '.$sStatus_);
+            if (! in_array($status, [ 'reactivate' , 'suspend', 'cancel', 'deactivate' ])) {
+                throw new Exception('Subscription.Status.Invalid', 'invalid subscription status provided: ' . $status);
             }
 
-            $aData = [
+            $data = [
                 'subscription_id'       => $this->id,
                 'description'           => $this->description,
             ];
 
-            $sResource = 'subscription/' . $sStatus_ . '/';
+            $resource = 'subscription/' . $status . '/';
 
-            $aData = array_filter($aData); // remove NULL values
-            $aResult = $this->client->doRequest($sResource, $aData, 'POST');
+            $data = array_filter($data); // remove NULL values
+            $result = $this->client->doRequest($resource, $data, 'POST');
 
-            if (false == $aResult['success']) {
+            if (false == $result['success']) {
                 // client will have thrown an error if there was a proper error from the API, so this is weird!
                 throw new Exception('Subscription.Request.Invalid', 'unexpected result: ' . $this->client->getLastResult() . $this->client->getDebugInfo(true, false));
             }

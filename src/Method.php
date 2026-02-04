@@ -183,37 +183,37 @@ namespace cardgate\api {
          * @throws
          *@api
          */
-        public function __construct( Client $oClient_, string $sId_, $sName_)
+        public function __construct( Client $client, string $id, $name)
         {
-            static $aValidMethods; // use static cache for this
+            static $validMethods; // use static cache for this
 
-            if (! isset($aValidMethods)) {
-                $aValidMethods  = ( new ReflectionClass('\cardgate\api\Method') )->getConstants();
+            if (! isset($validMethods)) {
+                $validMethods  = ( new ReflectionClass('\cardgate\api\Method') )->getConstants();
             }
-            $this->client = $oClient_;
-            if (! in_array($sId_, $aValidMethods)) {
-                throw new Exception('Method.PaymentMethod.Invalid', 'invalid payment method: ' . $sId_);
+            $this->client = $client;
+            if (! in_array($id, $validMethods)) {
+                throw new Exception('Method.PaymentMethod.Invalid', 'invalid payment method: ' . $id);
             }
-            $this->setId($sId_);
-            $this->setName($sName_);
+            $this->setId($id);
+            $this->setName($name);
         }
 
         /**
          * Set the method id.
          *
-         * @param string $sId_ Method id to set.
+         * @param string $id Method id to set.
          *
          * @return $this
          * @throws Exception
          * @access public
          * @api
          */
-        public function setId(string $sId_): Method {
-            if (empty($sId_)
+        public function setId(string $id): Method {
+            if (empty($id)
             ) {
-                throw new Exception('Method.Id.Invalid', 'invalid id: ' . $sId_);
+                throw new Exception('Method.Id.Invalid', 'invalid id: ' . $id);
             }
-            $this->id = $sId_;
+            $this->id = $id;
             return $this;
         }
 
@@ -230,21 +230,21 @@ namespace cardgate\api {
         /**
          * Set the method name.
          *
-         * @param string $sName_ Method name to set.
+         * @param string $name Method name to set.
          *
          * @return $this
          * @throws Exception
          * @access public
          * @api
          */
-        public function setName(string $sName_): Method {
+        public function setName(string $name): Method {
             if (
-                ! is_string($sName_)
-                || empty($sName_)
+                ! is_string($name)
+                || empty($name)
             ) {
-                throw new Exception('Method.Name.Invalid', 'invalid name: ' . $sName_);
+                throw new Exception('Method.Name.Invalid', 'invalid name: ' . $name);
             }
-            $this->name = $sName_;
+            $this->name = $name;
             return $this;
         }
 

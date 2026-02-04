@@ -57,11 +57,11 @@ namespace cardgate\api {
          * @access public
          * @api
          */
-        public function addItem(int $iType_, string $sSKU_, string $sName_, int $iQuantity_, int $iPrice_, ?string $sLink_ = null): Item
+        public function addItem(int $type, string $sku, string $name, int $quantity, int $price, ?string $link = null): Item
         {
-            $oItem         = new Item($iType_, $sSKU_, $sName_, $iQuantity_, $iPrice_, $sLink_);
-            $this->items[] = $oItem;
-            return $oItem;
+            $item         = new Item($type, $sku, $name, $quantity, $price, $link);
+            $this->items[] = $item;
+            return $item;
         }
 
         /**
@@ -69,11 +69,11 @@ namespace cardgate\api {
          */
         public function getData(): array
         {
-            $aData = [];
-            foreach ($this->items as $oItem) {
-                $aData[] = $oItem->getData();
+            $data = [];
+            foreach ($this->items as $item) {
+                $data[] = $item->getData();
             }
-            return $aData;
+            return $data;
         }
     }
 

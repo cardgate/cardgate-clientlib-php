@@ -173,18 +173,20 @@ namespace cardgate\api {
 
         /**
          * Toggle testmode.
-         * @param bool $bTestmode_ Enable or disable testmode for this client.
+         *
+         * @param bool $testmode Enable or disable testmode for this client.
+         *
          * @return $this
          * @throws Exception
          * @access public
          * @api
          */
-        public function setTestmode(bool $bTestmode_): Client
+        public function setTestmode(bool $testmode): Client
         {
-            if (! is_bool($bTestmode_)) {
-                throw new Exception('Client.Testmode.Invalid', 'invalid testmode: ' . $bTestmode_);
+            if (! is_bool($testmode)) {
+                throw new Exception('Client.Testmode.Invalid', 'invalid testmode: ' . $testmode);
             }
-            $this->testmode = $bTestmode_;
+            $this->testmode = $testmode;
             return $this;
         }
 
@@ -236,12 +238,12 @@ namespace cardgate\api {
         public function getDebugInfo(bool $startWithNewLine = true, bool $addResult = true): string
         {
             if ($this->getDebugLevel() > self::DEBUG_NONE) {
-                $sResult = ( $startWithNewLine ? PHP_EOL : '' );
-                $sResult .= 'Request: ' . $this->getLastRequest();
+                $result = ( $startWithNewLine ? PHP_EOL : '' );
+                $result .= 'Request: ' . $this->getLastRequest();
                 if ($addResult) {
-                    $sResult .= PHP_EOL . 'Result: ' . $this->getLastResult();
+                    $result .= PHP_EOL . 'Result: ' . $this->getLastResult();
                 }
-                return $sResult;
+                return $result;
             } else {
                 return '';
             }
@@ -249,19 +251,21 @@ namespace cardgate\api {
 
         /**
          * Configure the client object with a merchant id.
-         * @param int $iMerchantId_ Merchant id to set.
+         *
+         * @param int $merchantId Merchant id to set.
+         *
          * @return $this
          * @throws Exception
          * @access public
          * @api
          */
-        public function setMerchantId( int $iMerchantId_)
+        public function setMerchantId( int $merchantId)
         {
-            if (! is_integer($iMerchantId_)) {
-                throw new Exception('Client.MerchantId.Invalid', 'invalid merchant: ' . $iMerchantId_);
+            if ( ! is_integer($merchantId)) {
+                throw new Exception('Client.MerchantId.Invalid', 'invalid merchant: ' . $merchantId);
             }
 
-            $this->merchantId = $iMerchantId_;
+            $this->merchantId = $merchantId;
             return $this;
         }
 
@@ -278,7 +282,7 @@ namespace cardgate\api {
 
         /**
          * Set the Merchant API key to authenticate the transaction request with.
-         * @param string $sKey_ The merchant API key to set.
+         * @param string $key The merchant API key to set.
          * @return $this
          * @throws Exception
          * @access public
@@ -343,12 +347,12 @@ namespace cardgate\api {
          * @access public
          * @api
          */
-        public function setLanguage($sLanguage_)
+        public function setLanguage($language)
         {
-            if (! is_string($sLanguage_)) {
-                throw new Exception('Client.Language.Invalid', 'invalid language: ' . $sLanguage_);
+            if (! is_string($language)) {
+                throw new Exception('Client.Language.Invalid', 'invalid language: ' . $language);
             }
-            $this->language = $sLanguage_;
+            $this->language = $language;
             return $this;
         }
 
@@ -501,7 +505,7 @@ namespace cardgate\api {
                 throw new Exception('Client.HttpMethod.Invalid', 'invalid http method: ' . $httpMethod);
             }
 
-            $sUrl = $this->getUrl() . $resource;
+            $url = $this->getUrl() . $resource;
             if (is_array($data)) {
                 $data['ip'] = $this->getIp();
                 $data['language_id'] = $this->getLanguage();
@@ -515,58 +519,58 @@ namespace cardgate\api {
                 $data = array_merge($data, $this->version->getData());
             }
 
-            $rCh = curl_init();
-            curl_setopt($rCh, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-            curl_setopt($rCh, CURLOPT_USERPWD, $this->merchantId . ':' . $this->key);
-            curl_setopt($rCh, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($rCh, CURLOPT_TIMEOUT, 60);
-            curl_setopt($rCh, CURLOPT_HEADER, false);
-            curl_setopt($rCh, CURLOPT_HTTPHEADER, [
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+            curl_setopt($ch, CURLOPT_USERPWD, $this->merchantId . ':' . $this->key);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+            curl_setopt($ch, CURLOPT_HEADER, false);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
                 'Content-Type: application/json',
                 'Accept: application/json'
             ]);
             if ($this->testmode) {
-                curl_setopt($rCh, CURLOPT_SSL_VERIFYPEER, false);
-                curl_setopt($rCh, CURLOPT_SSL_VERIFYHOST, 0);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
             } else {
-                curl_setopt($rCh, CURLOPT_SSL_VERIFYPEER, true); // verify SSL peer
-                curl_setopt($rCh, CURLOPT_SSL_VERIFYHOST, 2); // check for valid common name and verify host
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true); // verify SSL peer
+                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2); // check for valid common name and verify host
             }
 
             if ('POST' == $httpMethod) {
                 $this->lastRequest = json_encode($data, JSON_PARTIAL_OUTPUT_ON_ERROR);
-                curl_setopt($rCh, CURLOPT_URL, $sUrl);
-                curl_setopt($rCh, CURLOPT_POST, true);
-                curl_setopt($rCh, CURLOPT_POSTFIELDS, $this->lastRequest);
-                $this->lastRequest = "[POST $sUrl] " . $this->lastRequest;
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_POST, true);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $this->lastRequest);
+                $this->lastRequest = "[POST $url] " . $this->lastRequest;
             } else {
-                $this->lastRequest = $sUrl
-                                     . ( false === strchr($sUrl, '?') ? '?' : '&' )
+                $this->lastRequest = $url
+                                     . ( false === strchr($url, '?') ? '?' : '&' )
                                      . http_build_query($data)
                 ;
-                curl_setopt($rCh, CURLOPT_URL, $this->lastRequest);
+                curl_setopt($ch, CURLOPT_URL, $this->lastRequest);
             }
 
             if (self::DEBUG_VERBOSE == $this->debugLevel) {
-                curl_setopt($rCh, CURLOPT_VERBOSE, true);
+                curl_setopt($ch, CURLOPT_VERBOSE, true);
             }
 
-            $this->lastResult = curl_exec($rCh);
+            $this->lastResult = curl_exec($ch);
             if (false == $this->lastResult) {
-                $sError = curl_error($rCh);
-                curl_close($rCh);
-                throw new Exception('Client.Request.Curl.Error', $sError);
+                $error = curl_error($ch);
+                curl_close($ch);
+                throw new Exception('Client.Request.Curl.Error', $error);
             } else {
-                curl_close($rCh);
+                curl_close($ch);
             }
-            if (null === ( $aResults = json_decode($this->lastResult, true) )) {
+            if (null === ( $results = json_decode($this->lastResult, true) )) {
                 throw new Exception('Client.Request.JSON.Invalid', 'remote gave invalid JSON: ' . $this->lastResult);
             }
-            if (isset($aResults['error'])) {
-                throw new Exception('Client.Request.Remote.' . $aResults['error']['code'], $aResults['error']['message']   . $this->getDebugInfo());
+            if (isset($results['error'])) {
+                throw new Exception( 'Client.Request.Remote.' . $results['error']['code'], $results['error']['message'] . $this->getDebugInfo());
             }
 
-            return $aResults;
+            return $results;
         }
     }
 

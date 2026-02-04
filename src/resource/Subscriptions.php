@@ -54,52 +54,52 @@ namespace cardgate\api\resource {
                 throw new Exception('Subscription.Id.Invalid', 'invalid subscription id: ' . $subscriptionId);
             }
 
-            $sResource = "subscription/{$subscriptionId}/";
+            $resource = "subscription/{$subscriptionId}/";
 
-            $aResult = $this->client->doRequest($sResource, null, 'GET');
+            $result = $this->client->doRequest($resource, null, 'GET');
 
-            if (empty($aResult['subscription'])) {
+            if (empty($result['subscription'])) {
                 throw new Exception('Subscription.Details.Invalid', 'invalid subscription data returned');
             }
 
             if (! is_null($details)) {
-                $details = array_merge($details, $aResult['subscription']);
+                $details = array_merge($details, $result['subscription']);
             }
 
-            $oSubscription = new Subscription(
+            $subscription = new Subscription(
                 $this->client,
-                (int) $aResult['subscription']['site_id'],
-                (int) $aResult['subscription']['period'],
-                $aResult['subscription']['period_type'],
-                (int) $aResult['subscription']['period_price']
+                (int) $result['subscription']['site_id'],
+                (int) $result['subscription']['period'],
+                $result['subscription']['period_type'],
+                (int) $result['subscription']['period_price']
             );
-            $oSubscription->setId($aResult['subscription']['nn_id']);
-            if (! empty($aResult['subscription']['description'])) {
-                $oSubscription->setDescription($aResult['subscription']['description']);
+            $subscription->setId($result['subscription']['nn_id']);
+            if (! empty($result['subscription']['description'])) {
+                $subscription->setDescription($result['subscription']['description']);
             }
-            if (! empty($aResult['subscription']['reference'])) {
-                $oSubscription->setReference($aResult['subscription']['reference']);
+            if (! empty($result['subscription']['reference'])) {
+                $subscription->setReference($result['subscription']['reference']);
             }
-            if (! empty($aResult['subscription']['start_date'])) {
-                $oSubscription->setStartDate($aResult['subscription']['start_date']);
+            if (! empty($result['subscription']['start_date'])) {
+                $subscription->setStartDate($result['subscription']['start_date']);
             }
-            if (! empty($aResult['subscription']['end_date'])) {
-                $oSubscription->setEndDate($aResult['subscription']['end_date']);
+            if (! empty($result['subscription']['end_date'])) {
+                $subscription->setEndDate($result['subscription']['end_date']);
             }
             // TODO: map other subscription fields? method_id can't be used in client::Method currently...
             /*
-            if ( ! empty( $aResult['subscription']['code'] ) ) {
-                $oSubscription->setCode( $aResult['subscription']['code'] );
+            if ( ! empty( $result['subscription']['code'] ) ) {
+                $subscription->setCode( $result['subscription']['code'] );
             }
-            if ( ! empty( $aResult['subscription']['payment_type_id'] ) ) {
-                $oSubscription->setPaymentMethod( $aResult['subscription']['payment_type_id'] );
+            if ( ! empty( $result['subscription']['payment_type_id'] ) ) {
+                $subscription->setPaymentMethod( $result['subscription']['payment_type_id'] );
             }
-            if ( ! empty( $aResult['subscription']['last_payment_date'] ) ) {
-                $oSubscription->setPaymentMethod( $aResult['subscription']['last_payment_date'] );
+            if ( ! empty( $result['subscription']['last_payment_date'] ) ) {
+                $subscription->setPaymentMethod( $result['subscription']['last_payment_date'] );
             }
             */
 
-            return $oSubscription;
+            return $subscription;
         }
 
         /**

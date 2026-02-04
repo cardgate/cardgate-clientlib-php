@@ -35,27 +35,27 @@ namespace cardgate\api {
     /**
      * Item instance.
      *
-     * @method Item setSKU( string $sSKU_ ) Sets the sku.
+     * @method Item setSKU( string $sku ) Sets the sku.
      * @method string getSKU() Returns the sku.
      * @method bool hasSKU() Checks for the existence of sku.
      * @method Item unsetSKU() Unsets the sku.
      *
-     * @method Item setName( string $sName_ ) Sets the name.
+     * @method Item setName( string $name ) Sets the name.
      * @method string getName() Returns the name.
      * @method bool hasName() Checks for the existence of name.
      * @method Item unsetName() Unsets the name.
      *
-     * @method Item setLink( string $sLink_ ) Sets the link.
+     * @method Item setLink( string $link ) Sets the link.
      * @method string getLink() Returns the link.
      * @method bool hasLink() Checks for the existence of a link.
      * @method Item unsetLink() Unsets the link.
      *
-     * @method Item setQuantity( string $sQuantity_ ) Sets the quantity.
+     * @method Item setQuantity( string $quantity ) Sets the quantity.
      * @method string getQuantity() Returns the quantity.
      * @method bool hasQuantity() Checks for the existence of quantity.
      * @method Item unsetQuantity() Unsets the quantity.
      *
-     * @method Item setPrice( int $iPrice_ ) Sets the price.
+     * @method Item setPrice( int $price ) Sets the price.
      * @method int getPrice() Returns the price.
      * @method bool hasPrice() Checks for the existence of price.
      * @method Item unsetPrice() Unsets the price.
@@ -137,104 +137,104 @@ namespace cardgate\api {
         /**
          * The constructor.
          *
-         * @param int $iType_ The cart item type.
-         * @param string $sSKU_ The SKU of the cart item.
-         * @param string $sName_ The name of the cart item (product name).
-         * @param int $iQuantity_
-         * @param int $iPrice_ The price of the cart item.
-         * @param string|null $sLink_ An optional link to the product.
+         * @param int $type The cart item type.
+         * @param string $sku The SKU of the cart item.
+         * @param string $name The name of the cart item (product name).
+         * @param int $quantity
+         * @param int $price The price of the cart item.
+         * @param string|null $link An optional link to the product.
          *
          * @throws Exception
          * @throws ReflectionException
          * @access public
          * @api
          */
-        public function __construct(int $iType_, string $sSKU_, string $sName_, int $iQuantity_, int $iPrice_, ?string $sLink_)
+        public function __construct(int $type, string $sku, string $name, int $quantity, int $price, ?string $link)
         {
-            $this->setType($iType_)->setSKU($sSKU_)->setName($sName_)->setQuantity($iQuantity_)->setPrice($iPrice_);
-            if (! is_null($sLink_)) {
-                $this->setLink($sLink_);
+            $this->setType($type)->setSKU($sku)->setName($name)->setQuantity($quantity)->setPrice($price);
+            if (! is_null($link)) {
+                $this->setLink($link);
             }
         }
 
         /**
          * Sets the type (must be one of the {@link Item::TYPE_*}) constants.
          *
-         * @param int $iType_ The cart item type to set.
+         * @param int $type The cart item type to set.
          *
          * @return Item Returns this, makes the call chainable.
          * @throws Exception|ReflectionException
          * @access public
          * @api
          */
-        public function setType(int $iType_): Item
+        public function setType(int $type): Item
         {
             if (
-               ! in_array($iType_, ( new ReflectionClass('\cardgate\api\Item') )->getConstants())
+               ! in_array($type, ( new ReflectionClass('\cardgate\api\Item') )->getConstants())
             ) {
-                throw new Exception( 'Item.Type.Invalid', 'invalid cart item type: ' . $iType_ );
+                throw new Exception( 'Item.Type.Invalid', 'invalid cart item type: ' . $type );
             }
-            return parent::setType($iType_);
+            return parent::setType($type);
         }
 
         /**
          * Sets the vat.
-         * @param float $fVat_ The vat to set.
+         * @param float $vat The vat to set.
          * @return Item Returns this, makes the call chainable.
          * @throws Exception
          * @access public
          * @api
          */
-        public function setVat(float $fVat_): Item
+        public function setVat(float $vat): Item
         {
-            if (! is_numeric($fVat_)) {
-                throw new Exception('Item.Vat.Invalid', 'invalid vat: ' . $fVat_);
+            if (! is_numeric($vat)) {
+                throw new Exception('Item.Vat.Invalid', 'invalid vat: ' . $vat);
             }
-            return parent::setVat($fVat_);
+            return parent::setVat($vat);
         }
 
         /**
          * Sets the vat included flag.
-         * @param bool $bVatIncluded_ Set the flag vat included.
+         * @param bool $vatIncluded Set the flag vat included.
          * @return Item Returns this, makes the call chainable.
          * @access public
          * @api
          */
-        public function setVatIncluded(bool $bVatIncluded_): Item
+        public function setVatIncluded(bool $vatIncluded): Item
         {
-            return parent::setVatIncluded(!! $bVatIncluded_);
+            return parent::setVatIncluded(!! $vatIncluded);
         }
 
         /**
          * Sets the vat amount.
-         * @param float $fVatAmount_ The vat amount to set.
+         * @param float $vatAmount The vat amount to set.
          * @return Item Returns this, makes the call chainable.
          * @throws Exception
          * @access public
          * @api
          */
-        public function setVatAmount(float $fVatAmount_): Item
+        public function setVatAmount(float $vatAmount): Item
         {
-            if (! is_numeric($fVatAmount_)) {
-                throw new Exception('Item.Vat.Amount.Invalid', 'invalid vat amount: ' . $fVatAmount_);
+            if (! is_numeric($vatAmount)) {
+                throw new Exception('Item.Vat.Amount.Invalid', 'invalid vat amount: ' . $vatAmount);
             }
-            return parent::setVatAmount($fVatAmount_);
+            return parent::setVatAmount($vatAmount);
         }
 
         /**
          * Sets the stock.
-         * @param float $fStock_ The stock to set.
+         * @param float $stock The stock to set.
          * @return Item Returns this, makes the call chainable.
          * @throws Exception
          * @access public
          * @api
          */
-        public function setStock(float $fStock_): Item
+        public function setStock(float $stock): Item
         {
-            if (! is_numeric($fStock_)) {
-                throw new Exception('Item.Stock.Invalid', 'invalid stock: ' . $fStock_);
+            if (! is_numeric($stock)) {
+                throw new Exception('Item.Stock.Invalid', 'invalid stock: ' . $stock);
             }
-            return parent::setStock($fStock_);
+            return parent::setStock($stock);
         }
     }
 

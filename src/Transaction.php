@@ -218,18 +218,20 @@ namespace cardgate\api {
 
         /**
          * Configure the transaction object with a site id.
-         * @param int $iSiteId_ Site id to set.
+         *
+         * @param int $siteId Site id to set.
+         *
          * @return $this
          * @throws Exception
          * @access public
          * @api
          */
-        public function setSiteId(int $iSiteId_): Transaction
+        public function setSiteId(int $siteId): Transaction
         {
-            if (! is_integer($iSiteId_)) {
-                throw new Exception( 'Transaction.SiteId.Invalid', 'invalid site: ' . $iSiteId_ );
+            if (! is_integer($siteId)) {
+                throw new Exception( 'Transaction.SiteId.Invalid', 'invalid site: ' . $siteId );
             }
-            $this->siteId = $iSiteId_;
+            $this->siteId = $siteId;
             return $this;
         }
 
@@ -252,12 +254,12 @@ namespace cardgate\api {
          * @access public
          * @api
          */
-        public function setSiteKey(string $sSiteKey_): Transaction
+        public function setSiteKey(string $siteKey): Transaction
         {
-            if (! is_string($sSiteKey_)) {
-                throw new Exception('Client.SiteKey.Invalid', 'invalid site key: ' . $sSiteKey_);
+            if (! is_string($siteKey)) {
+                throw new Exception('Client.SiteKey.Invalid', 'invalid site key: ' . $siteKey);
             }
-            $this->siteKey = $sSiteKey_;
+            $this->siteKey = $siteKey;
             return $this;
         }
 
@@ -274,18 +276,20 @@ namespace cardgate\api {
 
         /**
          * Configure the transaction object with an amount.
-         * @param int $iAmount_ Amount in cents to set.
+         *
+         * @param int $amount Amount in cents to set.
+         *
          * @return $this
          * @throws Exception
          * @access public
          * @api
          */
-        public function setAmount(int $iAmount_): Transaction
+        public function setAmount(int $amount): Transaction
         {
-            if (! is_integer($iAmount_)) {
-                throw new Exception('Transaction.Amount.Invalid', 'invalid amount: ' . $iAmount_);
+            if (! is_integer($amount)) {
+                throw new Exception('Transaction.Amount.Invalid', 'invalid amount: ' . $amount);
             }
-            $this->amount = $iAmount_;
+            $this->amount = $amount;
             return $this;
         }
 
@@ -302,7 +306,7 @@ namespace cardgate\api {
 
         /**
          * Configure the transaction currency.
-         * @param string $sCurrency_ The currency to set.
+         * @param string $currency The currency to set.
          * @return $this
          * @throws Exception
          * @access public
@@ -336,12 +340,12 @@ namespace cardgate\api {
          * @access public
          * @api
          */
-        public function setDescription(string $sDescription_): Transaction
+        public function setDescription(string $description): Transaction
         {
-            if (! is_string($sDescription_)) {
-                throw new Exception('Transaction.Description.Invalid', 'invalid description: ' . $sDescription_);
+            if (! is_string($description)) {
+                throw new Exception('Transaction.Description.Invalid', 'invalid description: ' . $description);
             }
-            $this->description = $sDescription_;
+            $this->description = $description;
             return $this;
         }
 
@@ -364,12 +368,12 @@ namespace cardgate\api {
          * @access public
          * @api
          */
-        public function setReference(string $sReference_): Transaction
+        public function setReference(string $reference): Transaction
         {
-            if (! is_string($sReference_)) {
-                throw new Exception('Transaction.Reference.Invalid', 'invalid reference: ' . $sReference_);
+            if (! is_string($reference)) {
+                throw new Exception('Transaction.Reference.Invalid', 'invalid reference: ' . $reference);
             }
-            $this->reference = $sReference_;
+            $this->reference = $reference;
             return $this;
         }
 
@@ -426,15 +430,15 @@ namespace cardgate\api {
          * @access public
          * @api
          */
-        public function setIssuer(string $sIssuer_): Transaction
+        public function setIssuer(string $issuer): Transaction
         {
             if (
                 empty($this->paymentMethod)
-                || ! is_string($sIssuer_)
+                || ! is_string($issuer)
             ) {
-                throw new Exception('Transaction.Issuer.Invalid', 'invalid issuer: ' . $sIssuer_);
+                throw new Exception('Transaction.Issuer.Invalid', 'invalid issuer: ' . $issuer);
             }
-            $this->issuer = $sIssuer_;
+            $this->issuer = $issuer;
             return $this;
         }
 
@@ -547,12 +551,12 @@ namespace cardgate\api {
          * @access public
          * @api
          */
-        public function setCallbackUrl(string $sUrl_): Transaction
+        public function setCallbackUrl(string $url): Transaction
         {
-            if (false === filter_var($sUrl_, FILTER_VALIDATE_URL)) {
-                throw new Exception('Transaction.CallbackUrl.Invalid', 'invalid url: ' . $sUrl_);
+            if (false === filter_var($url, FILTER_VALIDATE_URL)) {
+                throw new Exception('Transaction.CallbackUrl.Invalid', 'invalid url: ' . $url);
             }
-            $this->callbackUrl = $sUrl_;
+            $this->callbackUrl = $url;
             return $this;
         }
 
@@ -685,7 +689,7 @@ namespace cardgate\api {
          */
         public function register(): Transaction
         {
-            $aData = [
+            $data = [
                 'site_id'       => $this->siteId,
                 'amount'        => $this->amount,
                 'currency_id'   => $this->currency,
@@ -698,39 +702,39 @@ namespace cardgate\api {
                 'recurring'     => $this->recurring ? '1' : '0'
             ];
             if (! is_null($this->consumer)) {
-                $aData['email'] = $this->consumer->getEmail();
-                $aData['phone'] = $this->consumer->getPhone();
-                $aData['consumer'] = array_merge(
+                $data['email'] = $this->consumer->getEmail();
+                $data['phone'] = $this->consumer->getPhone();
+                $data['consumer'] = array_merge(
                     $this->consumer->address()->getData(),
                     $this->consumer->shippingAddress()->getData('shipto_')
                 );
-                $aData['countryid'] = $this->consumer->address()->getCountry();
+                $data['countryid'] = $this->consumer->address()->getCountry();
             }
             if (! is_null($this->cart)) {
-                $aData['cartitems'] = $this->cart->getData();
+                $data['cartitems'] = $this->cart->getData();
             }
 
-            $sResource = 'payment/';
+            $resource = 'payment/';
             if (! empty($this->paymentMethod)) {
-                $sResource .= $this->paymentMethod->getId() . '/';
-                $aData['issuer'] = $this->issuer;
+                $resource .= $this->paymentMethod->getId() . '/';
+                $data['issuer'] = $this->issuer;
             }
 
-            $aData = array_filter($aData); // remove NULL values
-            $aResult = $this->client->doRequest($sResource, $aData);
+            $data = array_filter($data); // remove NULL values
+            $result = $this->client->doRequest($resource, $data);
 
             if (
-                empty($aResult['payment'])
-                || empty($aResult['payment']['transaction'])
+                empty($result['payment'])
+                || empty($result['payment']['transaction'])
             ) {
                 throw new Exception('Transaction.Request.Invalid', 'unexpected result: ' . $this->client->getLastResult() . $this->client->getDebugInfo(true, false));
             }
-            $this->id = $aResult['payment']['transaction'];
+            $this->id = $result['payment']['transaction'];
             if (
-                isset($aResult['payment']['action'])
-                && 'redirect' == $aResult['payment']['action']
+                isset($result['payment']['action'])
+                && 'redirect' == $result['payment']['action']
             ) {
-                $this->actionUrl = $aResult['payment']['url'];
+                $this->actionUrl = $result['payment']['url'];
             }
 
             return $this;
@@ -744,7 +748,7 @@ namespace cardgate\api {
          * @throws Exception
          * @access public
          */
-        public function canRefund(&$iRemainder_ = null): bool
+        public function canRefund(&$remainder = null): bool
         {
             $sResource = "transaction/{$this->id}/";
 
@@ -754,48 +758,48 @@ namespace cardgate\api {
                 throw new Exception('Transaction.CanRefund.Invalid', 'unexpected result: ' . $this->client->getLastResult() . $this->client->getDebugInfo(true, false));
             }
 
-            $iRemainder_ = (int) @$aResult['transaction']['refund_remainder'];
+            $remainder = (int) @$aResult['transaction']['refund_remainder'];
 
             return !empty($aResult['transaction']['can_refund']);
         }
 
         /**
          * This method can be used to (partially) refund a transaction.
-         * @param int $iAmount_
+         * @param int $amount
          * @return Transaction The new (refund) transaction.
          * @throws Exception
          * @access public
          * @api
          */
-        public function refund(?int $iAmount_ = null, ?string $sDescription_ = null)
+        public function refund(?int $amount = null, ?string $description = null)
         {
             if (
-                ! is_null($iAmount_)
-                && ! is_integer($iAmount_)
+                ! is_null($amount)
+                && ! is_integer($amount)
             ) {
-                throw new Exception('Transaction.Amount.Invalid', 'invalid amount: ' . $iAmount_);
+                throw new Exception('Transaction.Amount.Invalid', 'invalid amount: ' . $amount);
             }
 
-            $aData = [
-                'amount'        => is_null($iAmount_) ? $this->amount : $iAmount_,
+            $data = [
+                'amount'        => is_null($amount) ? $this->amount : $amount,
                 'currency_id'   => $this->currency,
-                'description'   => $sDescription_
+                'description'   => $description
             ];
 
-            $sResource = "refund/{$this->id}/";
+            $resource = "refund/{$this->id}/";
 
-            $aData = array_filter($aData); // remove NULL values
-            $aResult = $this->client->doRequest($sResource, $aData);
+            $data = array_filter($data); // remove NULL values
+            $result = $this->client->doRequest($resource, $data);
 
             if (
-                empty($aResult['refund'])
-                || empty($aResult['refund']['transaction'])
+                empty($result['refund'])
+                || empty($result['refund']['transaction'])
             ) {
                 throw new Exception('Transaction.Refund.Invalid', 'unexpected result: ' . $this->client->getLastResult() . $this->client->getDebugInfo(true, false));
             }
 
             // This is a bit unlogical! Why not leave this to the callee?
-            return $this->client->transactions()->get($aResult['refund']['transaction']);
+            return $this->client->transactions()->get($result['refund']['transaction']);
         }
 
         /**
@@ -808,33 +812,33 @@ namespace cardgate\api {
          * @access public
          * @api
          */
-        public function recur($iAmount_, $sReference_ = null, $sDescription_ = null)
+        public function recur($amount, $reference = null, $description = null)
         {
-            if (! is_integer($iAmount_)) {
-                throw new Exception('Transaction.Amount.Invalid', 'invalid amount: ' . $iAmount_);
+            if (! is_integer($amount)) {
+                throw new Exception('Transaction.Amount.Invalid', 'invalid amount: ' . $amount);
             }
 
-            $aData = [
-                'amount'        => $iAmount_,
+            $data = [
+                'amount'        => $amount,
                 'currency_id'   => $this->currency,
-                'reference'     => $sReference_,
-                'description'   => $sDescription_
+                'reference'     => $reference,
+                'description'   => $description
             ];
 
-            $sResource = "recurring/{$this->id}/";
+            $resource = "recurring/{$this->id}/";
 
-            $aData = array_filter($aData); // remove NULL values
-            $aResult = $this->client->doRequest($sResource, $aData);
+            $data = array_filter($data); // remove NULL values
+            $result = $this->client->doRequest($resource, $data);
 
             if (
-                empty($aResult['recurring'])
-                || empty($aResult['recurring']['transaction_id'])
+                empty($result['recurring'])
+                || empty($result['recurring']['transaction_id'])
             ) {
                 throw new Exception('Transaction.Recur.Invalid', 'unexpected result: ' . $this->client->getLastResult() . $this->client->getDebugInfo(true, false));
             }
 
             // Same unlogical stuff as the method above! Why not leave this to the callee?
-            return $this->client->transactions()->get($aResult['recurring']['transaction_id']);
+            return $this->client->transactions()->get($result['recurring']['transaction_id']);
         }
     }
 
