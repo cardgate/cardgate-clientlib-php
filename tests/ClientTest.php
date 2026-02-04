@@ -182,7 +182,7 @@ class ClientTest extends TestCase
         $c = $this->newClient();
         $arr = $c->__debugInfo();
         $this->assertIsArray($arr);
-        foreach (['Version','Testmode','DebugLevel','iMerchantId','API_URL','LastRequest','LastResult'] as $key) {
+        foreach (['Version','Testmode','DebugLevel','merchantId','API_URL','LastRequest','LastResult'] as $key) {
             $this->assertArrayHasKey($key, $arr);
         }
         // Ensure the raw secret key is not directly present in debug info values

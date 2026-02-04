@@ -17,5 +17,5 @@ try {
 } catch (\cardgate\api\Exception $oException_) {
     echo 'something went wrong: ' . $oException_->getCode() . ': ' . $oException_->getMessage();
 }
-//$iSiteId = <optional site id>;
-//$sSiteKey = '<optional site key>';
+//$siteId = <optional site id>;
+//$siteKey = '<optional site key>';

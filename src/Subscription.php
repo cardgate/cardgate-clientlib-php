@@ -39,56 +39,56 @@ namespace cardgate\api {
          * @var string
          * @access private
          */
-        private $sId;
+        private $id;
 
         /**
          * The length of the subscription period.
          * @var int
          * @access private
          */
-        private $iPeriod;
+        private $period;
 
         /**
          * The type of period (ie day, week, month, year)
          * @var string
          * @access private
          */
-        private $sPeriodType;
+        private $periodType;
 
         /**
          * The price per period in cents
          * @var int
          * @access private
          */
-        private $iPeriodPrice;
+        private $periodPrice;
 
         /**
          * The amount of the initial (first) payment, used only when the first payment is different from the monthly costs.
          * @var int
          * @access private
          */
-        private $iInitialPayment;
+        private $initialPayment;
 
         /**
          * The length of the trial period.
          * @var int
          * @access private
          */
-        private $iTrialPeriod;
+        private $trialPeriod;
 
         /**
          * The type of trial period (ie day, week, month, year)
          * @var string
          * @access private
          */
-        private $sTrialPeriodType;
+        private $trialPeriodType;
 
         /**
          * The price for the trial period in cents
          * @var int
          * @access private
          */
-        private $iTrialPeriodPrice;
+        private $trialPeriodPrice;
 
         /**
          * The start date (UTC) of the subscription in YYYY-MM-DD hh:mm:ss format.
@@ -96,7 +96,7 @@ namespace cardgate\api {
          * @var string
          * @access private
          */
-        private $sStartDate;
+        private $startDate;
 
         /**
          * The end date (UTC) of the subscription in YYYY-MM-DD hh:mm:ss format.
@@ -104,62 +104,62 @@ namespace cardgate\api {
          * @var string
          * @access private
          */
-        private $sEndDate;
+        private $endDate;
 
         /**
          * The status of the subscription.
          * @var string
          * @access private
          */
-        private $sStatus;
+        private $status;
 
         /**
          * The constructor.
          *
-         * @param Client $oClient_ The client associated with this subscription.
-         * @param int $iSiteId_ Site id to create the subscription for.
-         * @param int $iPeriod_ The period length of the subscription.
-         * @param string $sPeriodType_ The period type of the subscription (e.g. day, week, month, year).
-         * @param int $iPeriodAmount_ The period amount of the subscription in cents.
-         * @param string $sCurrency_ Currency (ISO 4217)
+         * @param Client $client The client associated with this subscription.
+         * @param int $siteId Site id to create the subscription for.
+         * @param int $period The period length of the subscription.
+         * @param string $periodType The period type of the subscription (e.g. day, week, month, year).
+         * @param int $periodAmount The period amount of the subscription in cents.
+         * @param string $currency Currency (ISO 4217)
          *
          * @throws Exception
          * @access public
          * @api
          */
         public function __construct(
-            Client $oClient_,
-            int $iSiteId_,
-            int $iPeriod_,
-            string $sPeriodType_,
-            int $iPeriodAmount_,
-            string $sCurrency_ = 'EUR'
+            Client $client,
+            int $siteId,
+            int $period,
+            string $periodType,
+            int $periodAmount,
+            string $currency = 'EUR'
         ) {
-            $this->oClient = $oClient_;
-            $this->setSiteId($iSiteId_)
-                 ->setPeriod($iPeriod_)
-                 ->setPeriodType($sPeriodType_)
-                 ->setPeriodPrice($iPeriodAmount_)
-                 ->setCurrency($sCurrency_);
+            $this->client = $client;
+            $this->setSiteId($siteId)
+                 ->setPeriod($period)
+                 ->setPeriodType($periodType)
+                 ->setPeriodPrice($periodAmount)
+                 ->setCurrency($currency);
         }
 
         /**
          * Set the subscription id.
          *
-         * @param string $sId_ Subscription id to set.
+         * @param string $id Subscription id to set.
          *
          * @return $this
          * @throws Exception
          * @access public
          * @api
          */
-        public function setId(string $sId_): Transaction {
+        public function setId(string $id): Transaction {
             if (
-                empty($sId_)
+                empty($id)
             ) {
-                throw new Exception('Subscription.Id.Invalid', 'invalid id: ' . $sId_);
+                throw new Exception('Subscription.Id.Invalid', 'invalid id: ' . $id);
             }
-            $this->sId = $sId_;
+            $this->id = $id;
             return $this;
         }
 
@@ -171,10 +171,10 @@ namespace cardgate\api {
          * @api
          */
         public function getId(): string {
-            if (empty($this->sId)) {
+            if (empty($this->id)) {
                 throw new Exception('Subscription.Not.Initialized', 'invalid subscription state');
             }
-            return $this->sId;
+            return $this->id;
         }
 
         /**
@@ -192,7 +192,7 @@ namespace cardgate\api {
             if (! is_integer($iPeriod_)) {
                 throw new Exception('Subscription.Period.Invalid', 'invalid period: ' . $iPeriod_);
             }
-            $this->iPeriod = $iPeriod_;
+            $this->period = $iPeriod_;
             return $this;
         }
 
@@ -203,7 +203,7 @@ namespace cardgate\api {
          * @api
          */
         public function getPeriod(): int {
-            return $this->iPeriod;
+            return $this->period;
         }
 
         /**
@@ -223,7 +223,7 @@ namespace cardgate\api {
             ) {
                 throw new Exception('Subscription.Period.Type.Invalid', 'invalid period type: ' . $sPeriodType_);
             }
-            $this->sPeriodType = $sPeriodType_;
+            $this->periodType = $sPeriodType_;
             return $this;
         }
 
@@ -234,7 +234,7 @@ namespace cardgate\api {
          * @api
          */
         public function getPeriodType(): string {
-            return $this->sPeriodType;
+            return $this->periodType;
         }
 
         /**
@@ -250,7 +250,7 @@ namespace cardgate\api {
             if (! is_integer($iPeriodPrice_)) {
                 throw new Exception('Subscription.Period.Price.Invalid', 'invalid period price: ' . $iPeriodPrice_);
             }
-            $this->iPeriodPrice = $iPeriodPrice_;
+            $this->periodPrice = $iPeriodPrice_;
             return $this;
         }
 
@@ -262,7 +262,7 @@ namespace cardgate\api {
          */
         public function getPeriodPrice()
         {
-            return $this->iPeriodPrice;
+            return $this->periodPrice;
         }
 
         /**
@@ -278,7 +278,7 @@ namespace cardgate\api {
             if (! is_integer($iAmount_)) {
                 throw new Exception('Subscription.Initial.Payment.Invalid', 'invalid initial payment amount: ' . $iAmount_);
             }
-            $this->iInitialPayment = $iAmount_;
+            $this->initialPayment = $iAmount_;
             return $this;
         }
 
@@ -296,7 +296,7 @@ namespace cardgate\api {
             if (! is_integer($iTrialPeriod_)) {
                 throw new Exception('Subscription.Period.Invalid', 'invalid trial period: ' . $iTrialPeriod_);
             }
-            $this->iTrialPeriod = $iTrialPeriod_;
+            $this->trialPeriod = $iTrialPeriod_;
             return $this;
         }
 
@@ -308,7 +308,7 @@ namespace cardgate\api {
          */
         public function getTrialPeriod()
         {
-            return $this->iTrialPeriod;
+            return $this->trialPeriod;
         }
 
         /**
@@ -327,7 +327,7 @@ namespace cardgate\api {
             ) {
                 throw new Exception('Subscription.Period.Type.Invalid', 'invalid trial period type: ' . $sTrialPeriodType_);
             }
-            $this->sTrialPeriodType = $sTrialPeriodType_;
+            $this->trialPeriodType = $sTrialPeriodType_;
             return $this;
         }
 
@@ -339,7 +339,7 @@ namespace cardgate\api {
          */
         public function getTrialPeriodType()
         {
-            return $this->sTrialPeriodType;
+            return $this->trialPeriodType;
         }
 
         /**
@@ -355,7 +355,7 @@ namespace cardgate\api {
             if (! is_integer($iTrialPeriodPrice_)) {
                 throw new Exception('Subscription.Period.Price.Invalid', 'invalid trial period price: ' . $iTrialPeriodPrice_);
             }
-            $this->iTrialPeriodPrice = $iTrialPeriodPrice_;
+            $this->trialPeriodPrice = $iTrialPeriodPrice_;
             return $this;
         }
 
@@ -367,7 +367,7 @@ namespace cardgate\api {
          */
         public function getTrialPeriodPrice()
         {
-            return $this->iTrialPeriodPrice;
+            return $this->trialPeriodPrice;
         }
 
         /**
@@ -383,7 +383,7 @@ namespace cardgate\api {
             if (! is_string($sStartDate_)) {
                 throw new Exception('Subscription.Date.Start.Invalid', 'invalid start date: ' . $sStartDate_);
             }
-            $this->sStartDate = $sStartDate_;
+            $this->startDate = $sStartDate_;
             return $this;
         }
 
@@ -395,7 +395,7 @@ namespace cardgate\api {
          */
         public function getStartDate()
         {
-            return $this->sStartDate;
+            return $this->startDate;
         }
 
         /**
@@ -411,7 +411,7 @@ namespace cardgate\api {
             if (! is_string($sEndDate_)) {
                 throw new Exception('Subscription.Date.End.Invalid', 'invalid end date: ' . $sEndDate_);
             }
-            $this->sEndDate = $sEndDate_;
+            $this->endDate = $sEndDate_;
             return $this;
         }
 
@@ -423,7 +423,7 @@ namespace cardgate\api {
          */
         public function getEndDate()
         {
-            return $this->sEndDate;
+            return $this->endDate;
         }
 
         /**
@@ -434,7 +434,7 @@ namespace cardgate\api {
          */
         public function getStatus()
         {
-            return $this->sStatus;
+            return $this->status;
         }
 
         /**
@@ -446,60 +446,60 @@ namespace cardgate\api {
          */
         public function register(): Transaction {
             $aData = [
-                'site_id'               => $this->iSiteId,
-                'currency_id'           => $this->sCurrency,
-                'url_callback'          => $this->sCallbackUrl,
-                'url_success'           => $this->sSuccessUrl,
-                'url_failure'           => $this->sFailureUrl,
-                'url_pending'           => $this->sPendingUrl,
-                'description'           => $this->sDescription,
-                'reference'             => $this->sReference,
+                'site_id'               => $this->siteId,
+                'currency_id'           => $this->currency,
+                'url_callback'          => $this->callbackUrl,
+                'url_success'           => $this->successUrl,
+                'url_failure'           => $this->failureUrl,
+                'url_pending'           => $this->pendingUrl,
+                'description'           => $this->description,
+                'reference'             => $this->reference,
                 'recurring'             => true,
-                'period'                => $this->iPeriod,
-                'period_type'           => $this->sPeriodType,
-                'period_price'          => $this->iPeriodPrice,
-                'initial_payment'       => $this->iInitialPayment,
-                'trial_period'          => $this->iTrialPeriod,
-                'trial_period_type'     => $this->sTrialPeriodType,
-                'trial_period_price'    => $this->iTrialPeriodPrice,
-                'start_date'            => $this->sStartDate,
-                'end_date'              => $this->sEndDate,
+                'period'                => $this->period,
+                'period_type'           => $this->periodType,
+                'period_price'          => $this->periodPrice,
+                'initial_payment'       => $this->initialPayment,
+                'trial_period'          => $this->trialPeriod,
+                'trial_period_type'     => $this->trialPeriodType,
+                'trial_period_price'    => $this->trialPeriodPrice,
+                'start_date'            => $this->startDate,
+                'end_date'              => $this->endDate,
             ];
-            if (! is_null($this->oConsumer)) {
-                $aData['email'] = $this->oConsumer->getEmail();
-                $aData['phone'] = $this->oConsumer->getPhone();
+            if (! is_null($this->consumer)) {
+                $aData['email'] = $this->consumer->getEmail();
+                $aData['phone'] = $this->consumer->getPhone();
                 $aData['consumer'] = array_merge(
-                    $this->oConsumer->address()->getData(),
-                    $this->oConsumer->shippingAddress()->getData('shipto_')
+                    $this->consumer->address()->getData(),
+                    $this->consumer->shippingAddress()->getData('shipto_')
                 );
-                $aData['country_id'] = $this->oConsumer->address()->getCountry();
+                $aData['country_id'] = $this->consumer->address()->getCountry();
             }
-            if (! is_null($this->oCart)) {
-                $aData['cartitems'] = $this->oCart->getData();
+            if (! is_null($this->cart)) {
+                $aData['cartitems'] = $this->cart->getData();
             }
 
             $sResource = 'subscription/register/';
 
-            if (! empty($this->oPaymentMethod)) {
-                $aData['pt'] = $this->oPaymentMethod->getId();
-                $aData['issuer'] = $this->sIssuer;
+            if (! empty($this->paymentMethod)) {
+                $aData['pt'] = $this->paymentMethod->getId();
+                $aData['issuer'] = $this->issuer;
             }
 
             $aData = array_filter($aData); // remove NULL values
-            $aResult = $this->oClient->doRequest($sResource, $aData, 'POST');
+            $aResult = $this->client->doRequest($sResource, $aData, 'POST');
 
             if (
                 empty($aResult)
                 || empty($aResult['subscription'])
             ) {
-                throw new Exception('Subscription.Request.Invalid', 'unexpected result: ' . $this->oClient->getLastResult() . $this->oClient->getDebugInfo(true, false));
+                throw new Exception('Subscription.Request.Invalid', 'unexpected result: ' . $this->client->getLastResult() . $this->client->getDebugInfo(true, false));
             }
-            $this->sId = $aResult['subscription'];
+            $this->id = $aResult['subscription'];
             if (
                 isset($aResult['subscription']['action'])
                 && 'redirect' == $aResult['subscription']['action']
             ) {
-                $this->sActionUrl = $aResult['subscription']['url'];
+                $this->actionUrl = $aResult['subscription']['url'];
             }
 
             return $this;
@@ -515,7 +515,7 @@ namespace cardgate\api {
         public function changeStatus($sStatus_)
         {
 
-            if (empty($this->sId)) {
+            if (empty($this->id)) {
                 throw new Exception('Subscription.Request.Invalid', 'invalid subscription id');
             }
 
@@ -524,18 +524,18 @@ namespace cardgate\api {
             }
 
             $aData = [
-                'subscription_id'       => $this->sId,
-                'description'           => $this->sDescription,
+                'subscription_id'       => $this->id,
+                'description'           => $this->description,
             ];
 
             $sResource = 'subscription/' . $sStatus_ . '/';
 
             $aData = array_filter($aData); // remove NULL values
-            $aResult = $this->oClient->doRequest($sResource, $aData, 'POST');
+            $aResult = $this->client->doRequest($sResource, $aData, 'POST');
 
             if (false == $aResult['success']) {
-                // oClient will have thrown an error if there was a proper error from the API, so this is weird!
-                throw new Exception('Subscription.Request.Invalid', 'unexpected result: ' . $this->oClient->getLastResult() . $this->oClient->getDebugInfo(true, false));
+                // client will have thrown an error if there was a proper error from the API, so this is weird!
+                throw new Exception('Subscription.Request.Invalid', 'unexpected result: ' . $this->client->getLastResult() . $this->client->getDebugInfo(true, false));
             }
 
             return true;

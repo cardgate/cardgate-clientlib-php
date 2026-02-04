@@ -156,21 +156,21 @@ namespace cardgate\api {
          * @var Client
          * @access private
          */
-        private $oClient;
+        private $client;
 
         /**
          * The payment method.
          * @var string
          * @access private
          */
-        private $sId;
+        private $id;
 
         /**
          * The payment method name.
          * @var string
          * @access private
          */
-        private $sName;
+        private $name;
 
         /**
          * The constructor.
@@ -190,7 +190,7 @@ namespace cardgate\api {
             if (! isset($aValidMethods)) {
                 $aValidMethods  = ( new ReflectionClass('\cardgate\api\Method') )->getConstants();
             }
-            $this->oClient = $oClient_;
+            $this->client = $oClient_;
             if (! in_array($sId_, $aValidMethods)) {
                 throw new Exception('Method.PaymentMethod.Invalid', 'invalid payment method: ' . $sId_);
             }
@@ -213,7 +213,7 @@ namespace cardgate\api {
             ) {
                 throw new Exception('Method.Id.Invalid', 'invalid id: ' . $sId_);
             }
-            $this->sId = $sId_;
+            $this->id = $sId_;
             return $this;
         }
 
@@ -224,7 +224,7 @@ namespace cardgate\api {
          * @api
          */
         public function getId(): string {
-            return $this->sId;
+            return $this->id;
         }
 
         /**
@@ -244,7 +244,7 @@ namespace cardgate\api {
             ) {
                 throw new Exception('Method.Name.Invalid', 'invalid name: ' . $sName_);
             }
-            $this->sName = $sName_;
+            $this->name = $sName_;
             return $this;
         }
 
@@ -256,7 +256,7 @@ namespace cardgate\api {
          */
         public function getName(): string
         {
-            return $this->sName;
+            return $this->name;
         }
 
         /**

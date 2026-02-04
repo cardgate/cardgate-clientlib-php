@@ -60,7 +60,7 @@ namespace cardgate\api\resource {
          * @ignore
          * @internal The methods these fields expose are configured in the class phpdoc.
          */
-        protected static $aFields = [
+        protected static $fields = [
             'PlatformName'      => 'platform_name',
             'PlatformVersion'   => 'platform_version',
             'PluginName'        => 'plugin_name',

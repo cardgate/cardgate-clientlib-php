@@ -42,40 +42,40 @@ namespace cardgate\api\resource {
         /**
          * This method can be used to receive a {@link Method} instance.
          *
-         * @param string $sId_ Method id to receive method instance for.
+         * @param string $id Method id to receive method instance for.
          *
          * @return Method
          * @throws Exception|ReflectionException
          * @access public
          * @api
          */
-        public function get( string $sId_): Method
+        public function get( string $id): Method
         {
-            return new Method($this->oClient, $sId_, $sId_);
+            return new Method($this->client, $id, $id);
         }
 
         /**
          * This method can be used to retrieve a list of all available payment methods for a site.
          *
-         * @param int $iSiteId_ The site to retrieve payment methods for.
+         * @param int $siteId The site to retrieve payment methods for.
          *
          * @return array
          * @throws Exception|ReflectionException
          * @access public
          * @api
          */
-        public function all( int $iSiteId_): array
+        public function all( int $siteId): array
         {
-            if (! is_integer($iSiteId_)) {
-                throw new Exception('Methods.SiteId.Invalid', 'invalid site id: ' . $iSiteId_);
+            if (! is_integer($siteId)) {
+                throw new Exception('Methods.SiteId.Invalid', 'invalid site id: ' . $siteId);
             }
 
-            $sResource = "options/{$iSiteId_}/";
+            $sResource = "options/{$siteId}/";
 
-            $aResult = $this->oClient->doRequest($sResource, null, 'GET');
+            $aResult = $this->client->doRequest($sResource, null, 'GET');
 
             if (empty($aResult['options'])) {
-                throw new Exception('Method.Options.Invalid', 'unexpected result: ' . $this->oClient->getLastResult() . $this->oClient->getDebugInfo(true, false));
+                throw new Exception('Method.Options.Invalid', 'unexpected result: ' . $this->client->getLastResult() . $this->client->getDebugInfo(true, false));
             }
 
             $aValidMethods  = ( new ReflectionClass('\cardgate\api\Method') )->getConstants();
@@ -86,9 +86,9 @@ namespace cardgate\api\resource {
                 }
 
                 try {
-                    $aMethods[] = new Method($this->oClient, $aOption['id'], $aOption['name']);
-                } catch ( Exception $oException_) {
-                    trigger_error($oException_->getMessage() . '. Please update this SDK to the latest version.', E_USER_WARNING);
+                    $aMethods[] = new Method($this->client, $aOption['id'], $aOption['name']);
+                } catch ( Exception $exception) {
+                    trigger_error( $exception->getMessage() . '. Please update this SDK to the latest version.', E_USER_WARNING);
                 }
             }
             return $aMethods;

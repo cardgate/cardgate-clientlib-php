@@ -41,17 +41,19 @@ namespace cardgate\api\resource {
          * @var Client
          * @access private
          */
-        protected $oClient;
+        protected $client;
 
         /**
          * The constructor.
-         * @param Client $oClient_ The client to associate the resource with.
+         *
+         * @param Client $client The client to associate the resource with.
+         *
          * @access public
          * @api
          */
-        public function __construct( Client $oClient_)
+        public function __construct( Client $client)
         {
-            $this->oClient = $oClient_;
+            $this->client = $client;
         }
     }
 

@@ -41,34 +41,34 @@ namespace cardgate\api\resource {
         /**
          * This method can be used to retrieve transaction details.
          *
-         * @param string $sTransactionId_ The transaction identifier.
-         * @param array|null $aDetails_ array that gets filled with additional transaction details.
+         * @param string $transactionId The transaction identifier.
+         * @param array|null $details array that gets filled with additional transaction details.
          *
          * @return Transaction
          * @throws Exception|ReflectionException
          * @access public
          * @api
          */
-        public function get(string $sTransactionId_, array &$aDetails_ = null): Transaction
+        public function get(string $transactionId, array &$details = null): Transaction
         {
-            if (! is_string($sTransactionId_)) {
-                throw new Exception('Transaction.Id.Invalid', 'invalid transaction id: ' . $sTransactionId_);
+            if (! is_string($transactionId)) {
+                throw new Exception('Transaction.Id.Invalid', 'invalid transaction id: ' . $transactionId);
             }
 
-            $sResource = "transaction/$sTransactionId_/";
+            $sResource = "transaction/$transactionId/";
 
-            $aResult = $this->oClient->doRequest($sResource, null, 'GET');
+            $aResult = $this->client->doRequest($sResource, null, 'GET');
 
             if (empty($aResult['transaction'])) {
-                throw new Exception('Transaction.Details.Invalid', 'invalid transaction data returned' . $this->oClient->getDebugInfo());
+                throw new Exception('Transaction.Details.Invalid', 'invalid transaction data returned' . $this->client->getDebugInfo());
             }
 
-            if (! is_null($aDetails_)) {
-                $aDetails_ = array_merge($aDetails_, $aResult['transaction']);
+            if (! is_null($details)) {
+                $details = array_merge($details, $aResult['transaction']);
             }
 
             $oTransaction = new Transaction(
-                $this->oClient,
+                $this->client,
                 (int) $aResult['transaction']['site_id'],
                 (int) $aResult['transaction']['amount'],
                 $aResult['transaction']['currency_id']
@@ -105,13 +105,13 @@ namespace cardgate\api\resource {
 
             $sResource = "status/$sTransactionId_/";
 
-            $aResult = $this->oClient->doRequest($sResource, null, 'GET');
+            $aResult = $this->client->doRequest($sResource, null, 'GET');
 
             if (
                 empty($aResult['status'])
                 || ! is_string($aResult['status'])
             ) {
-                throw new Exception('Transaction.Status.Invalid', 'invalid transaction status returned' . $this->oClient->getDebugInfo());
+                throw new Exception('Transaction.Status.Invalid', 'invalid transaction status returned' . $this->client->getDebugInfo());
             }
 
             return $aResult['status'];
@@ -120,25 +120,25 @@ namespace cardgate\api\resource {
         /**
          * This method can be used to create a new transaction.
          *
-         * @param int $iSiteId_ Site id to create transaction for.
-         * @param int $iAmount_ The amount of the transaction in cents.
-         * @param string $sCurrency_ Currency (ISO 4217)
+         * @param int $siteId Site id to create transaction for.
+         * @param int $amount The amount of the transaction in cents.
+         * @param string $currency Currency (ISO 4217)
          *
          * @return Transaction
          * @throws Exception
          * @access public
          * @api
          */
-        public function create(int $iSiteId_, int $iAmount_, string $sCurrency_ = 'EUR'): Transaction
+        public function create(int $siteId, int $amount, string $currency = 'EUR'): Transaction
         {
-            return new Transaction($this->oClient, $iSiteId_, $iAmount_, $sCurrency_);
+            return new Transaction($this->client, $siteId, $amount, $currency);
         }
 
         /**
          * This method can be used to verify a callback for a transaction.
          *
-         * @param array $aData_ The callback data (usually $_GET) to use for verification.
-         * @param string|null $sSiteKey_ The site key used to verify hash. Leave empty to check hash with the
+         * @param array $data The callback data (usually $_GET) to use for verification.
+         * @param string|null $siteKey The site key used to verify hash. Leave empty to check hash with the
          * use of the merchant key only (otherwise both are checked).
          *
          * @return bool Returns TRUE if the callback is valid or FALSE if not.
@@ -146,38 +146,38 @@ namespace cardgate\api\resource {
          * @access public
          * @api
          */
-        public function verifyCallback(array $aData_, string $sSiteKey_ = null): bool
+        public function verifyCallback(array $data, string $siteKey = null): bool
         {
             foreach ([ 'transaction', 'currency', 'amount', 'reference', 'code', 'hash', 'status' ] as $sRequiredKey) {
-                if (! isset($aData_[$sRequiredKey])) {
+                if (! isset($data[$sRequiredKey])) {
                     throw new Exception('Transaction.Callback.Missing', 'missing callback data: ' . $sRequiredKey);
                 }
             }
 
-            $sPrefix = empty($aData_['testmode']) ? '': 'TEST';
+            $sPrefix = empty($data['testmode']) ? '': 'TEST';
 
             return (
                 (
-                    null !== $sSiteKey_
+                    null !== $siteKey
                     && md5(
-                        $sPrefix
-                        . $aData_['transaction']
-                        . $aData_['currency']
-                        . $aData_['amount']
-                        . $aData_['reference']
-                        . $aData_['code']
-                        . $sSiteKey_
-                    ) == $aData_['hash']
+                           $sPrefix
+                           . $data['transaction']
+                           . $data['currency']
+                           . $data['amount']
+                           . $data['reference']
+                           . $data['code']
+                           . $siteKey
+                    ) == $data['hash']
                 )
                 || md5(
-                    $sPrefix
-                    . $aData_['transaction']
-                    . $aData_['currency']
-                    . $aData_['amount']
-                    . $aData_['reference']
-                    . $aData_['code']
-                    . $this->oClient->getKey()
-                ) == $aData_['hash']
+                       $sPrefix
+                       . $data['transaction']
+                       . $data['currency']
+                       . $data['amount']
+                       . $data['reference']
+                       . $data['code']
+                    . $this->client->getKey()
+                ) == $data['hash']
             );
         }
     }

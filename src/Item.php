@@ -121,7 +121,7 @@ namespace cardgate\api {
          * @ignore
          * @internal The methods these fields expose are configured in the class phpdoc.
          */
-        protected static $aFields = [
+        protected static $fields = [
             'SKU'           => 'sku',
             'Name'          => 'name',
             'Link'          => 'link',

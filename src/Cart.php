@@ -41,7 +41,7 @@ namespace cardgate\api {
          * @var Client
          * @access private
          */
-        private $aItems = [];
+        private $items = [];
 
         /**
          * Add a cart item to the cart.
@@ -59,8 +59,8 @@ namespace cardgate\api {
          */
         public function addItem(int $iType_, string $sSKU_, string $sName_, int $iQuantity_, int $iPrice_, ?string $sLink_ = null): Item
         {
-            $oItem = new Item($iType_, $sSKU_, $sName_, $iQuantity_, $iPrice_, $sLink_);
-            $this->aItems[] = $oItem;
+            $oItem         = new Item($iType_, $sSKU_, $sName_, $iQuantity_, $iPrice_, $sLink_);
+            $this->items[] = $oItem;
             return $oItem;
         }
 
@@ -70,7 +70,7 @@ namespace cardgate\api {
         public function getData(): array
         {
             $aData = [];
-            foreach ($this->aItems as $oItem) {
+            foreach ($this->items as $oItem) {
                 $aData[] = $oItem->getData();
             }
             return $aData;

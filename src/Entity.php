@@ -38,18 +38,18 @@ namespace cardgate\api {
     {
         /**
          * @ignore
-         * @internal The aData property holds the data of the entity.
+         * @internal The data property holds the data of the entity.
          */
-        protected $aData = [];
+        protected $data = [];
 
         /**
          * @ignore
          * @internal To make the data in an Entity available through magic functions setName, getAmount, unsetName,
-         * hasCart populate the aFields property below. To make autocompletion work in Zend, use the @method phpdoc
+         * hasCart populate the fields property below. To make autocompletion work in Zend, use the @method phpdoc
          * directive like this: @method null setId( int $iId ).
          * Example: [ 'MerchantId' => 'merchant_id', 'Name' => 'name' ]
          */
-        protected static $aFields = [];
+        protected static $fields = [];
 
         /**
          * This method can be used to retrieve all the data of the instance.
@@ -60,12 +60,12 @@ namespace cardgate\api {
         {
             if (is_string($sPrefix_)) {
                 $aResult = [];
-                foreach ($this->aData as $sKey => $mValue) {
+                foreach ($this->data as $sKey => $mValue) {
                     $aResult[$sPrefix_ . $sKey] = $mValue;
                 }
                 return $aResult;
             } else {
-                return $this->aData;
+                return $this->data;
             }
         }
 
@@ -81,13 +81,13 @@ namespace cardgate\api {
             switch (substr($sMethod_, 0, 3)) {
                 case 'get':
                     $sKey = substr($sMethod_, 3);
-                    if (isset(static::$aFields[$sKey])) {
-                        return $this->aData[ static::$aFields[ $sKey ] ] ?? null;
+                    if (isset(static::$fields[$sKey])) {
+                        return $this->data[ static::$fields[ $sKey ] ] ?? null;
                     }
                     break;
                 case 'set':
                     $sKey = substr($sMethod_, 3);
-                    if (isset(static::$aFields[$sKey])) {
+                    if (isset(static::$fields[$sKey])) {
                         if (isset($aArgs_[0])) {
                             if (
                                 is_scalar($aArgs_[0])
@@ -96,7 +96,7 @@ namespace cardgate\api {
                                     || strlen($aArgs_[0]) > 0
                                 )
                             ) {
-                                $this->aData[static::$aFields[$sKey]] = $aArgs_[0];
+                                $this->data[static::$fields[$sKey]] = $aArgs_[0];
                                 return $this; // makes the call chainable
                             } else {
                                 throw new Exception("$sClassName.Invalid.Method", "invalid value for $sMethod_");
@@ -108,15 +108,15 @@ namespace cardgate\api {
                     break;
                 case 'uns':
                     $sKey = substr($sMethod_, 5);
-                    if (isset(static::$aFields[$sKey])) {
-                        unset($this->aData[static::$aFields[$sKey]]);
+                    if (isset(static::$fields[$sKey])) {
+                        unset($this->data[static::$fields[$sKey]]);
                         return $this; // makes the call chainable
                     }
                     break;
                 case 'has':
                     $sKey = substr($sMethod_, 3);
-                    if (isset(static::$aFields[$sKey])) {
-                        return isset($this->aData[static::$aFields[$sKey]]);
+                    if (isset(static::$fields[$sKey])) {
+                        return isset($this->data[static::$fields[$sKey]]);
                     }
                     break;
             }

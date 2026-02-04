@@ -48,7 +48,7 @@ namespace cardgate\api {
          * @ignore
          * @internal The methods these fields expose are configured in the class phpdoc.
          */
-        protected static $aFields = [
+        protected static $fields = [
             'Email'         => 'email',
             'Phone'         => 'phone'
         ];
@@ -58,14 +58,14 @@ namespace cardgate\api {
          * @var Address
          * @access private
          */
-        private $oAddress = null;
+        private $address = null;
 
         /**
          * The ship-to address.
          * @var Address
          * @access private
          */
-        private $oShippingAddress = null;
+        private $shippingAddress = null;
 
         /**
          * Accessor for the bill-to address.
@@ -75,10 +75,10 @@ namespace cardgate\api {
          */
         public function address(): Address
         {
-            if (null == $this->oAddress) {
-                $this->oAddress = new Address();
+            if (null == $this->address) {
+                $this->address = new Address();
             }
-            return $this->oAddress;
+            return $this->address;
         }
 
         /**
@@ -88,10 +88,10 @@ namespace cardgate\api {
          */
         public function shippingAddress(): Address
         {
-            if (null == $this->oShippingAddress) {
-                $this->oShippingAddress = new Address();
+            if (null == $this->shippingAddress) {
+                $this->shippingAddress = new Address();
             }
-            return $this->oShippingAddress;
+            return $this->shippingAddress;
         }
     }
 
