@@ -18,8 +18,8 @@ try {
         echo 'Subscription Id <input type="text" name="subscription_id" value=""> ';
         echo 'Action <select name="action">';
 
-        foreach ([ 'reactivate' , 'suspend', 'cancel', 'deactivate' ] as $aPeriod) {
-            echo '<option value="' . $aPeriod . '">' . ucfirst($aPeriod) . '</option>';
+        foreach ([ 'reactivate' , 'suspend', 'cancel', 'deactivate' ] as $period) {
+            echo '<option value="' . $period . '">' . ucfirst($period) . '</option>';
         }
 
         echo '</select> ';

@@ -5,7 +5,7 @@ try {
         die('init.php missing - copy or rename the init.example.php to init.php and configure it with your account details');
     }
 
-    $oTransaction = $oCardGate->transactions()->create($iSiteId, 695, 'EUR');
+    $oTransaction = $oCardGate->transactions()->create($siteId, 695, 'EUR');
 
     // Configure payment option.
     if (! empty($_POST['option'])) {

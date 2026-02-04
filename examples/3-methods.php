@@ -5,7 +5,7 @@ try {
         die('init.php missing - copy or rename the init.example.php to init.php and configure it with your account details');
     }
 
-    $aMethods = $oCardGate->methods()->all($iSiteId);
+    $aMethods = $oCardGate->methods()->all($siteId);
 
     echo '<form method="post" action="1-payment.php">';
     echo 'Select payment option: <select name="option">';

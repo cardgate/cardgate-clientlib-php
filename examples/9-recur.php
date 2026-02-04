@@ -6,7 +6,7 @@ try {
     }
 
     $aDetails = [];
-    $oTransaction = $oCardGate->transactions()->get('T26211228712', $aDetails);
+    $oTransaction = $oCardGate->transactions()->get('T26211231999', $aDetails);
     $oTransaction->recur(50);
 } catch (cardgate\api\Exception $oException_) {
     echo htmlspecialchars($oException_->getMessage());

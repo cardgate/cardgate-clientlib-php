@@ -6,18 +6,18 @@ try {
     }
 
     // Retrieve status of transaction.
-    $sOrderFile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $_GET['reference'];
+    $orderFile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $_GET['reference'];
     if (
-        ! file_exists($sOrderFile)
-        || false == ( $sOrderData = file_get_contents($sOrderFile) )
-        || false == ( $aOrderData = json_decode($sOrderData, true) )
-        || ! isset($aOrderData['status'])
+        ! file_exists($orderFile)
+        || false == ( $orderData = file_get_contents($orderFile) )
+        || false == ( $orderData = json_decode($orderData, true) )
+        || ! isset($orderData['status'])
     ) {
         die('invalid transaction');
     }
 
     // Print status.
-    echo "transaction has status: <strong>{$aOrderData['status']}</strong><br><a href=\"1-payment.php\">new transaction</a>";
+    echo "transaction has status: <strong>{$orderData['status']}</strong><br><a href=\"1-payment.php\">new transaction</a>";
 } catch (cardgate\api\Exception $oException_) {
     echo htmlspecialchars($oException_->getMessage());
 }

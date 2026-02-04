@@ -10,7 +10,7 @@ try {
         && isset($_POST['period'])
         && isset($_POST['period_type'])
     ) {
-        $oSubscription = $oCardGate->subscriptions()->create($iSiteId, (int) $_POST['period'], $_POST['period_type'], (int) $_POST['period_amount'], 'EUR');
+        $oSubscription = $oCardGate->subscriptions()->create($siteId, (int) $_POST['period'], $_POST['period_type'], (int) $_POST['period_amount'], 'EUR');
         $oSubscription->setPaymentMethod(cardgate\api\Method::BANKTRANSFER);
 
         // Configure consumer.
@@ -43,34 +43,34 @@ try {
 
         // Create unique order id with corresponding database file.
 
-        $sOrderFile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'cardgate_order_' . time();
-        if (! is_writable(dirname($sOrderFile))) {
+        $orderFile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'cardgate_order_' . time();
+        if (! is_writable(dirname($orderFile))) {
             die('unable to create order file');
         }
-        $sOrderId = basename($sOrderFile);
+        $orderId = basename($orderFile);
 
         // Fill with test data
-        file_put_contents($sOrderFile, json_encode([
+        file_put_contents($orderFile, json_encode([
             'status'            => 'pending',
             'subscription_id'    => 'test'
         ]));
 
         // Configure communication endpoint locations.
-        $sProtocol = isset($_SERVER['HTTPS']) && strcasecmp('off', $_SERVER['HTTPS']) !== 0 ? 'https' : 'http';
-        $sHostname = $_SERVER['HTTP_HOST'];
-        $sPath = dirname(isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF']);
-        $oSubscription->setCallbackUrl("{$sProtocol}://{$sHostname}{$sPath}/4-callback.php");
-        $oSubscription->setRedirectUrl("{$sProtocol}://{$sHostname}{$sPath}/5-return.php");
+        $protocol = isset($_SERVER['HTTPS']) && strcasecmp('off', $_SERVER['HTTPS']) !== 0 ? 'https' : 'http';
+        $hostname = $_SERVER['HTTP_HOST'];
+        $path = dirname(isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF']);
+        $oSubscription->setCallbackUrl("$protocol://$hostname$path/4-callback.php");
+        $oSubscription->setRedirectUrl("$protocol://$hostname$path/5-return.php");
 
-        $oSubscription->setReference($sOrderId);
-        $oSubscription->setDescription('test order ' . $sOrderId);
+        $oSubscription->setReference($orderId);
+        $oSubscription->setDescription('test order ' . $orderId);
 
         $oSubscription->register();
 
-        $sActionUrl = $oSubscription->getActionUrl();
-        if (null !== $sActionUrl) {
+        $actionUrl = $oSubscription->getActionUrl();
+        if (null !== $actionUrl) {
             // Redirect the consumer to the CardGate payment gateway.
-            header('Location: ' . $sActionUrl);
+            header('Location: ' . $actionUrl);
         } else {
             // Transaction was successfull without need for consumer interaction.
             echo 'OK';
@@ -88,13 +88,13 @@ try {
             [ 'id' => 'week', 'name' => 'Weeks' ],
             [ 'id' => 'month', 'name' => 'Months', 'selected' => true ],
             [ 'id' => 'year', 'name' => 'Years' ],
-            ] as $aPeriod
+            ] as $period
         ) {
-            echo '<option value="' . $aPeriod['id'] . '"';
-            if (isset($aPeriod['selected'])) {
+            echo '<option value="' . $period['id'] . '"';
+            if (isset($period['selected'])) {
                 echo ' selected="selected"';
             }
-            echo '>' . $aPeriod['name'] . '</option>';
+            echo '>' . $period['name'] . '</option>';
         }
 
         echo '</select> ';

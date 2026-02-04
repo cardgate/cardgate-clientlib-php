@@ -6,16 +6,16 @@ try {
     }
 
     // Make sure callback parameters are from the CardGate gateway.
-    if (false == $oCardGate->transactions()->verifyCallback($_GET, $sSiteKey)) {
+    if (false == $oCardGate->transactions()->verifyCallback($_GET, $siteKey)) {
         die('invalid callback');
     }
 
     // Overwrite order database file with updated status.
-    $sOrderFile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $_GET['reference'];
-    if (! file_exists($sOrderFile)) {
+    $orderFile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $_GET['reference'];
+    if (! file_exists($orderFile)) {
         die('invalid transaction');
     }
-    file_put_contents($sOrderFile, json_encode([
+    file_put_contents($orderFile, json_encode([
         'status'            => $_GET['status'],
         'transaction_id'    => $_GET['transaction']
     ]));
