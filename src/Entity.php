@@ -53,17 +53,17 @@ namespace cardgate\api {
 
         /**
          * This method can be used to retrieve all the data of the instance.
-         * @param string|null $sPrefix_ Optionally prefix all the data entries.
+         * @param string|null $prefix Optionally prefix all the data entries.
          * @return array Returns an array with the data in the entity.
          */
-        public function getData(?string $sPrefix_ = null): array
+        public function getData(?string $prefix = null): array
         {
-            if (is_string($sPrefix_)) {
-                $aResult = [];
-                foreach ($this->data as $sKey => $mValue) {
-                    $aResult[$sPrefix_ . $sKey] = $mValue;
+            if (is_string($prefix)) {
+                $result = [];
+                foreach ($this->data as $key => $value) {
+                    $result[$prefix . $key] = $value;
                 }
-                return $aResult;
+                return $result;
             } else {
                 return $this->data;
             }
@@ -75,52 +75,52 @@ namespace cardgate\api {
          *@ignore
          * @internal The __call method translates get-, set-, unset- and has-methods to their configured fields.
          */
-        public function __call($sMethod_, $aArgs_)
+        public function __call($method, $args)
         {
-            $sClassName = ( new ReflectionClass($this) )->getShortName();
-            switch (substr($sMethod_, 0, 3)) {
+            $className = ( new ReflectionClass($this) )->getShortName();
+            switch (substr($method, 0, 3)) {
                 case 'get':
-                    $sKey = substr($sMethod_, 3);
-                    if (isset(static::$fields[$sKey])) {
-                        return $this->data[ static::$fields[ $sKey ] ] ?? null;
+                    $key = substr($method, 3);
+                    if (isset(static::$fields[$key])) {
+                        return $this->data[ static::$fields[ $key ] ] ?? null;
                     }
                     break;
                 case 'set':
-                    $sKey = substr($sMethod_, 3);
-                    if (isset(static::$fields[$sKey])) {
-                        if (isset($aArgs_[0])) {
+                    $key = substr($method, 3);
+                    if (isset(static::$fields[$key])) {
+                        if (isset($args[0])) {
                             if (
-                                is_scalar($aArgs_[0])
+                                is_scalar($args[0])
                                 && (
-                                    ! is_string($aArgs_[0])
-                                    || strlen($aArgs_[0]) > 0
+                                    ! is_string($args[0])
+                                    || strlen($args[0]) > 0
                                 )
                             ) {
-                                $this->data[static::$fields[$sKey]] = $aArgs_[0];
+                                $this->data[static::$fields[$key]] = $args[0];
                                 return $this; // makes the call chainable
                             } else {
-                                throw new Exception("$sClassName.Invalid.Method", "invalid value for $sMethod_");
+                                throw new Exception("$className.Invalid.Method", "invalid value for $method");
                             }
                         } else {
-                            throw new Exception("$sClassName.Invalid.Method", "missing parameter 1 for $sMethod_");
+                            throw new Exception("$className.Invalid.Method", "missing parameter 1 for $method");
                         }
                     }
                     break;
                 case 'uns':
-                    $sKey = substr($sMethod_, 5);
-                    if (isset(static::$fields[$sKey])) {
-                        unset($this->data[static::$fields[$sKey]]);
+                    $key = substr($method, 5);
+                    if (isset(static::$fields[$key])) {
+                        unset($this->data[static::$fields[$key]]);
                         return $this; // makes the call chainable
                     }
                     break;
                 case 'has':
-                    $sKey = substr($sMethod_, 3);
-                    if (isset(static::$fields[$sKey])) {
-                        return isset($this->data[static::$fields[$sKey]]);
+                    $key = substr($method, 3);
+                    if (isset(static::$fields[$key])) {
+                        return isset($this->data[static::$fields[$key]]);
                     }
                     break;
             }
-            throw new Exception("$sClassName.Invalid.Method", "call to undefined method $sMethod_");
+            throw new Exception("$className.Invalid.Method", "call to undefined method $method");
         }
     }
 

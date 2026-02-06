@@ -37,14 +37,16 @@ namespace cardgate\api {
     {
         /**
          * Load the class.
-         * @param string $sClass_ The class to load
+         *
+         * @param string $class The class to load
+         *
          * @access private
          */
-        private static function autoload(string $sClass_)
+        private static function autoload(string $class)
         {
-            $iLength = strlen(__NAMESPACE__);
-            if (substr($sClass_, 0, $iLength) == __NAMESPACE__) {
-                require str_replace('\\', '/', substr($sClass_, $iLength + 1)) . '.php';
+            $length = strlen(__NAMESPACE__);
+            if ( substr($class, 0, $length) == __NAMESPACE__) {
+                require str_replace( '\\', '/', substr($class, $length + 1)) . '.php';
             }
         }
 

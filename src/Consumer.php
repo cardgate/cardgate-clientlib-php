@@ -32,12 +32,12 @@ namespace cardgate\api {
     /**
      * Consumer instance.
      *
-     * @method Consumer setEmail( string $sEmail_ )
+     * @method Consumer setEmail( string $email )
      * @method string getEmail()
      * @method bool hasEmail()
      * @method Consumer unsetEmail()
      *
-     * @method Consumer setPhone( string $sPhone_ )
+     * @method Consumer setPhone( string $phone )
      * @method string getPhone()
      * @method bool hasPhone()
      * @method Consumer unsetPhone()

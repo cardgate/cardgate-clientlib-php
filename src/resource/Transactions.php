@@ -103,18 +103,18 @@ namespace cardgate\api\resource {
                 throw new Exception('Transaction.Id.Invalid', 'invalid transaction id: ' . $transactionId);
             }
 
-            $sResource = "status/$transactionId/";
+            $resource = "status/$transactionId/";
 
-            $aResult = $this->client->doRequest($sResource, null, 'GET');
+            $result = $this->client->doRequest($resource, null, 'GET');
 
             if (
-                empty($aResult['status'])
-                || ! is_string($aResult['status'])
+                empty($result['status'])
+                || ! is_string($result['status'])
             ) {
                 throw new Exception('Transaction.Status.Invalid', 'invalid transaction status returned' . $this->client->getDebugInfo());
             }
 
-            return $aResult['status'];
+            return $result['status'];
         }
 
         /**

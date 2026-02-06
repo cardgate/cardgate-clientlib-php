@@ -312,12 +312,12 @@ namespace cardgate\api {
          * @access public
          * @api
          */
-        public function setCurrency(string $sCurrency_): Transaction
+        public function setCurrency(string $currency): Transaction
         {
-            if (! is_string($sCurrency_)) {
-                throw new Exception('Transaction.Currency.Invalid', 'invalid currency: ' . $sCurrency_);
+            if (! is_string($currency)) {
+                throw new Exception('Transaction.Currency.Invalid', 'invalid currency: ' . $currency);
             }
-            $this->currency = $sCurrency_;
+            $this->currency = $currency;
             return $this;
         }
 
@@ -573,18 +573,18 @@ namespace cardgate\api {
 
         /**
          * Set the success URL.
-         * @param string $sUrl_ The URL to send a successful transaction redirects.
+         * @param string $url The URL to send a successful transaction redirects.
          * @return $this
          * @throws Exception
          * @access public
          * @api
          */
-        public function setSuccessUrl(string $sUrl_): Transaction
+        public function setSuccessUrl(string $url): Transaction
         {
-            if (false === filter_var($sUrl_, FILTER_VALIDATE_URL)) {
-                throw new Exception('Transaction.SuccessUrl.Invalid', 'invalid url: ' . $sUrl_);
+            if (false === filter_var($url, FILTER_VALIDATE_URL)) {
+                throw new Exception('Transaction.SuccessUrl.Invalid', 'invalid url: ' . $url);
             }
-            $this->successUrl = $sUrl_;
+            $this->successUrl = $url;
             return $this;
         }
 
@@ -601,18 +601,18 @@ namespace cardgate\api {
 
         /**
          * Set the failure URL.
-         * @param string $sUrl_ The URL to send the failed transaction redirects.
+         * @param string $url The URL to send the failed transaction redirects.
          * @return $this
          * @throws Exception
          * @access public
          * @api
          */
-        public function setFailureUrl(string $sUrl_): Transaction
+        public function setFailureUrl(string $url): Transaction
         {
-            if (false === filter_var($sUrl_, FILTER_VALIDATE_URL)) {
-                throw new Exception('Transaction.FailureUrl.Invalid', 'invalid url: ' . $sUrl_);
+            if (false === filter_var($url, FILTER_VALIDATE_URL)) {
+                throw new Exception('Transaction.FailureUrl.Invalid', 'invalid url: ' . $url);
             }
-            $this->failureUrl = $sUrl_;
+            $this->failureUrl = $url;
             return $this;
         }
 
@@ -629,32 +629,32 @@ namespace cardgate\api {
 
         /**
          * Set the failure URL.
-         * @param string $sUrl_ The URL to send the failed transaction redirects.
+         * @param string $url The URL to send the failed transaction redirects.
          * @return $this
          * @throws Exception
          * @access public
          * @api
          */
-        public function setPendingUrl(string $sUrl_): Transaction
+        public function setPendingUrl(string $url): Transaction
         {
-            if ( filter_var($sUrl_, FILTER_VALIDATE_URL) === false ) {
-                throw new Exception('Transaction.PendingUrl.Invalid', 'invalid url: ' . $sUrl_);
+            if ( filter_var($url, FILTER_VALIDATE_URL) === false ) {
+                throw new Exception('Transaction.PendingUrl.Invalid', 'invalid url: ' . $url);
             }
-            $this->pendingUrl = $sUrl_;
+            $this->pendingUrl = $url;
             return $this;
         }
 
         /**
          * Use this method to set the url for success, failure, or pending all at once.
-         * @param string $sUrl_ The URL to use for success, failure, and pending.
+         * @param string $url The URL to use for success, failure, and pending.
          * @return $this
          * @throws Exception
          * @access public
          * @api
          */
-        public function setRedirectUrl(string $sUrl_): Transaction
+        public function setRedirectUrl(string $url): Transaction
         {
-            $this->setSuccessUrl($sUrl_)->setFailureUrl($sUrl_)->setPendingUrl($sUrl_);
+            $this->setSuccessUrl($url)->setFailureUrl($url)->setPendingUrl($url);
             return $this;
         }
 

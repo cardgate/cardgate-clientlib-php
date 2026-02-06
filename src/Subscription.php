@@ -239,7 +239,7 @@ namespace cardgate\api {
 
         /**
          * Configure the subscription object with a period price.
-         * @param int $iPeriod_ Period price to set.
+         * @param int $periodPrice Period price to set.
          * @return $this
          * @throws Exception
          * @access public
@@ -267,7 +267,7 @@ namespace cardgate\api {
 
         /**
          * Configure the subscription initial payment amount.
-         * @param int $iInitialPayment_ The initial payment amount to set.
+         * @param int $amount The initial payment amount to set.
          * @return $this
          * @throws Exception
          * @access public
@@ -285,7 +285,7 @@ namespace cardgate\api {
 
         /**
          * Configure the subscription object with a trial period.
-         * @param int $iPeriod_ Trial period length to set.
+         * @param int $trialPeriod Trial period length to set.
          * @return $this
          * @throws Exception
          * @access public
@@ -346,7 +346,7 @@ namespace cardgate\api {
 
         /**
          * Configure the subscription object with a trial period price.
-         * @param int $iPeriod_ Trial period price to set.
+         * @param int $trialPeriodPrice Trial period price to set.
          * @return $this
          * @throws Exception
          * @access public
@@ -410,12 +410,12 @@ namespace cardgate\api {
          * @access public
          * @api
          */
-        public function setEndDate($sEndDate_)
+        public function setEndDate($endDate)
         {
-            if (! is_string($sEndDate_)) {
-                throw new Exception('Subscription.Date.End.Invalid', 'invalid end date: ' . $sEndDate_);
+            if (! is_string($endDate)) {
+                throw new Exception('Subscription.Date.End.Invalid', 'invalid end date: ' . $endDate);
             }
-            $this->endDate = $sEndDate_;
+            $this->endDate = $endDate;
             return $this;
         }
 
