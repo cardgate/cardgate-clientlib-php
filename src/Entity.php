@@ -27,101 +27,99 @@
  * @link        https://www.cardgate.com
  */
 
-namespace cardgate\api {
+namespace cardgate\api;
 
-    use ReflectionClass;
+use ReflectionClass;
+
+/**
+ * CardGate client object.
+ */
+abstract class Entity
+{
+    /**
+     * @ignore
+     * @internal The data property holds the data of the entity.
+     */
+    protected $data = [];
 
     /**
-     * CardGate client object.
+     * @ignore
+     * @internal To make the data in an Entity available through magic functions setName, getAmount, unsetName,
+     * hasCart populate the fields property below. To make autocompletion work in Zend, use the @method phpdoc
+     * directive like this: @method null setId( int $iId ).
+     * Example: [ 'MerchantId' => 'merchant_id', 'Name' => 'name' ]
      */
-    abstract class Entity
+    protected static $fields = [];
+
+    /**
+     * This method can be used to retrieve all the data of the instance.
+     * @param string|null $prefix Optionally prefix all the data entries.
+     * @return array Returns an array with the data in the entity.
+     */
+    public function getData(?string $prefix = null): array
     {
-        /**
-         * @ignore
-         * @internal The data property holds the data of the entity.
-         */
-        protected $data = [];
-
-        /**
-         * @ignore
-         * @internal To make the data in an Entity available through magic functions setName, getAmount, unsetName,
-         * hasCart populate the fields property below. To make autocompletion work in Zend, use the @method phpdoc
-         * directive like this: @method null setId( int $iId ).
-         * Example: [ 'MerchantId' => 'merchant_id', 'Name' => 'name' ]
-         */
-        protected static $fields = [];
-
-        /**
-         * This method can be used to retrieve all the data of the instance.
-         * @param string|null $prefix Optionally prefix all the data entries.
-         * @return array Returns an array with the data in the entity.
-         */
-        public function getData(?string $prefix = null): array
-        {
-            if (is_string($prefix)) {
-                $result = [];
-                foreach ($this->data as $key => $value) {
-                    $result[$prefix . $key] = $value;
-                }
-                return $result;
-            } else {
-                return $this->data;
+        if (is_string($prefix)) {
+            $result = [];
+            foreach ($this->data as $key => $value) {
+                $result[$prefix . $key] = $value;
             }
-        }
-
-        /**
-         * @return $this|mixed|bool Return $this on set and unset, mixed on get and bool
-         * @throws Exception
-         *@ignore
-         * @internal The __call method translates get-, set-, unset- and has-methods to their configured fields.
-         */
-        public function __call($method, $args)
-        {
-            $className = ( new ReflectionClass($this) )->getShortName();
-            switch (substr($method, 0, 3)) {
-                case 'get':
-                    $key = substr($method, 3);
-                    if (isset(static::$fields[$key])) {
-                        return $this->data[ static::$fields[ $key ] ] ?? null;
-                    }
-                    break;
-                case 'set':
-                    $key = substr($method, 3);
-                    if (isset(static::$fields[$key])) {
-                        if (isset($args[0])) {
-                            if (
-                                is_scalar($args[0])
-                                && (
-                                    ! is_string($args[0])
-                                    || strlen($args[0]) > 0
-                                )
-                            ) {
-                                $this->data[static::$fields[$key]] = $args[0];
-                                return $this; // makes the call chainable
-                            } else {
-                                throw new Exception("$className.Invalid.Method", "invalid value for $method");
-                            }
-                        } else {
-                            throw new Exception("$className.Invalid.Method", "missing parameter 1 for $method");
-                        }
-                    }
-                    break;
-                case 'uns':
-                    $key = substr($method, 5);
-                    if (isset(static::$fields[$key])) {
-                        unset($this->data[static::$fields[$key]]);
-                        return $this; // makes the call chainable
-                    }
-                    break;
-                case 'has':
-                    $key = substr($method, 3);
-                    if (isset(static::$fields[$key])) {
-                        return isset($this->data[static::$fields[$key]]);
-                    }
-                    break;
-            }
-            throw new Exception("$className.Invalid.Method", "call to undefined method $method");
+            return $result;
+        } else {
+            return $this->data;
         }
     }
 
+    /**
+     * @return $this|mixed|bool Return $this on set and unset, mixed on get and bool
+     * @throws Exception
+     * @ignore
+     * @internal The __call method translates get-, set-, unset- and has-methods to their configured fields.
+     */
+    public function __call($method, $args)
+    {
+        $className = (new ReflectionClass($this))->getShortName();
+        switch (substr($method, 0, 3)) {
+            case 'get':
+                $key = substr($method, 3);
+                if (isset(static::$fields[$key])) {
+                    return $this->data[static::$fields[$key]] ?? null;
+                }
+                break;
+            case 'set':
+                $key = substr($method, 3);
+                if (isset(static::$fields[$key])) {
+                    if (isset($args[0])) {
+                        if (
+                            is_scalar($args[0])
+                            && (
+                                ! is_string($args[0])
+                                || strlen($args[0]) > 0
+                            )
+                        ) {
+                            $this->data[static::$fields[$key]] = $args[0];
+                            return $this; // makes the call chainable
+                        } else {
+                            throw new Exception("$className.Invalid.Method", "invalid value for $method");
+                        }
+                    } else {
+                        throw new Exception("$className.Invalid.Method", "missing parameter 1 for $method");
+                    }
+                }
+                break;
+            case 'uns':
+                $key = substr($method, 5);
+                if (isset(static::$fields[$key])) {
+                    unset($this->data[static::$fields[$key]]);
+                    return $this; // makes the call chainable
+                }
+                break;
+            case 'has':
+                $key = substr($method, 3);
+                if (isset(static::$fields[$key])) {
+                    return isset($this->data[static::$fields[$key]]);
+                }
+                break;
+        }
+        throw new Exception("$className.Invalid.Method", "call to undefined method $method");
+    }
 }

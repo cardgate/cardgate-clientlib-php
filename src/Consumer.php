@@ -27,72 +27,70 @@
  * @link        https://www.cardgate.com
  */
 
-namespace cardgate\api {
+namespace cardgate\api;
+
+/**
+ * Consumer instance.
+ *
+ * @method Consumer setEmail( string $email )
+ * @method string getEmail()
+ * @method bool hasEmail()
+ * @method Consumer unsetEmail()
+ *
+ * @method Consumer setPhone( string $phone )
+ * @method string getPhone()
+ * @method bool hasPhone()
+ * @method Consumer unsetPhone()
+ */
+final class Consumer extends Entity
+{
+    /**
+     * @ignore
+     * @internal The methods these fields expose are configured in the class phpdoc.
+     */
+    protected static $fields = [
+        'Email'         => 'email',
+        'Phone'         => 'phone'
+    ];
 
     /**
-     * Consumer instance.
-     *
-     * @method Consumer setEmail( string $email )
-     * @method string getEmail()
-     * @method bool hasEmail()
-     * @method Consumer unsetEmail()
-     *
-     * @method Consumer setPhone( string $phone )
-     * @method string getPhone()
-     * @method bool hasPhone()
-     * @method Consumer unsetPhone()
+     * The bill-to address.
+     * @var Address
+     * @access private
      */
-    final class Consumer extends Entity
+    private $address = null;
+
+    /**
+     * The ship-to address.
+     * @var Address
+     * @access private
+     */
+    private $shippingAddress = null;
+
+    /**
+     * Accessor for the bill-to address.
+     * @return Address
+     * @access public
+     * @api
+     */
+    public function address(): Address
     {
-        /**
-         * @ignore
-         * @internal The methods these fields expose are configured in the class phpdoc.
-         */
-        protected static $fields = [
-            'Email'         => 'email',
-            'Phone'         => 'phone'
-        ];
-
-        /**
-         * The bill-to address.
-         * @var Address
-         * @access private
-         */
-        private $address = null;
-
-        /**
-         * The ship-to address.
-         * @var Address
-         * @access private
-         */
-        private $shippingAddress = null;
-
-        /**
-         * Accessor for the bill-to address.
-         * @return Address
-         * @access public
-         * @api
-         */
-        public function address(): Address
-        {
-            if (null == $this->address) {
-                $this->address = new Address();
-            }
-            return $this->address;
+        if (null == $this->address) {
+            $this->address = new Address();
         }
-
-        /**
-         * Accessor for the ship-to address.
-         * @access public
-         * @api
-         */
-        public function shippingAddress(): Address
-        {
-            if (null == $this->shippingAddress) {
-                $this->shippingAddress = new Address();
-            }
-            return $this->shippingAddress;
-        }
+        return $this->address;
     }
 
+    /**
+     * Accessor for the ship-to address.
+     * @access public
+     * @api
+     */
+    public function shippingAddress(): Address
+    {
+        if (null == $this->shippingAddress) {
+            $this->shippingAddress = new Address();
+        }
+        return $this->shippingAddress;
+    }
 }

@@ -27,54 +27,53 @@
  * @link        https://www.cardgate.com
  */
 
-namespace cardgate\api {
+namespace cardgate\api;
 
-    use ReflectionException;
+use ReflectionException;
+
+/**
+ * Cart instance.
+ */
+final class Cart
+{
+    /**
+     * The items in this cart.
+     * @var Client
+     * @access private
+     */
+    private $items = [];
 
     /**
-     * Cart instance.
+     * Add a cart item to the cart.
+     *
+     * @param int $type The cart item type.
+     * @param string $sku The SKU of the cart item.
+     * @param string $name The product name of the cart item.
+     * @param int $quantity The quantity of the cart item.
+     * @param int $price The price of the cart item.
+     * @param string | null $link An optional link to the product.
+     *
+     * @return Item Returns the item that was added.
+     * @throws Exception|ReflectionException
+     * @access public
+     * @api
      */
-    final class Cart
+    public function addItem(int $type, string $sku, string $name, int $quantity, int $price, ?string $link = null): Item
     {
-        /**
-         * The items in this cart.
-         * @var Client
-         * @access private
-         */
-        private $items = [];
-
-        /**
-         * Add a cart item to the cart.
-         *
-         * @param int $iType_ The cart item type.
-         * @param string $sSKU_ The SKU of the cart item.
-         * @param string $sName_ The product name of the cart item.
-         * @param int $iPrice_ The price of the cart item.
-         * @param string | null $sLink_ An optional link to the product.
-         *
-         * @return Item Returns the item that was added.
-         * @throws Exception|ReflectionException
-         * @access public
-         * @api
-         */
-        public function addItem(int $type, string $sku, string $name, int $quantity, int $price, ?string $link = null): Item
-        {
-            $item         = new Item($type, $sku, $name, $quantity, $price, $link);
-            $this->items[] = $item;
-            return $item;
-        }
-
-        /**
-         * @return array
-         */
-        public function getData(): array
-        {
-            $data = [];
-            foreach ($this->items as $item) {
-                $data[] = $item->getData();
-            }
-            return $data;
-        }
+        $item         = new Item($type, $sku, $name, $quantity, $price, $link);
+        $this->items[] = $item;
+        return $item;
     }
 
+    /**
+     * @return array
+     */
+    public function getData(): array
+    {
+        $data = [];
+        foreach ($this->items as $item) {
+            $data[] = $item->getData();
+        }
+        return $data;
+    }
 }

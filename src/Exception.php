@@ -27,45 +27,43 @@
  * @link        https://www.cardgate.com
  */
 
-namespace cardgate\api {
+namespace cardgate\api;
+
+/**
+ * Class for all exceptions specific to the CardGate client library.
+ */
+final class Exception extends \Exception
+{
+    /**
+     * The unified string code of the exception.
+     * @var string
+     * @access private
+     */
+    private $error;
 
     /**
-     * Class for all exceptions specific to the CardGate client library.
+     * Constructs the exception.
+     * @param string $error A unified string code of the exception to throw.
+     * @param string $message The exception message to throw.
+     * @param int $code The numeric exception code.
+     * @param \Throwable|null $previous The previous exception used for the exception chaining.
+     * @access public
+     * @api
      */
-    final class Exception extends \Exception
+    public function __construct(string $error, string $message, int $code = 0, ?\Throwable $previous = null)
     {
-        /**
-         * The unified string code of the exception.
-         * @var string
-         * @access private
-         */
-        private $sError;
-
-        /**
-         * Constructs the exception.
-         * @param string $sError_ A unified string code of the exception to throw.
-         * @param string $sMessage_ The exception message to throw.
-         * @param int $iCode_ The numeric exception code.
-         * @param \Throwable $oPrevious_ The previous exception used for the exception chaining.
-         * @access public
-         * @api
-         */
-        public function __construct($sError_, $sMessage_, $iCode_ = 0, ?\Throwable $oPrevious_ = null)
-        {
-            $this->sError = $sError_;
-            parent::__construct($sMessage_, $iCode_, $oPrevious_);
-        }
-
-        /**
-         * Get the unified string code associated with this exception.
-         * @return string The unified string code of the exception.
-         * @access public
-         * @api
-         */
-        public function getError()
-        {
-            return $this->sError;
-        }
+        $this->error = $error;
+        parent::__construct($message, $code, $previous);
     }
 
+    /**
+     * Get the unified string code associated with this exception.
+     * @return string The unified string code of the exception.
+     * @access public
+     * @api
+     */
+    public function getError(): string
+    {
+        return $this->error;
+    }
 }

@@ -27,72 +27,76 @@
  * @link        https://www.cardgate.com
  */
 
-namespace cardgate\api\resource {
+namespace cardgate\api\resource;
 
-    use cardgate\api\Exception;
-    use cardgate\api\Method;
-    use ReflectionClass;
-    use ReflectionException;
+use cardgate\api\Exception;
+use cardgate\api\Method;
+use ReflectionClass;
+use ReflectionException;
 
+/**
+ * CardGate resource object.
+ */
+final class Methods extends Base
+{
     /**
-     * CardGate resource object.
+     * This method can be used to receive a {@link Method} instance.
+     *
+     * @param string $id Method id to receive method instance for.
+     *
+     * @return Method
+     * @throws Exception|ReflectionException
+     * @access public
+     * @api
      */
-    final class Methods extends Base
+    public function get(string $id): Method
     {
-        /**
-         * This method can be used to receive a {@link Method} instance.
-         *
-         * @param string $id Method id to receive method instance for.
-         *
-         * @return Method
-         * @throws Exception|ReflectionException
-         * @access public
-         * @api
-         */
-        public function get( string $id): Method
-        {
-            return new Method($this->client, $id, $id);
-        }
-
-        /**
-         * This method can be used to retrieve a list of all available payment methods for a site.
-         *
-         * @param int $siteId The site to retrieve payment methods for.
-         *
-         * @return array
-         * @throws Exception|ReflectionException
-         * @access public
-         * @api
-         */
-        public function all( int $siteId): array
-        {
-            if (! is_integer($siteId)) {
-                throw new Exception('Methods.SiteId.Invalid', 'invalid site id: ' . $siteId);
-            }
-
-            $resource = "options/{$siteId}/";
-
-            $result = $this->client->doRequest($resource, null, 'GET');
-
-            if (empty($result['options'])) {
-                throw new Exception('Method.Options.Invalid', 'unexpected result: ' . $this->client->getLastResult() . $this->client->getDebugInfo(true, false));
-            }
-
-            $validMethods = ( new ReflectionClass('\cardgate\api\Method') )->getConstants();
-            $methods      = [];
-            foreach ($result['options'] as $option) {
-                if (!in_array($option['id'], $validMethods)) {
-                    continue;
-                }
-
-                try {
-                    $methods[] = new Method($this->client, $option['id'], $option['name']);
-                } catch ( Exception $exception) {
-                    trigger_error( $exception->getMessage() . '. Please update this SDK to the latest version.', E_USER_WARNING);
-                }
-            }
-            return $methods;
-        }
+        return new Method($this->client, $id, $id);
     }
 
+    /**
+     * This method can be used to retrieve a list of all available payment methods for a site.
+     *
+     * @param int $siteId The site to retrieve payment methods for.
+     *
+     * @return array
+     * @throws Exception|ReflectionException
+     * @access public
+     * @api
+     */
+    public function all(int $siteId): array
+    {
+        if (! is_int($siteId)) {
+            throw new Exception('Methods.SiteId.Invalid', 'invalid site id: ' . $siteId);
+        }
+
+        $resource = "options/{$siteId}/";
+
+        $result = $this->client->doRequest($resource, null, 'GET');
+
+        if (empty($result['options'])) {
+            throw new Exception(
+                'Method.Options.Invalid',
+                'unexpected result: ' . $this->client->getLastResult() . $this->client->getDebugInfo(true, false)
+            );
+        }
+
+        $validMethods = (new ReflectionClass('\cardgate\api\Method'))->getConstants();
+        $methods      = [];
+        foreach ($result['options'] as $option) {
+            if (! in_array($option['id'], $validMethods)) {
+                continue;
+            }
+
+            try {
+                $methods[] = new Method($this->client, $option['id'], $option['name']);
+            } catch (Exception $exception) {
+                trigger_error(
+                    $exception->getMessage() . '. Please update this SDK to the latest version.',
+                    E_USER_WARNING
+                );
+            }
+        }
+        return $methods;
+    }
 }

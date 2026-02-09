@@ -27,34 +27,32 @@
  * @link        https://www.cardgate.com
  */
 
-namespace cardgate\api\resource {
+namespace cardgate\api\resource;
 
-    use cardgate\api\Client;
+use cardgate\api\Client;
+
+/**
+ * CardGate resource object.
+ */
+class Base
+{
+    /**
+     * The client associated with this resource.
+     * @var Client
+     * @access private
+     */
+    protected $client;
 
     /**
-     * CardGate resource object.
+     * The constructor.
+     *
+     * @param Client $client The client to associate the resource with.
+     *
+     * @access public
+     * @api
      */
-    class Base
+    public function __construct(Client $client)
     {
-        /**
-         * The client associated with this resource.
-         * @var Client
-         * @access private
-         */
-        protected $client;
-
-        /**
-         * The constructor.
-         *
-         * @param Client $client The client to associate the resource with.
-         *
-         * @access public
-         * @api
-         */
-        public function __construct( Client $client)
-        {
-            $this->client = $client;
-        }
+        $this->client = $client;
     }
-
 }

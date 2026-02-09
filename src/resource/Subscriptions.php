@@ -27,104 +27,101 @@
  * @link        https://www.cardgate.com
  */
 
-namespace cardgate\api\resource {
+namespace cardgate\api\resource;
 
-    use cardgate\api\Exception;
-    use cardgate\api\Subscription;
+use cardgate\api\Exception;
+use cardgate\api\Subscription;
 
+/**
+ * CardGate resource object.
+ */
+final class Subscriptions extends Base
+{
     /**
-     * CardGate resource object.
+     * This method can be used to retrieve subscription details.
+     *
+     * @param string $subscriptionId The subscription identifier.
+     * @param array|null $details Array that gets filled with additional subscription details.
+     *
+     * @return Subscription
+     * @throws Exception
+     * @access public
+     * @api
      */
-    final class Subscriptions extends Base
+    public function get(string $subscriptionId, array &$details = null): Subscription
     {
-        /**
-         * This method can be used to retrieve subscription details.
-         *
-         * @param string $subscriptionId The subscription identifier.
-         * @param array|null $details Array that gets filled with additional subscription details.
-         *
-         * @return Subscription
-         * @throws Exception
-         * @access public
-         * @api
-         */
-        public function get(string $subscriptionId, array &$details = null): Subscription
-        {
-            if (! is_string($subscriptionId)) {
-                throw new Exception('Subscription.Id.Invalid', 'invalid subscription id: ' . $subscriptionId);
-            }
-
-            $resource = "subscription/{$subscriptionId}/";
-
-            $result = $this->client->doRequest($resource, null, 'GET');
-
-            if (empty($result['subscription'])) {
-                throw new Exception('Subscription.Details.Invalid', 'invalid subscription data returned');
-            }
-
-            if (! is_null($details)) {
-                $details = array_merge($details, $result['subscription']);
-            }
-
-            $subscription = new Subscription(
-                $this->client,
-                (int) $result['subscription']['site_id'],
-                (int) $result['subscription']['period'],
-                $result['subscription']['period_type'],
-                (int) $result['subscription']['period_price']
-            );
-            $subscription->setId($result['subscription']['nn_id']);
-            if (! empty($result['subscription']['description'])) {
-                $subscription->setDescription($result['subscription']['description']);
-            }
-            if (! empty($result['subscription']['reference'])) {
-                $subscription->setReference($result['subscription']['reference']);
-            }
-            if (! empty($result['subscription']['start_date'])) {
-                $subscription->setStartDate($result['subscription']['start_date']);
-            }
-            if (! empty($result['subscription']['end_date'])) {
-                $subscription->setEndDate($result['subscription']['end_date']);
-            }
-            // TODO: map other subscription fields? method_id can't be used in client::Method currently...
-            /*
-            if ( ! empty( $result['subscription']['code'] ) ) {
-                $subscription->setCode( $result['subscription']['code'] );
-            }
-            if ( ! empty( $result['subscription']['payment_type_id'] ) ) {
-                $subscription->setPaymentMethod( $result['subscription']['payment_type_id'] );
-            }
-            if ( ! empty( $result['subscription']['last_payment_date'] ) ) {
-                $subscription->setPaymentMethod( $result['subscription']['last_payment_date'] );
-            }
-            */
-
-            return $subscription;
+        if (! is_string($subscriptionId)) {
+            throw new Exception('Subscription.Id.Invalid', 'invalid subscription id: ' . $subscriptionId);
         }
 
-        /**
-         * This method can be used to create a new subscription.
-         *
-         * @param int $siteId Site id to create the subscription for.
-         * @param int $period The period length of the subscription.
-         * @param string $periodType The period type of the subscription (e.g., day, week, month, year).
-         * @param int $periodAmount The period amount of the subscription in cents.
-         * @param string $currency Currency (ISO 4217)
-         *
-         * @throws Exception
-         * @access public
-         * @api
-         */
-        public function create(
-            int $siteId,
-            int $period,
-            string $periodType,
-            int $periodAmount,
-            string $currency = 'EUR'
-        ): Subscription
-        {
-            return new Subscription($this->client, $siteId, $period, $periodType, $periodAmount, $currency);
+        $resource = "subscription/{$subscriptionId}/";
+
+        $result = $this->client->doRequest($resource, null, 'GET');
+
+        if (empty($result['subscription'])) {
+            throw new Exception('Subscription.Details.Invalid', 'invalid subscription data returned');
         }
+
+        if (! is_null($details)) {
+            $details = array_merge($details, $result['subscription']);
+        }
+
+        $subscription = new Subscription(
+            $this->client,
+            (int) $result['subscription']['site_id'],
+            (int) $result['subscription']['period'],
+            $result['subscription']['period_type'],
+            (int) $result['subscription']['period_price']
+        );
+        $subscription->setId($result['subscription']['nn_id']);
+        if (! empty($result['subscription']['description'])) {
+            $subscription->setDescription($result['subscription']['description']);
+        }
+        if (! empty($result['subscription']['reference'])) {
+            $subscription->setReference($result['subscription']['reference']);
+        }
+        if (! empty($result['subscription']['start_date'])) {
+            $subscription->setStartDate($result['subscription']['start_date']);
+        }
+        if (! empty($result['subscription']['end_date'])) {
+            $subscription->setEndDate($result['subscription']['end_date']);
+        }
+        // TODO: map other subscription fields? method_id can't be used in client::Method currently...
+        /*
+        if ( ! empty( $result['subscription']['code'] ) ) {
+            $subscription->setCode( $result['subscription']['code'] );
+        }
+        if ( ! empty( $result['subscription']['payment_type_id'] ) ) {
+            $subscription->setPaymentMethod( $result['subscription']['payment_type_id'] );
+        }
+        if ( ! empty( $result['subscription']['last_payment_date'] ) ) {
+            $subscription->setPaymentMethod( $result['subscription']['last_payment_date'] );
+        }
+        */
+
+        return $subscription;
     }
 
+    /**
+     * This method can be used to create a new subscription.
+     *
+     * @param int $siteId Site id to create the subscription for.
+     * @param int $period The period length of the subscription.
+     * @param string $periodType The period type of the subscription (e.g., day, week, month, year).
+     * @param int $periodAmount The period amount of the subscription in cents.
+     * @param string $currency Currency (ISO 4217)
+     *
+     * @throws Exception
+     * @access public
+     * @api
+     */
+    public function create(
+        int $siteId,
+        int $period,
+        string $periodType,
+        int $periodAmount,
+        string $currency = 'EUR'
+    ): Subscription {
+        return new Subscription($this->client, $siteId, $period, $periodType, $periodAmount, $currency);
+    }
 }
