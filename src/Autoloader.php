@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) 2018 CardGate B.V.
  *
@@ -25,34 +26,38 @@
  * @copyright   CardGate B.V.
  * @link        https://www.cardgate.com
  */
+
 namespace cardgate\api {
 
-	/**
-	 * Autoloader for all CardGate client library classes.
-	 * Usage: cardgate\api\Autoloader::register();
-	 */
-	final class Autoloader {
+    /**
+     * Autoloader for all CardGate client library classes.
+     * Usage: cardgate\api\Autoloader::register();
+     */
+    final class Autoloader
+    {
+        /**
+         * Load the class.
+         *
+         * @param string $class The class to load
+         *
+         * @access private
+         */
+        private static function autoload(string $class)
+        {
+            $length = strlen(__NAMESPACE__);
+            if ( substr($class, 0, $length) == __NAMESPACE__) {
+                require str_replace( '\\', '/', substr($class, $length + 1)) . '.php';
+            }
+        }
 
-		/**
-		 * Load the class.
-		 * @param string $sClass_ The class to load
-		 * @access private
-		 */
-		private static function autoload( $sClass_ ) {
-			$iLength = strlen( __NAMESPACE__ );
-			if ( substr( $sClass_, 0, $iLength ) == __NAMESPACE__ ) {
-				require str_replace( '\\', '/', substr( $sClass_, $iLength + 1 ) ) . '.php';
-			}
-		}
-
-		/**
-		 * Register the autoloader.
-		 * @access public
-		 */
-		public static function register() {
-			return spl_autoload_register( [ __CLASS__, 'autoload' ] );
-		}
-
-	}
+        /**
+         * Register the autoloader.
+         * @access public
+         */
+        public static function register(): bool
+        {
+            return spl_autoload_register([ __CLASS__, 'autoload' ]);
+        }
+    }
 
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) 2018 CardGate B.V.
  *
@@ -25,72 +26,71 @@
  * @copyright   CardGate B.V.
  * @link        https://www.cardgate.com
  */
-namespace cardgate\api {
 
-	/**
-	 * Consumer instance.
-	 *
-	 * @method Consumer setEmail( string $sEmail_ )
-	 * @method string getEmail()
-	 * @method bool hasEmail()
-	 * @method Consumer unsetEmail()
-	 *
-	 * @method Consumer setPhone( string $sPhone_ )
-	 * @method string getPhone()
-	 * @method bool hasPhone()
-	 * @method Consumer unsetPhone()
-	 */
-	final class Consumer extends Entity {
+namespace cardgate\api;
 
-		/**
-		 * @ignore
-		 * @internal The methods these fields expose are configured in the class phpdoc.
-		 */
-		static $_aFields = [
-			'Email'			=> 'email',
-			'Phone'			=> 'phone'
-		];
+/**
+ * Consumer instance.
+ *
+ * @method Consumer setEmail( string $email )
+ * @method string getEmail()
+ * @method bool hasEmail()
+ * @method Consumer unsetEmail()
+ *
+ * @method Consumer setPhone( string $phone )
+ * @method string getPhone()
+ * @method bool hasPhone()
+ * @method Consumer unsetPhone()
+ */
+final class Consumer extends Entity
+{
+    /**
+     * @ignore
+     * @internal The methods these fields expose are configured in the class phpdoc.
+     */
+    protected static $fields = [
+        'Email'         => 'email',
+        'Phone'         => 'phone'
+    ];
 
-		/**
-		 * The bill-to address.
-		 * @var Address
-		 * @access private
-		 */
-		private $_oAddress = NULL;
+    /**
+     * The bill-to address.
+     * @var Address
+     * @access private
+     */
+    private $address = null;
 
-		/**
-		 * The ship-to address.
-		 * @var Address
-		 * @access private
-		 */
-		private $_oShippingAddress = NULL;
+    /**
+     * The ship-to address.
+     * @var Address
+     * @access private
+     */
+    private $shippingAddress = null;
 
-		/**
-		 * Accessor for the bill-to address.
-		 * @return Address
-		 * @access public
-		 * @api
-		 */
-		public function address() {
-			if ( NULL == $this->_oAddress ) {
-				$this->_oAddress = new Address();
-			}
-			return $this->_oAddress;
-		}
+    /**
+     * Accessor for the bill-to address.
+     * @return Address
+     * @access public
+     * @api
+     */
+    public function address(): Address
+    {
+        if (null == $this->address) {
+            $this->address = new Address();
+        }
+        return $this->address;
+    }
 
-		/**
-		 * Accessor for the ship-to address.
-		 * @return Address
-		 * @access public
-		 * @api
-		 */
-		public function shippingAddress() {
-			if ( NULL == $this->_oShippingAddress ) {
-				$this->_oShippingAddress = new Address();
-			}
-			return $this->_oShippingAddress;
-		}
-
-	}
-
+    /**
+     * Accessor for the ship-to address.
+     * @access public
+     * @api
+     */
+    public function shippingAddress(): Address
+    {
+        if (null == $this->shippingAddress) {
+            $this->shippingAddress = new Address();
+        }
+        return $this->shippingAddress;
+    }
 }

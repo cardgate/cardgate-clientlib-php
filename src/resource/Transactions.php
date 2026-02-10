@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) 2018 CardGate B.V.
  *
@@ -25,145 +26,164 @@
  * @copyright   CardGate B.V.
  * @link        https://www.cardgate.com
  */
-namespace cardgate\api\resource {
 
-	/**
-	 * CardGate resource object.
-	 */
-	final class Transactions extends Base {
+namespace cardgate\api\resource;
 
-		/**
-		 * This method can be used to retrieve transaction details.
-		 * @param string $sTransactionId_ The transaction identifier.
-		 * @param array $aDetails_ array that gets filled with additional transaction details.
-		 * @return \cardgate\api\Transaction
-		 * @throws \cardgate\api\Exception
-		 * @access public
-		 * @api
-		 */
-		public function get( $sTransactionId_, &$aDetails_ = NULL ) {
-			if ( ! is_string( $sTransactionId_ ) ) {
-				throw new \cardgate\api\Exception( 'Transaction.Id.Invalid', 'invalid transaction id: ' . $sTransactionId_ );
-			}
+use cardgate\api\Exception;
+use cardgate\api\Transaction;
+use ReflectionException;
 
-			$sResource = "transaction/{$sTransactionId_}/";
+/**
+ * CardGate resource object.
+ */
+final class Transactions extends Base
+{
+    /**
+     * This method can be used to retrieve transaction details.
+     *
+     * @param string $transactionId The transaction identifier.
+     * @param array|null $details array that gets filled with additional transaction details.
+     *
+     * @return Transaction
+     * @throws Exception|ReflectionException
+     * @access public
+     * @api
+     */
+    public function get(string $transactionId, array &$details = null): Transaction
+    {
+        if (! is_string($transactionId)) {
+            throw new Exception('Transaction.Id.Invalid', 'invalid transaction id: ' . $transactionId);
+        }
 
-			$aResult = $this->_oClient->doRequest( $sResource, NULL, 'GET' );
+        $resource = "transaction/$transactionId/";
 
-			if ( empty( $aResult['transaction'] ) ) {
-				throw new \cardgate\api\Exception( 'Transaction.Details.Invalid', 'invalid transaction data returned' . $this->_oClient->getDebugInfo() );
-			}
+        $result = $this->client->doRequest($resource, null, 'GET');
 
-			if ( ! is_null( $aDetails_ ) ) {
-				$aDetails_ = array_merge( $aDetails_, $aResult['transaction'] );
-			}
+        if (empty($result['transaction'])) {
+            throw new Exception(
+                'Transaction.Details.Invalid',
+                'invalid transaction data returned' . $this->client->getDebugInfo()
+            );
+        }
 
-			$oTransaction = new \cardgate\api\Transaction(
-				$this->_oClient,
-				(int) $aResult['transaction']['site_id'],
-				(int) $aResult['transaction']['amount'],
-				$aResult['transaction']['currency_id']
-			);
-			$oTransaction->setId( $aResult['transaction']['id'] );
-			if ( ! empty( $aResult['transaction']['description'] ) ) {
-				$oTransaction->setDescription( $aResult['transaction']['description'] );
-			}
-			if ( ! empty( $aResult['transaction']['reference'] ) ) {
-				$oTransaction->setReference( $aResult['transaction']['reference'] );
-			}
-			if ( ! empty( $aResult['transaction']['option'] ) ) {
-				$oTransaction->setPaymentMethod( $aResult['transaction']['option'] );
-			}
+        if (! is_null($details)) {
+            $details = array_merge($details, $result['transaction']);
+        }
 
-			return $oTransaction;
-		}
+        $transaction = new Transaction(
+            $this->client,
+            (int) $result['transaction']['site_id'],
+            (int) $result['transaction']['amount'],
+            $result['transaction']['currency_id']
+        );
+        $transaction->setId($result['transaction']['id']);
+        if (! empty($result['transaction']['description'])) {
+            $transaction->setDescription($result['transaction']['description']);
+        }
+        if (! empty($result['transaction']['reference'])) {
+            $transaction->setReference($result['transaction']['reference']);
+        }
+        if (! empty($result['transaction']['option'])) {
+            $transaction->setPaymentMethod($result['transaction']['option']);
+        }
 
-		/**
-		 * This method can be used to retrieve a transaction status.
-		 * @param string $sTransactionId_ The transaction identifier.
-		 * @return string
-		 * @throws \cardgate\api\Exception
-		 * @access public
-		 * @api
-		 */
-		public function status( $sTransactionId_ ) {
-			if ( ! is_string( $sTransactionId_ ) ) {
-				throw new \cardgate\api\Exception( 'Transaction.Id.Invalid', 'invalid transaction id: ' . $sTransactionId_ );
-			}
+        return $transaction;
+    }
 
-			$sResource = "status/{$sTransactionId_}/";
+    /**
+     * This method can be used to retrieve a transaction status.
+     *
+     * @param string $transactionId The transaction identifier.
+     *
+     * @return string
+     * @throws Exception
+     * @access public
+     * @api
+     */
+    public function status(string $transactionId): string
+    {
+        if (! is_string($transactionId)) {
+            throw new Exception('Transaction.Id.Invalid', 'invalid transaction id: ' . $transactionId);
+        }
 
-			$aResult = $this->_oClient->doRequest( $sResource, NULL, 'GET' );
+        $resource = "status/$transactionId/";
 
-			if (
-				empty( $aResult['status'] )
-				|| ! is_string( $aResult['status'] )
-			) {
-				throw new \cardgate\api\Exception( 'Transaction.Status.Invalid', 'invalid transaction status returned' . $this->_oClient->getDebugInfo() );
-			}
+        $result = $this->client->doRequest($resource, null, 'GET');
 
-			return $aResult['status'];
-		}
+        if (
+            empty($result['status'])
+            || ! is_string($result['status'])
+        ) {
+            throw new Exception(
+                'Transaction.Status.Invalid',
+                'invalid transaction status returned' . $this->client->getDebugInfo()
+            );
+        }
 
-		/**
-		 * This method can be used to create a new transaction.
-		 * @param int $iSiteId_ Site id to create transaction for.
-		 * @param int $iAmount_ The amount of the transaction in cents.
-		 * @param string $sCurrency_ Currency (ISO 4217)
-		 * @return \cardgate\api\Transaction
-		 * @throws \cardgate\api\Exception
-		 * @access public
-		 * @api
-		 */
-		public function create( $iSiteId_, $iAmount_, $sCurrency_ = 'EUR' ) {
-			return new \cardgate\api\Transaction( $this->_oClient, $iSiteId_, $iAmount_, $sCurrency_ );
-		}
+        return $result['status'];
+    }
 
-		/**
-		 * This method can be used to verify a callback for a transaction.
-		 * @param array $aData_ The callback data (usually $_GET) to use for verification.
-		 * @param string $sSiteKey_ The site key used to verify hash. Leave empty to check hash with the
-		 * use of the merchant key only (otherwise both are checked).
-		 * @return bool Returns TRUE if the callback is valid or FALSE if not.
-		 * @throws \cardgate\api\Exception
-		 * @access public
-		 * @api
-		 */
-		public function verifyCallback( $aData_, $sSiteKey_ = NULL ) {
-			foreach( [ 'transaction', 'currency', 'amount', 'reference', 'code', 'hash', 'status' ] as $sRequiredKey ) {
-				if ( ! isset( $aData_[$sRequiredKey] ) ) {
-					throw new \cardgate\api\Exception( 'Transaction.Callback.Missing', 'missing callback data: ' . $sRequiredKey );
-				}
-			}
-			$sPrefix = '';
-			if ( ! empty( $aData_['testmode'] ) ) {
-				$sPrefix = 'TEST';
-			}
-			return (
-				(
-					NULL !== $sSiteKey_
-					&& md5(
-						$sPrefix
-						. $aData_['transaction']
-						. $aData_['currency']
-						. $aData_['amount']
-						. $aData_['reference']
-						. $aData_['code']
-						. $sSiteKey_
-					) == $aData_['hash']
-				)
-				|| md5(
-					$sPrefix
-					. $aData_['transaction']
-					. $aData_['currency']
-					. $aData_['amount']
-					. $aData_['reference']
-					. $aData_['code']
-					. $this->_oClient->getKey()
-				) == $aData_['hash']
-			);
-		}
+    /**
+     * This method can be used to create a new transaction.
+     *
+     * @param int $siteId Site id to create transaction for.
+     * @param int $amount The amount of the transaction in cents.
+     * @param string $currency Currency (ISO 4217)
+     *
+     * @return Transaction
+     * @throws Exception
+     * @access public
+     * @api
+     */
+    public function create(int $siteId, int $amount, string $currency = 'EUR'): Transaction
+    {
+        return new Transaction($this->client, $siteId, $amount, $currency);
+    }
 
-	}
+    /**
+     * This method can be used to verify a callback for a transaction.
+     *
+     * @param array $data The callback data (usually $_GET) to use for verification.
+     * @param string|null $siteKey The site key used to verify hash. Leave empty to check hash with the
+     * use of the merchant key only (otherwise both are checked).
+     *
+     * @return bool Returns TRUE if the callback is valid or FALSE if not.
+     * @throws Exception
+     * @access public
+     * @api
+     */
+    public function verifyCallback(array $data, string $siteKey = null): bool
+    {
+        foreach (['transaction', 'currency', 'amount', 'reference', 'code', 'hash', 'status'] as $requiredKey) {
+            if (! isset($data[$requiredKey])) {
+                throw new Exception('Transaction.Callback.Missing', 'missing callback data: ' . $requiredKey);
+            }
+        }
 
+        $prefix = empty($data['testmode']) ? '' : 'TEST';
+
+        return (
+            (
+                null !== $siteKey
+                && md5(
+                    $prefix
+                    . $data['transaction']
+                    . $data['currency']
+                    . $data['amount']
+                    . $data['reference']
+                    . $data['code']
+                    . $siteKey
+                ) == $data['hash']
+            )
+            || md5(
+                $prefix
+                . $data['transaction']
+                . $data['currency']
+                . $data['amount']
+                . $data['reference']
+                . $data['code']
+                . $this->client->getKey()
+            ) == $data['hash']
+        );
+    }
 }

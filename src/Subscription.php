@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) 2018 CardGate B.V.
  *
@@ -25,490 +26,524 @@
  * @copyright   CardGate B.V.
  * @link        https://www.cardgate.com
  */
-namespace cardgate\api {
 
-	/**
-	 * Subscription instance.
-	 */
-	final class Subscription extends Transaction {
+namespace cardgate\api;
 
-		/**
-		 * The subscription id.
-		 * @var string
-		 * @access private
-		 */
-		private $_sId;
+/**
+ * Subscription instance.
+ */
+final class Subscription extends Transaction
+{
+    /**
+     * The subscription id.
+     * @var string
+     * @access private
+     */
+    private $id;
 
-		/**
-		 * The length of the subscription period.
-		 * @var int
-		 * @access private
-		 */
-		private $_iPeriod;
+    /**
+     * The length of the subscription period.
+     * @var int
+     * @access private
+     */
+    private $period;
 
-		/**
-		 * The type of period (ie day, week, month, year)
-		 * @var string
-		 * @access private
-		 */
-		private $_sPeriodType;
+    /**
+     * The type of period (ie day, week, month, year)
+     * @var string
+     * @access private
+     */
+    private $periodType;
 
-		/**
-		 * The price per period in cents
-		 * @var int
-		 * @access private
-		 */
-		private $_iPeriodPrice;
+    /**
+     * The price per period in cents
+     * @var int
+     * @access private
+     */
+    private $periodPrice;
 
-		/**
-		 * The amount of the initial (first) payment, used only when the first payment is different from the monthly costs.
-		 * @var int
-		 * @access private
-		 */
-		private $_iInitialPayment;
+    /**
+     * The amount of the initial (first) payment, used only when the first payment is different from the monthly costs.
+     * @var int
+     * @access private
+     */
+    private $initialPayment;
 
-		/**
-		 * The length of the trial period.
-		 * @var int
-		 * @access private
-		 */
-		private $_iTrialPeriod;
+    /**
+     * The length of the trial period.
+     * @var int
+     * @access private
+     */
+    private $trialPeriod;
 
-		/**
-		 * The type of trial period (ie day, week, month, year)
-		 * @var string
-		 * @access private
-		 */
-		private $_sTrialPeriodType;
+    /**
+     * The type of trial period (ie day, week, month, year)
+     * @var string
+     * @access private
+     */
+    private $trialPeriodType;
 
-		/**
-		 * The price for the trial period in cents
-		 * @var int
-		 * @access private
-		 */
-		private $_iTrialPeriodPrice;
+    /**
+     * The price for the trial period in cents
+     * @var int
+     * @access private
+     */
+    private $trialPeriodPrice;
 
-		/**
-		 * The start date (UTC) of the subscription in YYYY-MM-DD hh:mm:ss format.
-		 * If none is given the current date will be used.
-		 * @var string
-		 * @access private
-		 */
-		private $_sStartDate;
+    /**
+     * The start date (UTC) of the subscription in YYYY-MM-DD hh:mm:ss format.
+     * If none is given the current date will be used.
+     * @var string
+     * @access private
+     */
+    private $startDate;
 
-		/**
-		 * The end date (UTC) of the subscription in YYYY-MM-DD hh:mm:ss format.
-		 * If none is given the subscription will never end.
-		 * @var string
-		 * @access private
-		 */
-		private $_sEndDate;
+    /**
+     * The end date (UTC) of the subscription in YYYY-MM-DD hh:mm:ss format.
+     * If none is given the subscription will never end.
+     * @var string
+     * @access private
+     */
+    private $endDate;
 
-		/**
-		 * The status of the subscription.
-		 * @var string
-		 * @access private
-		 */
-		private $_sStatus;
+    /**
+     * The status of the subscription.
+     * @var string
+     * @access private
+     */
+    private $status;
 
-		/**
-		 * The constructor.
-		 * @param Client $oClient_ The client associated with this subscription.
-		 * @param int $iSiteId_ Site id to create the subscription for.
-		 * @param int $iPeriod_ The period length of the subscription.
-		 * @param string $sPeriodType_ The period type of the subscription (e.g. day, week, month, year).
-		 * @param int $iPeriodAmount_ The period amount of the subscription in cents.
-		 * @param string $sCurrency_ Currency (ISO 4217)
-		 * @throws Exception
-		 * @access public
-		 * @api
-		 */
-		function __construct( Client $oClient_, $iSiteId_, $iPeriod_, $sPeriodType_, $iPeriodAmount_, $sCurrency_ = 'EUR' ) {
-			$this->_oClient = $oClient_;
-			$this->setSiteId( $iSiteId_ )
-			     ->setPeriod( $iPeriod_ )
-			     ->setPeriodType( $sPeriodType_ )
-			     ->setPeriodPrice( $iPeriodAmount_ )
-			     ->setCurrency( $sCurrency_ );
-		}
+    /**
+     * The constructor.
+     *
+     * @param Client $client The client associated with this subscription.
+     * @param int $siteId Site id to create the subscription for.
+     * @param int $period The period length of the subscription.
+     * @param string $periodType The period type of the subscription (e.g. day, week, month, year).
+     * @param int $periodAmount The period amount of the subscription in cents.
+     * @param string $currency Currency (ISO 4217)
+     *
+     * @throws Exception
+     * @access public
+     * @api
+     */
+    public function __construct(
+        Client $client,
+        int $siteId,
+        int $period,
+        string $periodType,
+        int $periodAmount,
+        string $currency = 'EUR'
+    ) {
+        $this->client = $client;
+        $this->setSiteId($siteId)
+             ->setPeriod($period)
+             ->setPeriodType($periodType)
+             ->setPeriodPrice($periodAmount)
+             ->setCurrency($currency);
+    }
 
-		/**
-		 * Set the subscription id.
-		 * @param string $sId_ Subscription id to set.
-		 * @return $this
-		 * @throws Exception
-		 * @access public
-		 * @api
-		 */
-		public function setId( $sId_ ) {
-			if (
-				! is_string( $sId_ )
-				|| empty( $sId_ )
-			) {
-				throw new Exception( 'Subscription.Id.Invalid', 'invalid id: ' . $sId_ );
-			}
-			$this->_sId = $sId_;
-			return $this;
-		}
+    /**
+     * Set the subscription id.
+     *
+     * @param string $id Subscription id to set.
+     *
+     * @return $this
+     * @throws Exception
+     * @access public
+     * @api
+     */
+    public function setId(string $id): Transaction
+    {
+        if (empty($id)) {
+            throw new Exception('Subscription.Id.Invalid', 'invalid id: ' . $id);
+        }
+        $this->id = $id;
+        return $this;
+    }
 
-		/**
-		 * Get the subscription id associated with this subscription.
-		 * @return string The subscription id associated with this subscription.
-		 * @throws Exception
-		 * @access public
-		 * @api
-		 */
-		public function getId() {
-			if ( empty( $this->_sId ) ) {
-				throw new Exception( 'Subscription.Not.Initialized', 'invalid subscription state' );
-			}
-			return $this->_sId;
-		}
+    /**
+     * Get the subscription id associated with this subscription.
+     * @return string The subscription id associated with this subscription.
+     * @throws Exception
+     * @access public
+     * @api
+     */
+    public function getId(): string
+    {
+        if (empty($this->id)) {
+            throw new Exception('Subscription.Not.Initialized', 'invalid subscription state');
+        }
+        return $this->id;
+    }
 
-		/**
-		 * Configure the subscription object with a period.
-		 * @param int $iPeriod_ Period length to set.
-		 * @return $this
-		 * @throws Exception
-		 * @access public
-		 * @api
-		 */
-		public function setPeriod( $iPeriod_ ) {
-			if ( ! is_integer( $iPeriod_ ) ) {
-				throw new Exception( 'Subscription.Period.Invalid', 'invalid period: ' . $iPeriod_ );
-			}
-			$this->_iPeriod = $iPeriod_;
-			return $this;
-		}
+    /**
+     * Configure the subscription object with a period.
+     *
+     * @param int $period Period length to set.
+     *
+     * @return $this
+     * @throws Exception
+     * @access public
+     * @api
+     */
+    public function setPeriod(int $period): Subscription
+    {
+        if (! is_int($period)) {
+            throw new Exception('Subscription.Period.Invalid', 'invalid period: ' . $period);
+        }
+        $this->period = $period;
+        return $this;
+    }
 
-		/**
-		 * Get the period of the subscription.
-		 * @return int The period of the subscription.
-		 * @access public
-		 * @api
-		 */
-		public function getPeriod() {
-			return $this->_iPeriod;
-		}
+    /**
+     * Get the period of the subscription.
+     * @return int The period of the subscription.
+     * @access public
+     * @api
+     */
+    public function getPeriod(): int
+    {
+        return $this->period;
+    }
 
-		/**
-		 * Configure the subscription object with a period type.
-		 * @param string $sPeriodType_ Period type to set.
-		 * @return $this
-		 * @throws Exception
-		 * @access public
-		 * @api
-		 */
-		public function setPeriodType( $sPeriodType_ ) {
-			if (
-				! is_string( $sPeriodType_ )
-				|| ! in_array( $sPeriodType_, [ 'day', 'week', 'month', 'year' ] )
-			) {
-				throw new Exception( 'Subscription.Period.Type.Invalid', 'invalid period type: ' . $sPeriodType_ );
-			}
-			$this->_sPeriodType = $sPeriodType_;
-			return $this;
-		}
+    /**
+     * Configure the subscription object with a period type.
+     *
+     * @param string $periodType Period type to set.
+     *
+     * @return $this
+     * @throws Exception
+     * @access public
+     * @api
+     */
+    public function setPeriodType(string $periodType): Subscription
+    {
+        if (! in_array($periodType, ['day', 'week', 'month', 'year'])) {
+            throw new Exception('Subscription.Period.Type.Invalid', 'invalid period type: ' . $periodType);
+        }
+        $this->periodType = $periodType;
+        return $this;
+    }
 
-		/**
-		 * Get the period type of the subscription.
-		 * @return string The period type of the subscription.
-		 * @access public
-		 * @api
-		 */
-		public function getPeriodType() {
-			return $this->_sPeriodType;
-		}
+    /**
+     * Get the period type of the subscription.
+     * @return string The period type of the subscription.
+     * @access public
+     * @api
+     */
+    public function getPeriodType(): string
+    {
+        return $this->periodType;
+    }
 
-		/**
-		 * Configure the subscription object with a period price.
-		 * @param int $iPeriod_ Period price to set.
-		 * @return $this
-		 * @throws Exception
-		 * @access public
-		 * @api
-		 */
-		public function setPeriodPrice( $iPeriodPrice_ ) {
-			if ( ! is_integer( $iPeriodPrice_ ) ) {
-				throw new Exception( 'Subscription.Period.Price.Invalid', 'invalid period price: ' . $iPeriodPrice_ );
-			}
-			$this->_iPeriodPrice = $iPeriodPrice_;
-			return $this;
-		}
+    /**
+     * Configure the subscription object with a period price.
+     * @param int $periodPrice Period price to set.
+     * @return $this
+     * @throws Exception
+     * @access public
+     * @api
+     */
+    public function setPeriodPrice(int $periodPrice): Subscription
+    {
+        if (! is_int($periodPrice)) {
+            throw new Exception('Subscription.Period.Price.Invalid', 'invalid period price: ' . $periodPrice);
+        }
+        $this->periodPrice = $periodPrice;
+        return $this;
+    }
 
-		/**
-		 * Get the period price of the subscription.
-		 * @return int The period price of the subscription.
-		 * @access public
-		 * @api
-		 */
-		public function getPeriodPrice() {
-			return $this->_iPeriodPrice;
-		}
+    /**
+     * Get the period price of the subscription.
+     * @return int The period price of the subscription.
+     * @access public
+     * @api
+     */
+    public function getPeriodPrice(): int
+    {
+        return (int) $this->periodPrice;
+    }
 
-		/**
-		 * Configure the subscription initial payment amount.
-		 * @param int $iInitialPayment_ The initial payment amount to set.
-		 * @return $this
-		 * @throws Exception
-		 * @access public
-		 * @api
-		 */
-		public function setInitialPayment( $iAmount_ ) {
-			if ( ! is_integer( $iAmount_ ) ) {
-				throw new Exception( 'Subscription.Initial.Payment.Invalid', 'invalid initial payment amount: ' . $iAmount_ );
-			}
-			$this->_iInitialPayment = $iAmount_;
-			return $this;
-		}
+    /**
+     * Configure the subscription initial payment amount.
+     * @param int $amount The initial payment amount to set.
+     * @return $this
+     * @throws Exception
+     * @access public
+     * @api
+     */
+    public function setInitialPayment(int $amount): Subscription
+    {
+        if (! is_int($amount)) {
+            throw new Exception('Subscription.Initial.Payment.Invalid', 'invalid initial payment amount: ' . $amount);
+        }
+        $this->initialPayment = $amount;
+        return $this;
+    }
 
 
-		/**
-		 * Configure the subscription object with a trial period.
-		 * @param int $iPeriod_ Trial period length to set.
-		 * @return $this
-		 * @throws Exception
-		 * @access public
-		 * @api
-		 */
-		public function setTrialPeriod( $iTrialPeriod_ ) {
-			if ( ! is_integer( $iTrialPeriod_ ) ) {
-				throw new Exception( 'Subscription.Period.Invalid', 'invalid trial period: ' . $iTrialPeriod_ );
-			}
-			$this->_iTrialPeriod = $iTrialPeriod_;
-			return $this;
-		}
+    /**
+     * Configure the subscription object with a trial period.
+     * @param int $trialPeriod Trial period length to set.
+     * @return $this
+     * @throws Exception
+     * @access public
+     * @api
+     */
+    public function setTrialPeriod(int $trialPeriod): Subscription
+    {
+        if (! is_int($trialPeriod)) {
+            throw new Exception('Subscription.Period.Invalid', 'invalid trial period: ' . $trialPeriod);
+        }
+        $this->trialPeriod = $trialPeriod;
+        return $this;
+    }
 
-		/**
-		 * Get the trial period of the subscription.
-		 * @return int The trial period of the subscription.
-		 * @access public
-		 * @api
-		 */
-		public function getTrialPeriod() {
-			return $this->_iTrialPeriod;
-		}
+    /**
+     * Get the trial period of the subscription.
+     * @return int The trial period of the subscription.
+     * @access public
+     * @api
+     */
+    public function getTrialPeriod(): int
+    {
+        return (int) $this->trialPeriod;
+    }
 
-		/**
-		 * Configure the subscription object with a trial period type.
-		 * @param string $sTrialPeriodType_ Trial Period type to set.
-		 * @return $this
-		 * @throws Exception
-		 * @access public
-		 * @api
-		 */
-		public function setTrialPeriodType( $sTrialPeriodType_ ) {
-			if (
-				! is_string( $sTrialPeriodType_ )
-				|| ! in_array( $sTrialPeriodType_, [ 'day', 'week', 'month', 'year' ] )
-			) {
-				throw new Exception( 'Subscription.Period.Type.Invalid', 'invalid trial period type: ' . $sTrialPeriodType_ );
-			}
-			$this->_sTrialPeriodType = $sTrialPeriodType_;
-			return $this;
-		}
+    /**
+     * Configure the subscription object with a trial period type.
+     *
+     * @param string $trialPeriodType Trial Period type to set.
+     *
+     * @return $this
+     * @throws Exception
+     * @access public
+     * @api
+     */
+    public function setTrialPeriodType(string $trialPeriodType): Subscription
+    {
+        if (! in_array($trialPeriodType, ['day', 'week', 'month', 'year'])) {
+            throw new Exception('Subscription.Period.Type.Invalid', 'invalid trial period type: ' . $trialPeriodType);
+        }
+        $this->trialPeriodType = $trialPeriodType;
+        return $this;
+    }
 
-		/**
-		 * Get the trial period type of the subscription.
-		 * @return string The trial period type of the subscription.
-		 * @access public
-		 * @api
-		 */
-		public function getTrialPeriodType() {
-			return $this->_sTrialPeriodType;
-		}
+    /**
+     * Get the trial period type of the subscription.
+     * @return string The trial period type of the subscription.
+     * @access public
+     * @api
+     */
+    public function getTrialPeriodType(): string
+    {
+        return (string) $this->trialPeriodType;
+    }
 
-		/**
-		 * Configure the subscription object with a trial period price.
-		 * @param int $iPeriod_ Trial period price to set.
-		 * @return $this
-		 * @throws Exception
-		 * @access public
-		 * @api
-		 */
-		public function setTrialPeriodPrice( $iTrialPeriodPrice_ ) {
-			if ( ! is_integer( $iTrialPeriodPrice_ ) ) {
-				throw new Exception( 'Subscription.Period.Price.Invalid', 'invalid trial period price: ' . $iTrialPeriodPrice_ );
-			}
-			$this->_iTrialPeriodPrice = $iTrialPeriodPrice_;
-			return $this;
-		}
+    /**
+     * Configure the subscription object with a trial period price.
+     * @param int $trialPeriodPrice Trial period price to set.
+     * @return $this
+     * @throws Exception
+     * @access public
+     * @api
+     */
+    public function setTrialPeriodPrice(int $trialPeriodPrice): Subscription
+    {
+        if (! is_int($trialPeriodPrice)) {
+            throw new Exception(
+                'Subscription.Period.Price.Invalid',
+                'invalid trial period price: ' . $trialPeriodPrice
+            );
+        }
+        $this->trialPeriodPrice = $trialPeriodPrice;
+        return $this;
+    }
 
-		/**
-		 * Get the period price of the subscription.
-		 * @return int The period price of the subscription.
-		 * @access public
-		 * @api
-		 */
-		public function getTrialPeriodPrice() {
-			return $this->_iPeriodPrice;
-		}
+    /**
+     * Get the period price of the subscription.
+     * @return int The period price of the subscription.
+     * @access public
+     * @api
+     */
+    public function getTrialPeriodPrice(): int
+    {
+        return (int) $this->trialPeriodPrice;
+    }
 
-		/**
-		 * Configure the subscription date on which it should start.
-		 * @param string $sStartDate_ The start date to set.
-		 * @return $this
-		 * @throws Exception
-		 * @access public
-		 * @api
-		 */
-		public function setStartDate( $sStartDate_ ) {
-			if ( ! is_string( $sStartDate_ ) ) {
-				throw new Exception( 'Subscription.Date.Start.Invalid', 'invalid start date: ' . $sStartDate_ );
-			}
-			$this->_sStartDate = $sStartDate_;
-			return $this;
-		}
+    /**
+     * Configure the subscription date on which it should start.
+     *
+     * @param string $startDate The start date to set.
+     *
+     * @return $this
+     * @throws Exception
+     * @access public
+     * @api
+     */
+    public function setStartDate(string $startDate): Subscription
+    {
+        $this->startDate = $startDate;
+        return $this;
+    }
 
-		/**
-		 * Get the start date of the subscription.
-		 * @return string The start date of the subscription.
-		 * @access public
-		 * @api
-		 */
-		public function getStartDate() {
-			return $this->_sStartDate;
-		}
+    /**
+     * Get the start date of the subscription.
+     * @return string The start date of the subscription.
+     * @access public
+     * @api
+     */
+    public function getStartDate(): string
+    {
+        return (string) $this->startDate;
+    }
 
-		/**
-		 * Configure the date on which the subscription should end.
-		 * @param string $sEndDate_ The end date to set.
-		 * @return $this
-		 * @throws Exception
-		 * @access public
-		 * @api
-		 */
-		public function setEndDate( $sEndDate_ ) {
-			if ( ! is_string( $sEndDate_ ) ) {
-				throw new Exception( 'Subscription.Date.End.Invalid', 'invalid end date: ' . $sEndDate_ );
-			}
-			$this->_sEndDate = $sEndDate_;
-			return $this;
-		}
+    /**
+     * Configure the date on which the subscription should end.
+     * @param string $endDate The end date to set.
+     * @return $this
+     * @throws Exception
+     * @access public
+     * @api
+     */
+    public function setEndDate(string $endDate): Subscription
+    {
+        $this->endDate = $endDate;
+        return $this;
+    }
 
-		/**
-		 * Get the end date of the subscription.
-		 * @return string The end date of the subscription.
-		 * @access public
-		 * @api
-		 */
-		public function getEndDate() {
-			return $this->_sEndDate;
-		}
+    /**
+     * Get the end date of the subscription.
+     * @return string The end date of the subscription.
+     * @access public
+     * @api
+     */
+    public function getEndDate(): string
+    {
+        return (string) $this->endDate;
+    }
 
-		/**
-		 * Get the status of the subscription.
-		 * @return string The end date of the subscription.
-		 * @access public
-		 * @api
-		 */
-		public function getStatus() {
-			return $this->_sStatus;
-		}
+    /**
+     * Get the status of the subscription.
+     * @return string The end date of the subscription.
+     * @access public
+     * @api
+     */
+    public function getStatus(): string
+    {
+        return (string) $this->status;
+    }
 
-		/**
-		 * Registers the subscription with the CardGate payment gateway.
-		 * @return $this
-		 * @throws Exception
-		 * @access public
-		 * @api
-		 */
-		public function register() {
-			$aData = [
-				'site_id' 				=> $this->_iSiteId,
-				'currency_id'			=> $this->_sCurrency,
-				'url_callback'			=> $this->_sCallbackUrl,
-				'url_success'			=> $this->_sSuccessUrl,
-				'url_failure'			=> $this->_sFailureUrl,
-				'url_pending'			=> $this->_sPendingUrl,
-				'description'			=> $this->_sDescription,
-				'reference'				=> $this->_sReference,
-				'recurring'				=> true,
-				'period'				=> $this->_iPeriod,
-				'period_type'			=> $this->_sPeriodType,
-				'period_price'			=> $this->_iPeriodPrice,
-				'initial_payment'		=> $this->_iInitialPayment,
-				'trial_period'			=> $this->_iTrialPeriod,
-				'trial_period_type'		=> $this->_sTrialPeriodType,
-				'trial_period_price'	=> $this->_iTrialPeriodPrice,
-				'start_date'			=> $this->_sStartDate,
-				'end_date'				=> $this->_sEndDate,
-			];
-			if ( ! is_null( $this->_oConsumer ) ) {
-				$aData['email'] = $this->_oConsumer->getEmail();
-				$aData['phone'] = $this->_oConsumer->getPhone();
-				$aData['consumer'] = array_merge(
-					$this->_oConsumer->address()->getData(),
-					$this->_oConsumer->shippingAddress()->getData( 'shipto_' )
-				);
-				$aData['country_id'] = $this->_oConsumer->address()->getCountry();
-			}
-			if ( ! is_null( $this->_oCart ) ) {
-				$aData['cartitems'] = $this->_oCart->getData();
-			}
+    /**
+     * Registers the subscription with the CardGate payment gateway.
+     * @return $this
+     * @throws Exception
+     * @access public
+     * @api
+     */
+    public function register(): Transaction
+    {
+        $data = [
+            'site_id'               => $this->siteId,
+            'currency_id'           => $this->currency,
+            'url_callback'          => $this->callbackUrl,
+            'url_success'           => $this->successUrl,
+            'url_failure'           => $this->failureUrl,
+            'url_pending'           => $this->pendingUrl,
+            'description'           => $this->description,
+            'reference'             => $this->reference,
+            'recurring'             => true,
+            'period'                => $this->period,
+            'period_type'           => $this->periodType,
+            'period_price'          => $this->periodPrice,
+            'initial_payment'       => $this->initialPayment,
+            'trial_period'          => $this->trialPeriod,
+            'trial_period_type'     => $this->trialPeriodType,
+            'trial_period_price'    => $this->trialPeriodPrice,
+            'start_date'            => $this->startDate,
+            'end_date'              => $this->endDate,
+        ];
+        if (! is_null($this->consumer)) {
+            $data['email'] = $this->consumer->getEmail();
+            $data['phone'] = $this->consumer->getPhone();
+            $data['consumer'] = array_merge(
+                $this->consumer->address()->getData(),
+                $this->consumer->shippingAddress()->getData('shipto_')
+            );
+            $data['country_id'] = $this->consumer->address()->getCountry();
+        }
+        if (! is_null($this->cart)) {
+            $data['cartitems'] = $this->cart->getData();
+        }
 
-			$sResource = 'subscription/register/';
+        $resource = 'subscription/register/';
 
-			if ( ! empty( $this->_oPaymentMethod ) ) {
-				$aData['pt'] = $this->_oPaymentMethod->getId();
-				$aData['issuer'] = $this->_sIssuer;
-			}
+        if (! empty($this->paymentMethod)) {
+            $data['pt'] = $this->paymentMethod->getId();
+            $data['issuer'] = $this->issuer;
+        }
 
-			$aData = array_filter( $aData ); // remove NULL values
-			$aResult = $this->_oClient->doRequest( $sResource, $aData, 'POST' );
+        $data = array_filter($data); // remove NULL values
+        $result = $this->client->doRequest($resource, $data, 'POST');
 
-			if (
-				empty( $aResult )
-				|| empty( $aResult['subscription'] )
-			) {
-				throw new Exception( 'Subscription.Request.Invalid', 'unexpected result: ' . $this->_oClient->getLastResult() . $this->_oClient->getDebugInfo( TRUE, FALSE ) );
-			}
-			$this->_sId = $aResult['subscription'];
-			if (
-				isset( $aResult['subscription']['action'] )
-				&& 'redirect' == $aResult['subscription']['action']
-			) {
-				$this->_sActionUrl = $aResult['subscription']['url'];
-			}
+        if (
+            empty($result)
+            || empty($result['subscription'])
+        ) {
+            throw new Exception(
+                'Subscription.Request.Invalid',
+                'unexpected result: ' . $this->client->getLastResult() . $this->client->getDebugInfo(true, false)
+            );
+        }
+        $this->id = $result['subscription'];
+        if (
+            isset($result['subscription']['action'])
+            && 'redirect' == $result['subscription']['action']
+        ) {
+            $this->actionUrl = $result['subscription']['url'];
+        }
 
-			return $this;
-		}
+        return $this;
+    }
 
-		/**
-		 * Change the subscription status.
-		 * @return bool Whether the status change succeeded.
-		 * @throws Exception
-		 * @access public
-		 * @api
-		 */
-		public function changeStatus( $sStatus_ ) {
+    /**
+     * Change the subscription status.
+     * @param string $status The status to change to.
+     * @return bool Whether the status change succeeded.
+     * @throws Exception
+     * @access public
+     * @api
+     */
+    public function changeStatus(string $status): bool
+    {
 
-			if ( empty( $this->_sId ) ) {
-				throw new Exception( 'Subscription.Request.Invalid', 'invalid subscription id' );
-			}
+        if (empty($this->id)) {
+            throw new Exception('Subscription.Request.Invalid', 'invalid subscription id');
+        }
 
-			if ( ! in_array( $sStatus_, [ 'reactivate' , 'suspend', 'cancel', 'deactivate' ] ) ) {
-				throw new Exception( 'Subscription.Status.Invalid', 'invalid subscription status provided' );
-			}
+        if (! in_array($status, ['reactivate', 'suspend', 'cancel', 'deactivate'])) {
+            throw new Exception('Subscription.Status.Invalid', 'invalid subscription status provided: ' . $status);
+        }
 
-			$aData = [
-				'subscription_id'		=> $this->_sId,
-				'description'			=> $this->_sDescription,
-			];
+        $data = [
+            'subscription_id'       => $this->id,
+            'description'           => $this->description,
+        ];
 
-			$sResource = 'subscription/' . $sStatus_ . '/';
+        $resource = 'subscription/' . $status . '/';
 
-			$aData = array_filter( $aData ); // remove NULL values
-			$aResult = $this->_oClient->doRequest( $sResource, $aData, 'POST' );
+        $data = array_filter($data); // remove NULL values
+        $result = $this->client->doRequest($resource, $data, 'POST');
 
-			if ( FALSE == $aResult['success'] ) {
-				// oClient will have thrown an error if there was a proper error from the API, so this is weird!
-				throw new Exception( 'Subscription.Request.Invalid', 'unexpected result: ' . $this->_oClient->getLastResult() . $this->_oClient->getDebugInfo( TRUE, FALSE ) );
-			}
+        if (false == $result['success']) {
+            // client will have thrown an error if there was a proper error from the API, so this is weird!
+            throw new Exception(
+                'Subscription.Request.Invalid',
+                'unexpected result: ' . $this->client->getLastResult() . $this->client->getDebugInfo(true, false)
+            );
+        }
 
-			return TRUE;
-		}
-
-	}
-
+        return true;
+    }
 }
