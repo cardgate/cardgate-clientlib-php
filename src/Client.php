@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) 2018 CardGate B.V.
  *
@@ -25,518 +26,534 @@
  * @copyright   CardGate B.V.
  * @link        https://www.cardgate.com
  */
-namespace cardgate\api {
 
-	/**
-	 * CardGate client object.
-	 */
-	final class Client {
+namespace cardgate\api;
 
-		/**
-		 * Client version.
-		 */
-		const CLIENT_VERSION = "1.1.24";
+/**
+ * CardGate client object.
+ */
+final class Client
+{
+    /**
+     * Client version.
+     */
+    public const CLIENT_VERSION = "1.1.25";
 
-		/**
-		 * Url to use for production.
-		 */
-		const URL_PRODUCTION = 'https://secure.curopayments.net/rest/v1/curo/';
+    /**
+     * Url to use for production.
+     */
+    public const URL_PRODUCTION = 'https://secure.curopayments.net/rest/v1/curo/';
 
-		/**
-		 * Url to use for testing.
-		 */
-		const URL_STAGING = 'https://secure-staging.curopayments.net/rest/v1/curo/';
+    /**
+     * Url to use for testing.
+     */
+    public const URL_STAGING = 'https://secure-staging.curopayments.net/rest/v1/curo/';
 
-		/**
-		 * Toggle testmode variable.
-		 * @var bool
-		 * @access private
-		 */
-		private $_bTestmode;
+    /**
+     * Toggle testmode variable.
+     * @var bool
+     * @access private
+     */
+    private $testmode;
 
-		/**
-		 * The merchant id to use for authentication.
-		 * @var int
-		 * @access private
-		 */
-		private $_iMerchantId;
+    /**
+     * The merchant id to use for authentication.
+     * @var int
+     * @access private
+     */
+    private $merchantId;
 
-		/**
-		 * The secret key to use for authentication.
-		 * @var string
-		 * @access private
-		 */
-		private $_sKey;
+    /**
+     * The secret key to use for authentication.
+     * @var string
+     * @access private
+     */
+    private $key;
 
-		/**
-		 * The consumer IP address associated with the client.
-		 * @var string
-		 * @access private
-		 */
-		private $_sIp = NULL;
+    /**
+     * The consumer IP address associated with the client.
+     * @var string
+     * @access private
+     */
+    private $ip = null;
 
-		/**
-		 * The language to use when communicating with the API.
-		 * @var string
-		 * @access private
-		 */
-		private $_sLanguage = NULL;
+    /**
+     * The language to use when communicating with the API.
+     * @var string
+     * @access private
+     */
+    private $language = null;
 
-		/**
-		 * The version resource.
-		 * @var resource\Version
-		 * @access private
-		 */
-		private $_oVersion = NULL;
+    /**
+     * The version resource.
+     * @var resource\Version
+     * @access private
+     */
+    private $version = null;
 
-		/**
-		 * The transactions resource.
-		 * @var resource\Transactions
-		 * @access private
-		 */
-		private $_oTransactions = NULL;
+    /**
+     * The transactions resource.
+     * @var resource\Transactions
+     * @access private
+     */
+    private $transactions = null;
 
-		/**
-		 * The subscriptions resource.
-		 * @var resource\Subscriptions
-		 * @access private
-		 */
-		private $_oSubscriptions = NULL;
+    /**
+     * The subscriptions resource.
+     * @var resource\Subscriptions
+     * @access private
+     */
+    private $subscriptions = null;
 
-		/**
-		 * The consumers resource.
-		 * @var resource\Consumers
-		 * @access private
-		 */
-		private $_oConsumers = NULL;
+    /**
+     * The consumers resource.
+     * @var resource\Consumers
+     * @access private
+     */
+    private $consumers = null;
 
-		/**
-		 * The methods resource.
-		 * @var resource\Methods
-		 * @access private
-		 */
-		private $_oMethods = NULL;
+    /**
+     * The methods resource.
+     * @var resource\Methods
+     * @access private
+     */
+    private $methods = null;
 
-		/**
-		 * Debug level. 0 = None, 1 = Include result in errors, 2 = Verbose CURL calls.
-		 * @var int
-		 * @access private
-		 */
-		const DEBUG_NONE    = 0;
-		const DEBUG_RESULTS = 1;
-		const DEBUG_VERBOSE = 2;
+    /**
+     * Debug level. 0 = None, 1 = Include result in errors, 2 = Verbose CURL calls.
+     * @var int
+     * @access private
+     */
+    public const DEBUG_NONE    = 0;
+    public const DEBUG_RESULTS = 1;
+    public const DEBUG_VERBOSE = 2;
 
-		private $_iDebugLevel = 0;
+    private $debugLevel = 0;
 
-		/**
-		 * Last request and result for debugging.
-		 * @var string
-		 * @access private
-		 */
-		private $_sLastRequest = NULL;
-		private $_sLastResult = NULL;
+    /**
+     * Last request and result for debugging.
+     * @var string
+     * @access private
+     */
+    private $lastRequest = null;
+    private $lastResult = null;
 
-		/**
-		 * The constructor.
-		 * @param int $iMerchantId_ The merchant id for the client.
-		 * @param string $sKey_ The merchant API key for the client.
-		 * @param bool $bTestmode_ Toggle testmode for the client.
-		 * @throws Exception
-		 * @access public
-		 * @api
-		 */
-		function __construct( $iMerchantId_, $sKey_, $bTestmode_ = FALSE ) {
-			$this->setMerchantId( $iMerchantId_ )->setKey( $sKey_ )->setTestmode( $bTestmode_ );
-		}
+    /**
+     * The constructor.
+     *
+     * @param int $merchantId The merchant id for the client.
+     * @param string $key The merchant API key for the client.
+     * @param bool $testmode Toggle testmode for the client.
+     *
+     * @throws Exception
+     * @access public
+     * @api
+     */
+    public function __construct(int $merchantId, string $key, bool $testmode = false)
+    {
+        $this->setMerchantId($merchantId)->setKey($key)->setTestmode($testmode);
+    }
 
-		/**
-		 * Prevent leaking info in dumps.
-		 * @ignore
-		 */
-		public function __debugInfo() {
-			return [
-				'Version'       => $this->_oVersion,
-				'Testmode'    => $this->_bTestmode,
-				'DebugLevel'  => $this->_iDebugLevel,
-				'iMerchantId' => $this->_iMerchantId,
-				'API_URL'     => $this->getUrl(),
-				'LastRequest' => $this->_sLastRequest,
-				'LastResult'  => $this->_sLastResult
-			];
-		}
+    /**
+     * Prevent leaking info in dumps.
+     * @ignore
+     */
+    public function __debugInfo()
+    {
+        return [
+            'Version'       => $this->version,
+            'Testmode'    => $this->testmode,
+            'DebugLevel'  => $this->debugLevel,
+            'merchantId' => $this->merchantId,
+            'API_URL'     => $this->getUrl(),
+            'LastRequest' => $this->lastRequest,
+            'LastResult'  => $this->lastResult
+        ];
+    }
 
-		/**
-		 * Toggle testmode.
-		 * @param bool $bTestmode_ Enable or disable testmode for this client.
-		 * @return $this
-		 * @throws Exception
-		 * @access public
-		 * @api
-		 */
-		public function setTestmode( $bTestmode_ ) {
-			if ( ! is_bool( $bTestmode_ ) ) {
-				throw new Exception( 'Client.Testmode.Invalid', 'invalid testmode: ' . $bTestmode_ );
-			}
-			$this->_bTestmode = $bTestmode_;
-			return $this;
-		}
+    /**
+     * Toggle testmode.
+     *
+     * @param bool $testmode Enable or disable testmode for this client.
+     *
+     * @return $this
+     * @throws Exception
+     * @access public
+     * @api
+     */
+    public function setTestmode(bool $testmode): Client
+    {
+        $this->testmode = $testmode;
+        return $this;
+    }
 
-		/**
-		 * Get currenct testmode setting.
-		 * @return bool The current testmode setting
-		 * @access public
-		 * @api
-		 */
-		public function getTestmode() {
-			return $this->_bTestmode;
-		}
+    /**
+     * Get currenct testmode setting.
+     * @return bool The current testmode setting
+     * @access public
+     * @api
+     */
+    public function getTestmode(): bool
+    {
+        return $this->testmode;
+    }
 
-		/**
-		 * Set debug level.
-		 * @param int $iDebugLevel_ Level: 0 = None, 1 = Include request/resule in errors, 2 = Verbose cURL calls.
-		 * @return $this
-		 * @access public
-		 * @api
-		 */
-		public function setDebugLevel( $iLevel_ ) {
-			$this->_iDebugLevel = $iLevel_;
-			return $this;
-		}
+    /**
+     * Set debug level.
+     *
+     * @param int $level Level: 0 = None, 1 = Include request/resule in errors, 2 = Verbose cURL calls.
+     *
+     * @return $this
+     * @access public
+     * @api
+     */
+    public function setDebugLevel(int $level): Client
+    {
+        $this->debugLevel = $level;
+        return $this;
+    }
 
-		/**
-		 * Get current debug level setting.
-		 * @return int The current debug level.
-		 * @access public
-		 * @api
-		 */
-		public function getDebugLevel() {
-			return $this->_iDebugLevel;
-		}
+    /**
+     * Get current debug level setting.
+     * @return int The current debug level.
+     * @access public
+     * @api
+     */
+    public function getDebugLevel(): int
+    {
+        return $this->debugLevel;
+    }
 
-		/**
-		 * Get debug information according to debug level.
-		 * @param bool $bStartWithNewLine_ Optional flag to indicate the info should start with a new-line.
-		 * @param bool $bAddResult_ Optional flag to indicate the result should be included too.
-		 * @return string Debug info or empty if level = 0.
-		 * @access public
-		 * @api
-		 */
-		public function getDebugInfo( $bStartWithNewLine_ = TRUE, $bAddResult_ = TRUE ) {
-			if ( $this->getDebugLevel() > self::DEBUG_NONE ) {
-				$sResult = ( $bStartWithNewLine_ ? PHP_EOL : '' );
-				$sResult .= 'Request: ' . $this->getLastRequest();
-				if ( $bAddResult_ ) {
-					$sResult .= PHP_EOL . 'Result: ' . $this->getLastResult();
-				}
-				return $sResult;
-			} else {
-				return '';
-			}
-		}
+    /**
+     * Get debug information according to debug level.
+     * @param bool $startWithNewLine Optional flag to indicate the info should start with a new-line.
+     * @param bool $addResult Optional flag to indicate the result should be included too.
+     * @return string Debug info or empty if level = 0.
+     * @access public
+     * @api
+     */
+    public function getDebugInfo(bool $startWithNewLine = true, bool $addResult = true): string
+    {
+        if ($this->getDebugLevel() > self::DEBUG_NONE) {
+            $result = ($startWithNewLine ? PHP_EOL : '');
+            $result .= 'Request: ' . $this->getLastRequest();
+            if ($addResult) {
+                $result .= PHP_EOL . 'Result: ' . $this->getLastResult();
+            }
+            return $result;
+        } else {
+            return '';
+        }
+    }
 
-		/**
-		 * Configure the client object with a merchant id.
-		 * @param int $iMerchantId_ Merchant id to set.
-		 * @return $this
-		 * @throws Exception
-		 * @access public
-		 * @api
-		 */
-		public function setMerchantId( $iMerchantId_ ) {
-			if ( ! is_integer( $iMerchantId_ ) ) {
-				throw new Exception( 'Client.MerchantId.Invalid', 'invalid merchant: ' . $iMerchantId_ );
-			}
-			$this->_iMerchantId = $iMerchantId_;
-			return $this;
-		}
+    /**
+     * Configure the client object with a merchant id.
+     *
+     * @param int $merchantId Merchant id to set.
+     *
+     * @return $this
+     * @throws Exception
+     * @access public
+     * @api
+     */
+    public function setMerchantId(int $merchantId): Client
+    {
+        $this->merchantId = $merchantId;
+        return $this;
+    }
 
-		/**
-		 * Get the merchant id associated with this client.
-		 * @return int The merchant id associated with this client
-		 * @access public
-		 * @api
-		 */
-		public function getMerchantId() {
-			return $this->_iMerchantId;
-		}
+    /**
+     * Get the merchant id associated with this client.
+     * @return int The merchant id associated with this client
+     * @access public
+     * @api
+     */
+    public function getMerchantId(): int
+    {
+        return $this->merchantId;
+    }
 
-		/**
-		 * Set the Merchant API key to authenticate the transaction request with.
-		 * @param string $sKey_ The merchant API key to set.
-		 * @return $this
-		 * @throws Exception
-		 * @access public
-		 * @api
-		 */
-		public function setKey( $sKey_ ) {
-			if ( ! is_string( $sKey_ ) ) {
-				throw new Exception( 'Client.Key.Invalid', 'invalid merchant key: ' . $sKey_ );
-			}
-			$this->_sKey = $sKey_;
-			return $this;
-		}
+    /**
+     * Set the Merchant API key to authenticate the transaction request with.
+     * @param string $key The merchant API key to set.
+     * @return $this
+     * @throws Exception
+     * @access public
+     * @api
+     */
+    public function setKey(string $key): Client
+    {
+        $this->key = $key;
+        return $this;
+    }
 
-		/**
-		 * Get the Merchant API key to authenticate the transaction request with.
-		 * @return string The merchant API key.
-		 * @access public
-		 * @api
-		 */
-		public function getKey() {
-			return $this->_sKey;
-		}
+    /**
+     * Get the Merchant API key to authenticate the transaction request with.
+     * @return string The merchant API key.
+     * @access public
+     * @api
+     */
+    public function getKey(): string
+    {
+        return $this->key;
+    }
 
-		/**
-		 * Set the IP address.
-		 * @param string The IP address of the consumer.
-		 * @return $this
-		 * @throws Exception
-		 * @access public
-		 * @api
-		 */
-		public function setIp( $sIp_ ) {
-			if (
-				! is_string( $sIp_ )
-				|| FALSE === filter_var( $sIp_, FILTER_VALIDATE_IP ) // NOTE ipv6
-			) {
-				throw new Exception( 'Client.Ip.Invalid', 'invalid IP address: ' . $sIp_ );
-			}
-			$this->_sIp = $sIp_;
-			return $this;
-		}
+    /**
+     * Set the IP address.
+     * @param string $ip The IP address of the consumer.
+     * @return $this
+     * @throws Exception
+     * @access public
+     * @api
+     */
+    public function setIp(string $ip): Client
+    {
+        if (false === filter_var($ip, FILTER_VALIDATE_IP)) {
+            throw new Exception('Client.Ip.Invalid', 'invalid IP address: ' . $ip);
+        }
+        $this->ip = $ip;
+        return $this;
+    }
 
-		/**
-		 * Get the IP address.
-		 * @return string The consumer IP address.
-		 * @access public
-		 * @api
-		 */
-		public function getIp() {
-			return $this->_sIp;
-		}
+    /**
+     * Get the IP address.
+     * @return string|null The consumer IP address.
+     * @access public
+     * @api
+     */
+    public function getIp(): ?string
+    {
+        return $this->ip;
+    }
 
-		/**
-		 * Configure the language to use.
-		 * @param string $sLanguage_ The language to set.
-		 * @return $this
-		 * @throws Exception
-		 * @access public
-		 * @api
-		 */
-		public function setLanguage( $sLanguage_ ) {
-			if ( ! is_string( $sLanguage_ ) ) {
-				throw new Exception( 'Client.Language.Invalid', 'invalid language: ' . $sLanguage_ );
-			}
-			$this->_sLanguage = $sLanguage_;
-			return $this;
-		}
+    /**
+     * Configure the language to use.
+     * @param string $language The language to set.
+     * @return $this
+     * @throws Exception
+     * @access public
+     * @api
+     */
+    public function setLanguage(string $language): Client
+    {
+        $this->language = $language;
+        return $this;
+    }
 
-		/**
-		 * Get the language the client is configured with.
-		 * @return string The language the client is configured with.
-		 * @access public
-		 * @api
-		 */
-		public function getLanguage() {
-			return $this->_sLanguage;
-		}
+    /**
+     * Get the language the client is configured with.
+     * @return string|null The language the client is configured with.
+     * @access public
+     * @api
+     */
+    public function getLanguage(): ?string
+    {
+        return $this->language;
+    }
 
-		/**
-		 * Get the URL to use with this connection, depending on testmode settings.
-		 * @return string The URL to use
-		 * @access public
-		 * @api
-		 */
-		public function getUrl() {
-			if ( ! empty( $_SERVER['CG_API_URL'] ) ) {
-				return $_SERVER['CG_API_URL'];
-			} else {
-				return ( $this->getTestmode() ? self::URL_STAGING : self::URL_PRODUCTION );
-			}
-		}
+    /**
+     * Get the URL to use with this connection, depending on testmode settings.
+     * @return string The URL to use
+     * @access public
+     * @api
+     */
+    public function getUrl(): string
+    {
+        if (! empty($_SERVER['CG_API_URL'])) {
+            return $_SERVER['CG_API_URL'];
+        } else {
+            return ($this->getTestmode() ? self::URL_STAGING : self::URL_PRODUCTION);
+        }
+    }
 
-		/**
-		 * Get the last request sent to the API.
-		 * @return string The request string.
-		 * @access public
-		 * @api
-		 */
-		public function getLastRequest() {
-			return (string) $this->_sLastRequest;
-		}
+    /**
+     * Get the last request sent to the API.
+     * @return string The request string.
+     * @access public
+     * @api
+     */
+    public function getLastRequest(): string
+    {
+        return (string) $this->lastRequest;
+    }
 
-		/**
-		 * Get the last result from an API call.
-		 * @return string The result string.
-		 * @access public
-		 * @api
-		 */
-		public function getLastResult() {
-			return (string) $this->_sLastResult;
-		}
+    /**
+     * Get the last result from an API call.
+     * @return string The result string.
+     * @access public
+     * @api
+     */
+    public function getLastResult(): string
+    {
+        return (string) $this->lastResult;
+    }
 
-		/**
-		 * Pull the config from the API using a token provided by the site setup button in the backoffice.
-		 * @return array Returns an array with settings.
-		 * @throws Exception
-		 * @access public
-		 * @api
-		 */
-		public function pullConfig( $sToken_ ) {
-			if ( ! is_string( $sToken_ ) ) {
-				throw new Exception( 'Client.Token.Invalid', 'invalid token for settings pull: ' . $sToken_ );
-			}
-			$sResource = "pullconfig/{$sToken_}/";
-			return $this->doRequest($sResource);
-		}
+    /**
+     * Pull the config from the API using a token provided by the site setup button in the backoffice.
+     * @param string $token Token to use for settings pull.
+     * @return array Returns an array with settings.
+     * @throws Exception
+     * @access public
+     * @api
+     */
+    public function pullConfig(string $token): array
+    {
+        $resource = "pullconfig/{$token}/";
+        return $this->doRequest($resource);
+    }
 
-		/**
-		 * Accessor for the versioning resource.
-		 * @return resource\Version
-		 * @access public
-		 * @api
-		 */
-		public function version() {
-			if ( NULL == $this->_oVersion ) {
-				$this->_oVersion = new resource\Version();
-			}
-			return $this->_oVersion;
-		}
+    /**
+     * Accessor for the versioning resource.
+     * @return resource\Version
+     * @access public
+     * @api
+     */
+    public function version(): resource\Version
+    {
+        if (null == $this->version) {
+            $this->version = new resource\Version();
+        }
+        return $this->version;
+    }
 
-		/**
-		 * Accessor for the transactions resource.
-		 * @return resource\Transactions
-		 * @access public
-		 * @api
-		 */
-		public function transactions() {
-			if ( NULL == $this->_oTransactions ) {
-				$this->_oTransactions = new resource\Transactions( $this );
-			}
-			return $this->_oTransactions;
-		}
+    /**
+     * Accessor for the transactions resource.
+     * @return resource\Transactions
+     * @access public
+     * @api
+     */
+    public function transactions(): resource\Transactions
+    {
+        if (null == $this->transactions) {
+            $this->transactions = new resource\Transactions($this);
+        }
+        return $this->transactions;
+    }
 
-		/**
-		 * Accessor for the subscriptions resource.
-		 * @return resource\Subscriptions
-		 * @access public
-		 * @api
-		 */
-		public function subscriptions() {
-			if ( NULL == $this->_oSubscriptions ) {
-				$this->_oSubscriptions = new resource\Subscriptions( $this );
-			}
-			return $this->_oSubscriptions;
-		}
+    /**
+     * Accessor for the subscriptions resource.
+     * @return resource\Subscriptions
+     * @access public
+     * @api
+     */
+    public function subscriptions(): resource\Subscriptions
+    {
+        if (null == $this->subscriptions) {
+            $this->subscriptions = new resource\Subscriptions($this);
+        }
+        return $this->subscriptions;
+    }
 
-		/**
-		 * Accessor for the consumers resource.
-		 * @return resource\Consumers
-		 * @access public
-		 * @api
-		 */
-		public function consumers() {
-			if ( NULL == $this->_oConsumers ) {
-				$this->_oConsumers = new resource\Consumers( $this );
-			}
-			return $this->_oConsumers;
-		}
+    /**
+     * Accessor for the consumers resource.
+     * @return resource\Consumers
+     * @access public
+     * @api
+     */
+    public function consumers(): resource\Consumers
+    {
+        if (null == $this->consumers) {
+            $this->consumers = new resource\Consumers($this);
+        }
+        return $this->consumers;
+    }
 
-		/**
-		 * Accessor for the payment methods resource.
-		 * @return resource\Methods
-		 * @access public
-		 * @api
-		 */
-		public function methods() {
-			if ( NULL == $this->_oMethods ) {
-				$this->_oMethods = new resource\Methods( $this );
-			}
-			return $this->_oMethods;
-		}
+    /**
+     * Accessor for the payment methods resource.
+     * @return resource\Methods
+     * @access public
+     * @api
+     */
+    public function methods(): resource\Methods
+    {
+        if (null == $this->methods) {
+            $this->methods = new resource\Methods($this);
+        }
+        return $this->methods;
+    }
 
-		/**
-		 * Send a request to the CardGate API.
-		 * @param string $sResource_ The resource to call.
-		 * @param array $aData_ Optional data to use for the call.
-		 * @param string $sHttpMethod_ The http method to use (GET or POST, which is the default).
-		 * @return array An array with request results.
-		 * @throws Exception
-		 */
-		public function doRequest( $sResource_, $aData_ = NULL, $sHttpMethod_ = 'POST' ) {
+    /**
+     * Send a request to the CardGate API.
+     * @param string $resource The resource to call.
+     * @param array|null $data Optional data to use for the call.
+     * @param string $httpMethod The http method to use (GET or POST, which is the default).
+     * @return array An array with request results.
+     * @throws Exception
+     */
+    public function doRequest(string $resource, ?array $data = null, string $httpMethod = 'POST'): array
+    {
 
-			if ( ! in_array( $sHttpMethod_, [ 'GET', 'POST' ] ) ) {
-				throw new Exception( 'Client.HttpMethod.Invalid', 'invalid http method: ' . $sHttpMethod_ );
-			}
+        if (! in_array($httpMethod, ['GET', 'POST'])) {
+            throw new Exception('Client.HttpMethod.Invalid', 'invalid http method: ' . $httpMethod);
+        }
 
-			$sUrl = $this->getUrl() . $sResource_;
-			if ( is_array( $aData_ ) ) {
-				$aData_['ip'] = $this->getIp();
-				$aData_['language_id'] = $this->getLanguage();
-			} elseif ( is_null( $aData_ ) ) {
-				$aData_ = [ 'ip' => $this->getIp(), 'language_id' => $this->getLanguage() ];
-			} else {
-				throw new Exception( 'Client.Data.Invalid', 'invalid data: ' . $aData_ );
-			}
+        $url = $this->getUrl() . $resource;
+        if (is_array($data)) {
+            $data['ip'] = $this->getIp();
+            $data['language_id'] = $this->getLanguage();
+        } elseif (is_null($data)) {
+            $data = ['ip' => $this->getIp(), 'language_id' => $this->getLanguage()];
+        } else {
+            throw new Exception('Client.Data.Invalid', 'invalid data: ' . $data);
+        }
 
-			if ( NULL !== $this->_oVersion ) {
-				$aData_ = array_merge( $aData_, $this->_oVersion->getData() );
-			}
+        if (null !== $this->version) {
+            $data = array_merge($data, $this->version->getData());
+        }
 
-			$rCh = curl_init();
-			curl_setopt( $rCh, CURLOPT_HTTPAUTH, CURLAUTH_BASIC );
-			curl_setopt( $rCh, CURLOPT_USERPWD, $this->_iMerchantId . ':' . $this->_sKey );
-			curl_setopt( $rCh, CURLOPT_RETURNTRANSFER, 1 );
-			curl_setopt( $rCh, CURLOPT_TIMEOUT, 60 );
-			curl_setopt( $rCh, CURLOPT_HEADER, FALSE );
-			curl_setopt( $rCh, CURLOPT_HTTPHEADER, [
-				'Content-Type: application/json',
-				'Accept: application/json'
-			] );
-			if ( $this->_bTestmode ) {
-				curl_setopt( $rCh, CURLOPT_SSL_VERIFYPEER, FALSE );
-				curl_setopt( $rCh, CURLOPT_SSL_VERIFYHOST, 0 );
-			} else {
-				curl_setopt( $rCh, CURLOPT_SSL_VERIFYPEER, TRUE ); // verify SSL peer
-				curl_setopt( $rCh, CURLOPT_SSL_VERIFYHOST, 2 ); // check for valid common name and verify host
-			}
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+        curl_setopt($ch, CURLOPT_USERPWD, $this->merchantId . ':' . $this->key);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Accept: application/json'
+        ]);
+        if ($this->testmode) {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        } else {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true); // verify SSL peer
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2); // check for valid common name and verify host
+        }
 
-			if ( 'POST' == $sHttpMethod_ ) {
-				$this->_sLastRequest = json_encode( $aData_, JSON_PARTIAL_OUTPUT_ON_ERROR );
-				curl_setopt( $rCh, CURLOPT_URL, $sUrl );
-				curl_setopt( $rCh, CURLOPT_POST, TRUE );
-				curl_setopt( $rCh, CURLOPT_POSTFIELDS, $this->_sLastRequest );
-				$this->_sLastRequest = "[POST $sUrl] " . $this->_sLastRequest;
-			} else {
-				$this->_sLastRequest = $sUrl
-					. ( FALSE === strchr( $sUrl, '?' ) ? '?' : '&' )
-					. http_build_query( $aData_ )
-				;
-				curl_setopt( $rCh, CURLOPT_URL, $this->_sLastRequest );
-			}
+        if ('POST' == $httpMethod) {
+            $this->lastRequest = json_encode($data, JSON_PARTIAL_OUTPUT_ON_ERROR);
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $this->lastRequest);
+            $this->lastRequest = "[POST $url] " . $this->lastRequest;
+        } else {
+            $this->lastRequest = $url
+                                 . (false === strchr($url, '?') ? '?' : '&')
+                                 . http_build_query($data);
+            curl_setopt($ch, CURLOPT_URL, $this->lastRequest);
+        }
 
-			if ( self::DEBUG_VERBOSE == $this->_iDebugLevel ) {
-				curl_setopt( $rCh, CURLOPT_VERBOSE, TRUE );
-			}
+        if (self::DEBUG_VERBOSE == $this->debugLevel) {
+            curl_setopt($ch, CURLOPT_VERBOSE, true);
+        }
 
-			$this->_sLastResult = curl_exec( $rCh );
-			if ( FALSE == $this->_sLastResult ) {
-				$sError = curl_error( $rCh );
-				curl_close( $rCh );
-				throw new Exception( 'Client.Request.Curl.Error', $sError );
-			} else {
-				curl_close( $rCh );
-			}
-			if ( NULL === ( $aResults = json_decode( $this->_sLastResult, TRUE ) ) ) {
-				throw new Exception( 'Client.Request.JSON.Invalid', 'remote gave invalid JSON: ' . $this->_sLastResult );
-			}
-			if ( isset( $aResults['error'] ) ) {
-				throw new Exception( 'Client.Request.Remote.' . $aResults['error']['code'], $aResults['error']['message']	. $this->getDebugInfo()	);
-			}
+        $this->lastResult = curl_exec($ch);
+        if (false == $this->lastResult) {
+            $error = curl_error($ch);
+            curl_close($ch);
+            throw new Exception('Client.Request.Curl.Error', $error);
+        } else {
+            curl_close($ch);
+        }
+        if (null === ($results = json_decode($this->lastResult, true))) {
+            throw new Exception('Client.Request.JSON.Invalid', 'remote gave invalid JSON: ' . $this->lastResult);
+        }
+        if (isset($results['error'])) {
+            throw new Exception(
+                'Client.Request.Remote.' . $results['error']['code'],
+                $results['error']['message'] . $this->getDebugInfo()
+            );
+        }
 
-			return $aResults;
-		}
-
-	}
-
+        return $results;
+    }
 }

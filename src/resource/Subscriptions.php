@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) 2018 CardGate B.V.
  *
@@ -25,91 +26,102 @@
  * @copyright   CardGate B.V.
  * @link        https://www.cardgate.com
  */
-namespace cardgate\api\resource {
 
-	/**
-	 * CardGate resource object.
-	 */
-	final class Subscriptions extends Base {
+namespace cardgate\api\resource;
 
-		/**
-		 * This method can be used to retrieve subscription details.
-		 * @param string $sSubscriptionId_ The subscription identifier.
-		 * @param array $aDetails_ Array that gets filled with additional subscription details.
-		 * @return \cardgate\api\Subscription
-		 * @throws \cardgate\api\Exception
-		 * @access public
-		 * @api
-		 */
-		public function get( $sSubscriptionId_, &$aDetails_ = NULL ) {
-			if ( ! is_string( $sSubscriptionId_ ) ) {
-				throw new \cardgate\api\Exception( 'Subscription.Id.Invalid', 'invalid subscription id: ' . $sSubscriptionId_ );
-			}
+use cardgate\api\Exception;
+use cardgate\api\Subscription;
 
-			$sResource = "subscription/{$sSubscriptionId_}/";
+/**
+ * CardGate resource object.
+ */
+final class Subscriptions extends Base
+{
+    /**
+     * This method can be used to retrieve subscription details.
+     *
+     * @param string $subscriptionId The subscription identifier.
+     * @param array|null $details Array that gets filled with additional subscription details.
+     *
+     * @return Subscription
+     * @throws Exception
+     * @access public
+     * @api
+     */
+    public function get(string $subscriptionId, array &$details = null): Subscription
+    {
+        if (! is_string($subscriptionId)) {
+            throw new Exception('Subscription.Id.Invalid', 'invalid subscription id: ' . $subscriptionId);
+        }
 
-			$aResult = $this->_oClient->doRequest( $sResource, NULL, 'GET' );
+        $resource = "subscription/{$subscriptionId}/";
 
-			if ( empty( $aResult['subscription'] ) ) {
-				throw new \cardgate\api\Exception( 'Subscription.Details.Invalid', 'invalid subscription data returned' );
-			}
+        $result = $this->client->doRequest($resource, null, 'GET');
 
-			if ( ! is_null( $aDetails_ ) ) {
-				$aDetails_ = array_merge( $aDetails_, $aResult['subscription'] );
-			}
+        if (empty($result['subscription'])) {
+            throw new Exception('Subscription.Details.Invalid', 'invalid subscription data returned');
+        }
 
-			$oSubscription = new \cardgate\api\Subscription(
-				$this->_oClient,
-				(int) $aResult['subscription']['site_id'],
-				(int) $aResult['subscription']['period'],
-				$aResult['subscription']['period_type'],
-				(int) $aResult['subscription']['period_price']
-			);
-			$oSubscription->setId( $aResult['subscription']['nn_id'] );
-			if ( ! empty( $aResult['subscription']['description'] ) ) {
-				$oSubscription->setDescription( $aResult['subscription']['description'] );
-			}
-			if ( ! empty( $aResult['subscription']['reference'] ) ) {
-				$oSubscription->setReference( $aResult['subscription']['reference'] );
-			}
-			if ( ! empty( $aResult['subscription']['start_date'] ) ) {
-				$oSubscription->setStartDate( $aResult['subscription']['start_date'] );
-			}
-			if ( ! empty( $aResult['subscription']['end_date'] ) ) {
-				$oSubscription->setEndDate( $aResult['subscription']['end_date'] );
-			}
-			// TODO: map other subscription fields? method_id can't be used in client::Method currently...
-			/*
-			if ( ! empty( $aResult['subscription']['code'] ) ) {
-				$oSubscription->setCode( $aResult['subscription']['code'] );
-			}
-			if ( ! empty( $aResult['subscription']['payment_type_id'] ) ) {
-				$oSubscription->setPaymentMethod( $aResult['subscription']['payment_type_id'] );
-			}
-			if ( ! empty( $aResult['subscription']['last_payment_date'] ) ) {
-				$oSubscription->setPaymentMethod( $aResult['subscription']['last_payment_date'] );
-			}
-			*/
+        if (! is_null($details)) {
+            $details = array_merge($details, $result['subscription']);
+        }
 
-			return $oSubscription;
-		}
+        $subscription = new Subscription(
+            $this->client,
+            (int) $result['subscription']['site_id'],
+            (int) $result['subscription']['period'],
+            $result['subscription']['period_type'],
+            (int) $result['subscription']['period_price']
+        );
+        $subscription->setId($result['subscription']['nn_id']);
+        if (! empty($result['subscription']['description'])) {
+            $subscription->setDescription($result['subscription']['description']);
+        }
+        if (! empty($result['subscription']['reference'])) {
+            $subscription->setReference($result['subscription']['reference']);
+        }
+        if (! empty($result['subscription']['start_date'])) {
+            $subscription->setStartDate($result['subscription']['start_date']);
+        }
+        if (! empty($result['subscription']['end_date'])) {
+            $subscription->setEndDate($result['subscription']['end_date']);
+        }
+        // TODO: map other subscription fields? method_id can't be used in client::Method currently...
+        /*
+        if ( ! empty( $result['subscription']['code'] ) ) {
+            $subscription->setCode( $result['subscription']['code'] );
+        }
+        if ( ! empty( $result['subscription']['payment_type_id'] ) ) {
+            $subscription->setPaymentMethod( $result['subscription']['payment_type_id'] );
+        }
+        if ( ! empty( $result['subscription']['last_payment_date'] ) ) {
+            $subscription->setPaymentMethod( $result['subscription']['last_payment_date'] );
+        }
+        */
 
-		/**
-		 * This method can be used to create a new subscription.
-		 * @param int $iSiteId_ Site id to create the subscription for.
-		 * @param int $iPeriod_ The period length of the subscription.
-		 * @param string $sPeriodType_ The period type of the subscription (e.g. day, week, month, year).
-		 * @param int $iPeriodAmount_ The period amount of the subscription in cents.
-		 * @param string $sCurrency_ Currency (ISO 4217)
-		 * @return \cardgate\api\Subscription
-		 * @throws \cardgate\api\Exception
-		 * @access public
-		 * @api
-		 */
-		public function create( $iSiteId_, $iPeriod_, $sPeriodType_, $iPeriodAmount_, $sCurrency_ = 'EUR' ) {
-			return new \cardgate\api\Subscription( $this->_oClient, $iSiteId_, $iPeriod_, $sPeriodType_, $iPeriodAmount_, $sCurrency_ );
-		}
+        return $subscription;
+    }
 
-	}
-
+    /**
+     * This method can be used to create a new subscription.
+     *
+     * @param int $siteId Site id to create the subscription for.
+     * @param int $period The period length of the subscription.
+     * @param string $periodType The period type of the subscription (e.g., day, week, month, year).
+     * @param int $periodAmount The period amount of the subscription in cents.
+     * @param string $currency Currency (ISO 4217)
+     *
+     * @throws Exception
+     * @access public
+     * @api
+     */
+    public function create(
+        int $siteId,
+        int $period,
+        string $periodType,
+        int $periodAmount,
+        string $currency = 'EUR'
+    ): Subscription {
+        return new Subscription($this->client, $siteId, $period, $periodType, $periodAmount, $currency);
+    }
 }

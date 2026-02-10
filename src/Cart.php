@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) 2018 CardGate B.V.
  *
@@ -25,49 +26,54 @@
  * @copyright   CardGate B.V.
  * @link        https://www.cardgate.com
  */
-namespace cardgate\api {
 
-	/**
-	 * Cart instance.
-	 */
-	final class Cart {
+namespace cardgate\api;
 
-		/**
-		 * The items in this cart.
-		 * @var Client
-		 * @access private
-		 */
-		private $_aItems = [];
+use ReflectionException;
 
-		/**
-		 * Add a cart item to the cart.
-		 * @param int $iType_ The cart item type.
-		 * @param string $sSKU_ The SKU of the cart item.
-		 * @param string $sName_ The name of the cart item (productname).
-		 * @param string $iPrice_ The price of the cart item.
-		 * @param string $sLink_ An optional link to the product.
-		 * @return Item Returns the item that was added.
-		 * @throws Exception|\ReflectionException
-		 * @access public
-		 * @api
-		 */
-		function addItem( $iType_, $sSKU_, $sName_, $iQuantity_, $iPrice_, $sLink_ = NULL ) {
-			$oItem = new Item( $iType_, $sSKU_, $sName_, $iQuantity_, $iPrice_, $sLink_ );
-			$this->_aItems[] = $oItem;
-			return $oItem;
-		}
+/**
+ * Cart instance.
+ */
+final class Cart
+{
+    /**
+     * The items in this cart.
+     * @var Client
+     * @access private
+     */
+    private $items = [];
 
-		function getAll() {
-		}
+    /**
+     * Add a cart item to the cart.
+     *
+     * @param int $type The cart item type.
+     * @param string $sku The SKU of the cart item.
+     * @param string $name The product name of the cart item.
+     * @param int $quantity The quantity of the cart item.
+     * @param int $price The price of the cart item.
+     * @param string | null $link An optional link to the product.
+     *
+     * @return Item Returns the item that was added.
+     * @throws Exception|ReflectionException
+     * @access public
+     * @api
+     */
+    public function addItem(int $type, string $sku, string $name, int $quantity, int $price, ?string $link = null): Item
+    {
+        $item         = new Item($type, $sku, $name, $quantity, $price, $link);
+        $this->items[] = $item;
+        return $item;
+    }
 
-		function getData() {
-			$aData = [];
-			foreach( $this->_aItems as $oItem ) {
-				$aData[] = $oItem->getData();
-			}
-			return $aData;
-		}
-
-	}
-
+    /**
+     * @return array
+     */
+    public function getData(): array
+    {
+        $data = [];
+        foreach ($this->items as $item) {
+            $data[] = $item->getData();
+        }
+        return $data;
+    }
 }
