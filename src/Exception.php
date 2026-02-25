@@ -53,6 +53,7 @@ final class Exception extends \Exception
     public function __construct(string $error, string $message, int $code = 0, ?\Throwable $previous = null)
     {
         $this->error = $error;
+        $message = 'CL: '.$message;
         parent::__construct($message, $code, $previous);
     }
 
