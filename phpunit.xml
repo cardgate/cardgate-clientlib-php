@@ -7,4 +7,9 @@
 	<testsuite name="cardgate-clientlib-php-testsuite">
 		<directory>tests</directory>
 	</testsuite>
+	<source>
+		<include>
+			<directory>src</directory>
+		</include>
+	</source>
 </phpunit>
