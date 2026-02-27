@@ -505,18 +505,6 @@ namespace cardgate\api {
         }
 
         /**
-         * Get the consumer for the transaction.
-         * @return Consumer The consumer for the transaction.
-         * @access public
-         * @api
-         * @deprecated Will be removed in v2.0.0.
-         */
-        public function getCustomer(): Consumer
-        {
-            return $this->getConsumer();
-        }
-
-        /**
          * Set the cart for the transaction.
          * @param Cart $cart The cart for the transaction.
          * @return $this

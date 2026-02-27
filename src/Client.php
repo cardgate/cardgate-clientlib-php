@@ -37,7 +37,7 @@ final class Client
     /**
      * Client version.
      */
-    public const CLIENT_VERSION = "2.0.0";
+    public const CLIENT_VERSION = "2.1.0";
 
     /**
      * Url to use for production.

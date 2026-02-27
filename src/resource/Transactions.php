@@ -49,7 +49,7 @@ final class Transactions extends Base
      * @access public
      * @api
      */
-    public function get(string $transactionId, array &$details = null): Transaction
+    public function get(string $transactionId, ?array &$details = null): Transaction
     {
         if (! is_string($transactionId)) {
             throw new Exception('Transaction.Id.Invalid', 'invalid transaction id: ' . $transactionId);
@@ -152,7 +152,7 @@ final class Transactions extends Base
      * @access public
      * @api
      */
-    public function verifyCallback(array $data, string $siteKey = null): bool
+    public function verifyCallback(array $data, ?string $siteKey = null): bool
     {
         foreach (['transaction', 'currency', 'amount', 'reference', 'code', 'hash', 'status'] as $requiredKey) {
             if (! isset($data[$requiredKey])) {
