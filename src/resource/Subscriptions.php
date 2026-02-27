@@ -48,7 +48,7 @@ final class Subscriptions extends Base
      * @access public
      * @api
      */
-    public function get(string $subscriptionId, array &$details = null): Subscription
+    public function get(string $subscriptionId, ?array &$details = null): Subscription
     {
         if (! is_string($subscriptionId)) {
             throw new Exception('Subscription.Id.Invalid', 'invalid subscription id: ' . $subscriptionId);

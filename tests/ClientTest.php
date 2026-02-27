@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace cardgate\api\tests;
 
 use PHPUnit\Framework\TestCase;
@@ -34,7 +36,7 @@ class ClientTest extends TestCase
 
     public function testSetTestmodeInvalidThrows()
     {
-        $this->expectException(\cardgate\api\Exception::class);
+        $this->expectException(\TypeError::class);
         $c = $this->newClient();
         /** @noinspection PhpParamsInspection */
         $c->setTestmode('yes');
@@ -65,7 +67,7 @@ class ClientTest extends TestCase
 
     public function testSetMerchantIdInvalidThrows()
     {
-        $this->expectException(\cardgate\api\Exception::class);
+        $this->expectException(\TypeError::class);
         $c = $this->newClient();
         /** @noinspection PhpParamsInspection */
         $c->setMerchantId('not-int');
@@ -80,7 +82,7 @@ class ClientTest extends TestCase
 
     public function testSetKeyInvalidThrows()
     {
-        $this->expectException(\cardgate\api\Exception::class);
+        $this->expectException(\TypeError::class);
         $c = $this->newClient();
         /** @noinspection PhpParamsInspection */
         $c->setKey(100);
@@ -113,7 +115,7 @@ class ClientTest extends TestCase
 
     public function testSetLanguageInvalidThrows()
     {
-        $this->expectException(\cardgate\api\Exception::class);
+        $this->expectException(\TypeError::class);
         $c = $this->newClient();
         /** @noinspection PhpParamsInspection */
         $c->setLanguage(123);
@@ -135,7 +137,7 @@ class ClientTest extends TestCase
 
     public function testPullConfigInvalidTokenTypeThrows()
     {
-        $this->expectException(\cardgate\api\Exception::class);
+        $this->expectException(\TypeError::class);
         $c = $this->newClient();
         /** @noinspection PhpParamsInspection */
         $c->pullConfig(123); // non-string token should throw before any network call
@@ -172,7 +174,7 @@ class ClientTest extends TestCase
     {
         $c = $this->newClient();
         // Invalid data (non-array, non-null)
-        $this->expectException(\cardgate\api\Exception::class);
+        $this->expectException(\TypeError::class);
         /** @noinspection PhpParamsInspection */
         $c->doRequest('status/', 'not-an-array', 'GET');
     }

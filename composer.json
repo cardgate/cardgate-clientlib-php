@@ -2,7 +2,7 @@
 	"name": "cardgate/cardgate-clientlib-php",
 	"description": "CardGate API client library for PHP",
 	"homepage": "https://github.com/cardgate/cardgate-clientlib-php",
-	"version": "2.0.0",
+	"version": "2.1.0",
 	"license": "MIT",
 	"authors": [
 		{
@@ -19,7 +19,7 @@
 		"afterpay", "bitcoin", "directdebit"
 	],
 	"require" : {
-		"php": "~7.1.0|~7.2.0|~7.3.0|~7.4.0|~8.0.0|~8.1.0|~8.2.0|~8.3.0|~8.4.0",
+		"php": "~8.4.0|~8.5.0",
 		"ext-json": "*",
       	"ext-curl": "*"
     },
@@ -29,7 +29,8 @@
 		}
 	},
 	"require-dev": {
-		"squizlabs/php_codesniffer": "^4.0"
+		"squizlabs/php_codesniffer": "^4.0",
+		"phpunit/phpunit": "^13.0"
 	},
 	"scripts": {
 		"phpcs": "phpcs",
