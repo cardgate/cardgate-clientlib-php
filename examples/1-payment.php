@@ -2,7 +2,10 @@
 
 try {
     if (false == @include 'init.php') {
-        die('init.php missing - copy or rename the init.example.php to init.php and configure it with your account details');
+        die(
+            'init.php missing - copy or rename the init.example.php to init.php'
+            . ' and configure it with your account details'
+        );
     }
 
     $oTransaction = $oCardGate->transactions()->create($siteId, 695, 'EUR');
@@ -48,7 +51,14 @@ try {
 
     // Configure cart.
     $oCart = $oTransaction->getCart();
-    $oItem = $oCart->addItem(\cardgate\api\Item::TYPE_PRODUCT, 'AA21484', 'iMac 27"', 3, 219999, 'http://www.apple.com/imac/');
+    $oItem = $oCart->addItem(
+        \cardgate\api\Item::TYPE_PRODUCT,
+        'AA21484',
+        'iMac 27"',
+        3,
+        219999,
+        'http://www.apple.com/imac/'
+    );
     $oItem = $oCart->addItem(\cardgate\api\Item::TYPE_SHIPPING, 'SHIPPING', 'Shipping by UPS', 1, 599);
 
     // Create unique order id with corresponding database file.
