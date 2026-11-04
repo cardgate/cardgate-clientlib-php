@@ -45,8 +45,8 @@ namespace cardgate\api {
         private static function autoload(string $class)
         {
             $length = strlen(__NAMESPACE__);
-            if ( substr($class, 0, $length) == __NAMESPACE__) {
-                require str_replace( '\\', '/', substr($class, $length + 1)) . '.php';
+            if (substr($class, 0, $length) == __NAMESPACE__) {
+                require str_replace('\\', '/', substr($class, $length + 1)) . '.php';
             }
         }
 

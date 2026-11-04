@@ -170,7 +170,7 @@ final class Item extends Entity
     public function setType(int $type): Item
     {
         if (
-           ! in_array($type, (new ReflectionClass('\cardgate\api\Item'))->getConstants())
+            ! in_array($type, (new ReflectionClass('\cardgate\api\Item'))->getConstants())
         ) {
             throw new Exception('Item.Type.Invalid', 'invalid cart item type: ' . $type);
         }

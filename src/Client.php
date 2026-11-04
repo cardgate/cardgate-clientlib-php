@@ -37,7 +37,7 @@ final class Client
     /**
      * Client version.
      */
-    public const CLIENT_VERSION = "2.1.0";
+    public const CLIENT_VERSION = "2.1.1";
 
     /**
      * Url to use for production.
@@ -539,11 +539,10 @@ final class Client
         $this->lastResult = curl_exec($ch);
         if (false == $this->lastResult) {
             $error = curl_error($ch);
-            curl_close($ch);
+            unset($ch);
             throw new Exception('Client.Request.Curl.Error', $error);
-        } else {
-            curl_close($ch);
         }
+        unset($ch);
         if (null === ($results = json_decode($this->lastResult, true))) {
             throw new Exception('Client.Request.JSON.Invalid', 'remote gave invalid JSON: ' . $this->lastResult);
         }

@@ -229,7 +229,7 @@ namespace cardgate\api {
         public function setSiteId(int $siteId): Transaction
         {
             if (! is_integer($siteId)) {
-                throw new Exception( 'Transaction.SiteId.Invalid', 'invalid site: ' . $siteId );
+                throw new Exception('Transaction.SiteId.Invalid', 'invalid site: ' . $siteId);
             }
             $this->siteId = $siteId;
             return $this;
@@ -401,7 +401,7 @@ namespace cardgate\api {
          */
         public function setPaymentMethod($paymentMethod): Transaction
         {
-            if ( $paymentMethod instanceof Method) {
+            if ($paymentMethod instanceof Method) {
                 $this->paymentMethod = $paymentMethod;
             } elseif (is_string($paymentMethod)) {
                 $this->paymentMethod = new Method($this->client, $paymentMethod, $paymentMethod);
@@ -625,7 +625,7 @@ namespace cardgate\api {
          */
         public function setPendingUrl(string $url): Transaction
         {
-            if ( filter_var($url, FILTER_VALIDATE_URL) === false ) {
+            if (filter_var($url, FILTER_VALIDATE_URL) === false) {
                 throw new Exception('Transaction.PendingUrl.Invalid', 'invalid url: ' . $url);
             }
             $this->pendingUrl = $url;
@@ -715,7 +715,10 @@ namespace cardgate\api {
                 empty($result['payment'])
                 || empty($result['payment']['transaction'])
             ) {
-                throw new Exception('Transaction.Request.Invalid', 'unexpected result: ' . $this->client->getLastResult() . $this->client->getDebugInfo(true, false));
+                throw new Exception(
+                    'Transaction.Request.Invalid',
+                    'unexpected result: ' . $this->client->getLastResult() . $this->client->getDebugInfo(true, false)
+                );
             }
             $this->id = $result['payment']['transaction'];
             if (
@@ -743,7 +746,10 @@ namespace cardgate\api {
             $aResult = $this->client->doRequest($sResource, null, 'GET');
 
             if (empty($aResult['transaction'])) {
-                throw new Exception('Transaction.CanRefund.Invalid', 'unexpected result: ' . $this->client->getLastResult() . $this->client->getDebugInfo(true, false));
+                throw new Exception(
+                    'Transaction.CanRefund.Invalid',
+                    'unexpected result: ' . $this->client->getLastResult() . $this->client->getDebugInfo(true, false)
+                );
             }
 
             $remainder = (int) @$aResult['transaction']['refund_remainder'];
@@ -783,7 +789,10 @@ namespace cardgate\api {
                 empty($result['refund'])
                 || empty($result['refund']['transaction'])
             ) {
-                throw new Exception('Transaction.Refund.Invalid', 'unexpected result: ' . $this->client->getLastResult() . $this->client->getDebugInfo(true, false));
+                throw new Exception(
+                    'Transaction.Refund.Invalid',
+                    'unexpected result: ' . $this->client->getLastResult() . $this->client->getDebugInfo(true, false)
+                );
             }
 
             // This is a bit unlogical! Why not leave this to the callee?
@@ -822,7 +831,10 @@ namespace cardgate\api {
                 empty($result['recurring'])
                 || empty($result['recurring']['transaction_id'])
             ) {
-                throw new Exception('Transaction.Recur.Invalid', 'unexpected result: ' . $this->client->getLastResult() . $this->client->getDebugInfo(true, false));
+                throw new Exception(
+                    'Transaction.Recur.Invalid',
+                    'unexpected result: ' . $this->client->getLastResult() . $this->client->getDebugInfo(true, false)
+                );
             }
 
             // Same unlogical stuff as the method above! Why not leave this to the callee?
