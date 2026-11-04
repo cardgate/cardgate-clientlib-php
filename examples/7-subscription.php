@@ -2,7 +2,10 @@
 
 try {
     if (false == @include 'init.php') {
-        die('init.php missing - copy or rename the init.example.php to init.php and configure it with your account details');
+        die(
+            'init.php missing - copy or rename the init.example.php to init.php'
+            . ' and configure it with your account details'
+        );
     }
 
     if (
@@ -10,7 +13,13 @@ try {
         && isset($_POST['period'])
         && isset($_POST['period_type'])
     ) {
-        $oSubscription = $oCardGate->subscriptions()->create($siteId, (int) $_POST['period'], $_POST['period_type'], (int) $_POST['period_amount'], 'EUR');
+        $oSubscription = $oCardGate->subscriptions()->create(
+            $siteId,
+            (int) $_POST['period'],
+            $_POST['period_type'],
+            (int) $_POST['period_amount'],
+            'EUR'
+        );
         $oSubscription->setPaymentMethod(cardgate\api\Method::BANKTRANSFER);
 
         // Configure consumer.
@@ -37,7 +46,14 @@ try {
 
         // Configure cart.
         $oCart = $oSubscription->getCart();
-        $oItem = $oCart->addItem(\cardgate\api\Item::TYPE_PRODUCT, 'AA21484', 'iMac 27"', 3, 219999, 'http://www.apple.com/imac/');
+        $oItem = $oCart->addItem(
+            \cardgate\api\Item::TYPE_PRODUCT,
+            'AA21484',
+            'iMac 27"',
+            3,
+            219999,
+            'http://www.apple.com/imac/'
+        );
         $oItem = $oCart->addItem(\cardgate\api\Item::TYPE_SHIPPING, 'SHIPPING', 'Shipping by UPS', 1, 599);
 
 

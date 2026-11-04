@@ -2,7 +2,10 @@
 
 try {
     if (false == @include 'init.php') {
-        die('init.php missing - copy or rename the init.example.php to init.php and configure it with your account details');
+        die(
+            'init.php missing - copy or rename the init.example.php to init.php'
+            . ' and configure it with your account details'
+        );
     }
 
     // Make sure callback parameters are from the CardGate gateway.
